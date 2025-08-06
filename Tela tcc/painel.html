@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel TCC - SENAI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+  <style>
+    body {
+      background-color: #f4f4f4;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-red-bar {
+      height: 5px;
+      background-color: #E30613;
+      width: 100%;
+    }
+
+    .navbar {
+      background-color: white;
+      padding: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .card {
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .card-header {
+      background-color: #E30613;
+      color: white;
+      font-weight: bold;
+    }
+
+    .btn-senai {
+      background-color: #E30613;
+      color: white;
+    }
+
+    .btn-senai:hover {
+      background-color: #c00511;
+      color: white;
+    }
+
+    .btn-outline-senai {
+      border-color: #E30613;
+      color: #E30613;
+    }
+
+    .btn-outline-senai:hover {
+      background-color: #E30613;
+      color: white;
+    }
+
+    .status-pendente {
+      color: #ffc107;
+      font-weight: bold;
+    }
+
+    .status-aprovado {
+      color: #28a745;
+      font-weight: bold;
+    }
+
+    .status-rejeitado {
+      color: #dc3545;
+      font-weight: bold;
+    }
+
+    .search-container {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .tcc-actions {
+      white-space: nowrap;
+    }
+
+    .footer {
+      margin-top: auto;
+      background-color: white;
+      padding: 10px 0;
+      box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .barra {
+      height: 5px;
+      background-color: #E30613;
+      width: 100%;
+    }
+
+    .btn-visualizar {
+      color: #0d6efd;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .btn-visualizar:hover {
+      opacity: 0.7;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top-red-bar"></div>
+
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link active" href="painel.html">TCC</a></li>
+        <li class="nav-item"><a class="nav-link" href="cadastrar_curso.html">CURSO</a></li>
+        <li class="nav-item"><a class="nav-link" href="usuarios.html">USUÁRIO</a></li>
+      </ul>
+      <a class="navbar-brand" href="#">
+        <img src="Logo.png" alt="SENAI" height="40">
+      </a>
+    </div>
+  </nav>
+
+  <main class="container py-4">
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <h2>Painel de TCCs</h2>
+      </div>
+      <div class="col-md-6 text-end">
+        <button class="btn btn-senai" data-bs-toggle="modal" data-bs-target="#cadastrarTccModal">
+          <i class="bi bi-plus-circle"></i> Cadastrar TCC
+        </button>
+      </div>
+    </div>
+
+    <!-- Barra de busca -->
+    <div class="search-container mb-4">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Buscar por título ou curso..." id="buscaTcc">
+            <button class="btn btn-senai" type="button" id="btnBuscar">
+              <i class="bi bi-search"></i> Buscar
+            </button>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <select class="form-select" id="filtroStatus">
+            <option value="todos">Todos os status</option>
+            <option value="pendente">Pendentes</option>
+            <option value="aprovado">Aprovados</option>
+            <option value="rejeitado">Rejeitados</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de TCCs -->
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>TCCs Cadastrados</span>
+        <span class="badge bg-secondary" id="totalTccs">0 encontrados</span>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Autor</th>
+                <th>Curso</th>
+                <th>Ano</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tccTableBody">
+              <!-- TCCs serão carregados aqui via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal para aprovar/rejeitar TCC -->
+  <div class="modal fade" id="avaliarTccModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Avaliar TCC</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="tccModalInfo"></div>
+          <input type="hidden" id="tccIdParaAvaliacao">
+
+          <div class="mb-3">
+            <label for="comentarioAvaliacao" class="form-label">Comentário (opcional)</label>
+            <textarea class="form-control" id="comentarioAvaliacao" rows="3"
+              placeholder="Forneça um feedback detalhado para o autor..."></textarea>
+            <div class="form-text">Este comentário será registrado junto com a avaliação.</div>
+          </div>
+          <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle-fill"></i> Esta ação não pode ser desfeita.
+            Certifique-se de revisar o TCC antes de aprovar ou rejeitar.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-outline-danger" id="btnRejeitarTcc">
+            <i class="bi bi-x-circle"></i> Rejeitar
+          </button>
+          <button type="button" class="btn btn-senai" id="btnAprovarTcc">
+            <i class="bi bi-check-circle"></i> Aprovar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para confirmar exclusão -->
+  <div class="modal fade" id="confirmarExclusaoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar Exclusão</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Tem certeza que deseja excluir este tcc? Esta ação não pode ser desfeita.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" id="btnConfirmarExclusao">Excluir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal para editar TCC (substitua o modal existente) -->
+  <div class="modal fade" id="editarTccModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar TCC</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editarTccForm">
+            <input type="hidden" id="editarTccId">
+            <div class="mb-3">
+              <label for="editarTitulo" class="form-label">Título</label>
+              <input type="text" class="form-control" id="editarTitulo" required>
+            </div>
+            <div class="mb-3">
+              <label for="editarAno" class="form-label">Ano</label>
+              <input type="number" class="form-control" id="editarAno" required>
+            </div>
+            <div class="mb-3">
+              <label for="editarAutor" class="form-label">Autor</label>
+              <input type="text" class="form-control" id="editarAutor" required>
+            </div>
+            <div class="mb-3">
+              <label for="editarCurso" class="form-label">Curso</label>
+              <select class="form-select" id="editarCurso" required>
+                <option value="" selected disabled>-- Escolha um curso --</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-senai" id="btnSalvarEdicao">Salvar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+
+  <!-- Modal para cadastrar TCC -->
+  <div class="modal fade" id="cadastrarTccModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Cadastrar TCC</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="tccForm">
+            <div class="mb-3">
+              <label for="titulo" class="form-label">Título</label>
+              <input type="text" class="form-control" id="titulo" required>
+            </div>
+            <div class="mb-3">
+              <label for="ano" class="form-label">Ano</label>
+              <input type="number" class="form-control" id="ano" required>
+            </div>
+            <div class="mb-3">
+              <label for="autor" class="form-label">Autor</label>
+              <input type="text" class="form-control" id="autor" required>
+            </div>
+            <div class="mb-3">
+              <label for="curso" class="form-label">Curso</label>
+              <select class="form-select" id="curso" required>
+                <option value="" selected disabled>-- Escolha um curso --</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="arquivoTcc" class="form-label">Arquivo do TCC</label>
+              <input class="form-control" type="file" id="arquivoTcc" required accept=".pdf,application/pdf">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-senai" id="btnCadastrarTcc">Cadastrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="text-center">
+        <p class="mb-0">SENAI - Sistema de Gerenciamento de TCCs</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="barra"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    var tccs = [];
+    let tccSelecionado = null;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      carregarCursos();
+      carregarTccs();
+
+      document.getElementById('btnBuscar').addEventListener('click', filtrarTccs);
+      document.getElementById('buscaTcc').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') filtrarTccs();
+      });
+      document.getElementById('filtroStatus').addEventListener('change', filtrarTccs);
+
+      document.getElementById('btnAprovarTcc').addEventListener('click', function () {
+        avaliarTcc('aprovado');
+      });
+      document.getElementById('btnRejeitarTcc').addEventListener('click', function () {
+        avaliarTcc('rejeitado');
+      });
+
+      document.getElementById('btnCadastrarTcc').addEventListener('click', cadastrarTcc);
+
+      document.getElementById('arquivoTcc').addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (file) {
+          const isValid = file.type === 'application/pdf' && file.name.toLowerCase().endsWith('.pdf');
+          if (!isValid) {
+            alert('Por favor, selecione um arquivo PDF.');
+            e.target.value = '';
+          }
+        }
+      });
+
+      document.getElementById('btnSalvarEdicao').addEventListener('click', salvarEdicaoTcc);
+    });
+
+    function carregarCursos() {
+      fetch('http://localhost:3000/listar_cursos')
+        .then(response => response.json())
+        .then(data => {
+          const selects = [document.getElementById('curso'), document.getElementById('editarCurso')];
+          selects.forEach(select => {
+            select.innerHTML = '<option value="" selected disabled>-- Escolha um curso --</option>';
+            data.forEach(curso => {
+              const option = document.createElement('option');
+              option.value = curso.id;
+              option.textContent = curso.curso;
+              select.appendChild(option.cloneNode(true));
+            });
+          });
+        })
+        .catch(err => {
+          console.error('Erro ao carregar cursos:', err);
+          alert('Erro ao carregar cursos.');
+        });
+    }
+
+    function carregarTccs() {
+      fetch('http://localhost:3000/listar_tccs')
+        .then(response => response.json())
+        .then(data => {
+          tccs = data.map(tcc => ({
+            id: tcc.id,
+            titulo: tcc.titulo,
+            autor: tcc.autor,
+            curso: tcc.curso,
+            ano: tcc.ano,
+            arquivo: tcc.arquivo,
+            status: tcc.status,
+            comentario: tcc.comentario || ''
+          }));
+          atualizarTabelaTccs(tccs);
+          document.getElementById('totalTccs').textContent = `${tccs.length} encontrados`;
+        })
+        .catch(err => {
+          console.error('Erro ao carregar TCCs:', err);
+          alert('Erro ao carregar TCCs.');
+        });
+    }
+
+    function atualizarTabelaTccs(lista) {
+      const tbody = document.getElementById('tccTableBody');
+      tbody.innerHTML = '';
+      lista.forEach(tcc => {
+        let statusClass = '';
+        let statusText = '';
+        switch (tcc.status) {
+          case 'pendente': statusClass = 'status-pendente'; statusText = 'Pendente'; break;
+          case 'aprovado': statusClass = 'status-aprovado'; statusText = 'Aprovado'; break;
+          case 'rejeitado': statusClass = 'status-rejeitado'; statusText = 'Rejeitado'; break;
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${tcc.titulo}</td>
+          <td>${tcc.autor}</td>
+          <td>${tcc.curso}</td>
+          <td>${tcc.ano}</td>
+          <td class="${statusClass}">${statusText}</td>
+          <td class="tcc-actions">
+            <button class="btn btn-sm btn-outline-primary me-1" onclick="window.open('http://localhost:3000/visualizar_tcc/${tcc.arquivo}', '_blank')">
+              <i class="bi bi-eye-fill"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-success me-1" onclick="abrirModalEdicao(${tcc.id})">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-warning me-1" onclick="abrirModalAvaliacao(${tcc.id})">
+              <i class="bi bi-check-circle"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger" onclick="confirmarExclusao(${tcc.id})">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filtrarTccs() {
+      const termo = document.getElementById('buscaTcc').value.toLowerCase();
+      const status = document.getElementById('filtroStatus').value;
+
+      const filtrados = tccs.filter(tcc => {
+        const matchTermo = tcc.titulo.toLowerCase().includes(termo) || tcc.curso.toLowerCase().includes(termo);
+        const matchStatus = status === 'todos' || tcc.status === status;
+        return matchTermo && matchStatus;
+      });
+
+      atualizarTabelaTccs(filtrados);
+      document.getElementById('totalTccs').textContent = `${filtrados.length} encontrados`;
+    }
+
+    function abrirModalAvaliacao(tccId) {
+      tccSelecionado = tccs.find(t => t.id === tccId);
+      if (!tccSelecionado) return alert('TCC não encontrado.');
+
+      document.getElementById('tccIdParaAvaliacao').value = tccSelecionado.id;
+      document.getElementById('comentarioAvaliacao').value = tccSelecionado.comentario || '';
+      document.getElementById('tccModalInfo').innerHTML = `
+        <strong>Título:</strong> ${tccSelecionado.titulo}<br>
+        <strong>Autor:</strong> ${tccSelecionado.autor}<br>
+        <strong>Curso:</strong> ${tccSelecionado.curso}<br>
+        <strong>Ano:</strong> ${tccSelecionado.ano}<br>
+        <strong>Status Atual:</strong> ${tccSelecionado.status}
+      `;
+
+      new bootstrap.Modal(document.getElementById('avaliarTccModal')).show();
+    }
+
+    function avaliarTcc(acao) {
+      const id = document.getElementById('tccIdParaAvaliacao').value;
+      const comentario = document.getElementById('comentarioAvaliacao').value;
+
+      if (!id) return alert('TCC inválido.');
+
+      fetch('http://localhost:3000/avaliar_tcc', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status: acao, comentario })
+      })
+        .then(res => res.json())
+        .then(data => {
+          alert(data.mensagem || `TCC ${acao} com sucesso.`);
+          bootstrap.Modal.getInstance(document.getElementById('avaliarTccModal')).hide();
+          carregarTccs();
+        })
+        .catch(err => {
+          console.error('Erro ao avaliar:', err);
+          alert('Erro ao avaliar TCC.');
+        });
+    }
+
+    function confirmarExclusao(id) {
+      const modal = new bootstrap.Modal(document.getElementById('confirmarExclusaoModal'));
+      document.getElementById('btnConfirmarExclusao').onclick = () => {
+        fetch(`http://localhost:3000/excluir_tcc/${id}`, { method: 'DELETE' })
+          .then(res => res.json())
+          .then(data => {
+            alert(data.mensagem);
+            carregarTccs();
+          })
+          .catch(err => {
+            console.error('Erro ao excluir:', err);
+            alert('Erro ao excluir TCC.');
+          });
+        modal.hide();
+      };
+      modal.show();
+    }
+
+    function cadastrarTcc() {
+      const titulo = document.getElementById('titulo').value;
+      const ano = document.getElementById('ano').value;
+      const autor = document.getElementById('autor').value;
+      const curso = document.getElementById('curso').value;
+      const arquivo = document.getElementById('arquivoTcc').files[0];
+
+      if (!titulo || !ano || !autor || !curso || !arquivo) {
+        return alert('Preencha todos os campos.');
+      }
+
+      const formData = new FormData();
+      formData.append('titulo', titulo);
+      formData.append('ano', ano);
+      formData.append('autor', autor);
+      formData.append('curso', curso);
+      formData.append('arquivo', arquivo);
+
+      fetch('http://localhost:3000/upload_tcc', {
+        method: 'POST',
+        body: formData
+      })
+        .then(res => res.json())
+        .then(data => {
+          alert(data.mensagem || 'TCC cadastrado!');
+          document.getElementById('tccForm').reset();
+          carregarTccs();
+        })
+        .catch(err => {
+          console.error('Erro ao cadastrar:', err);
+          alert('Erro ao cadastrar TCC.');
+        });
+    }
+
+    function abrirModalEdicao(tccId) {
+      const tcc = tccs.find(t => t.id === tccId);
+      if (!tcc) return alert('TCC não encontrado.');
+
+      document.getElementById('editarTccId').value = tcc.id;
+      document.getElementById('editarTitulo').value = tcc.titulo;
+      document.getElementById('editarAno').value = tcc.ano;
+      document.getElementById('editarAutor').value = tcc.autor;
+
+      const selectCurso = document.getElementById('editarCurso');
+      selectCurso.innerHTML = '<option value="" selected disabled>-- Escolha um curso --</option>';
+
+      fetch('http://localhost:3000/listar_cursos')
+        .then(response => response.json())
+        .then(data => {
+          data.forEach(curso => {
+            const option = document.createElement('option');
+            option.value = curso.id;
+            option.textContent = curso.curso;
+            if (curso.curso === tcc.curso) {
+              option.selected = true;
+            }
+            selectCurso.appendChild(option);
+          });
+        });
+
+      new bootstrap.Modal(document.getElementById('editarTccModal')).show();
+    }
+
+    function salvarEdicaoTcc() {
+      const tccId = document.getElementById('editarTccId').value;
+      const titulo = document.getElementById('editarTitulo').value;
+      const ano = document.getElementById('editarAno').value;
+      const autor = document.getElementById('editarAutor').value;
+      const curso = document.getElementById('editarCurso').value;
+
+      if (!titulo || !ano || !autor || !curso) {
+        return alert('Preencha todos os campos.');
+      }
+
+      const btnSalvar = document.getElementById('btnSalvarEdicao');
+      btnSalvar.disabled = true;
+      btnSalvar.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Salvando...`;
+
+      fetch('http://localhost:3000/editar_tcc', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: tccId, titulo, ano, autor, curso_id: curso })
+      })
+        .then(res => res.json())
+        .then(data => {
+          alert(data.mensagem || 'TCC atualizado.');
+          bootstrap.Modal.getInstance(document.getElementById('editarTccModal')).hide();
+          carregarTccs();
+        })
+        .catch(err => {
+          console.error('Erro ao salvar edição:', err);
+          alert('Erro ao editar TCC.');
+        })
+        .finally(() => {
+          btnSalvar.disabled = false;
+          btnSalvar.innerHTML = 'Salvar';
+        });
+    }
+  </script>
+
+</body>
+
+</html>

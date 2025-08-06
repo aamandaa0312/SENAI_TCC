@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Curso</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="container py-5">
+
+    <h2>Editar Curso</h2>
+    <form id="formEditarCurso">
+        <input type="hidden" id="cursoId">
+        <div class="mb-3">
+            <label for="cursoNome" class="form-label">Nome do Curso</label>
+            <input type="text" id="cursoNome" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        <a href="cadastrar_curso.html" class="btn btn-secondary">Cancelar</a>
+    </form>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const cursoId = params.get("id");
+
+        // Preenche os dados do curso
+        fetch("http://localhost:3000/listar_cursos")
+            .then(res => res.json())
+            .then(cursos => {
+                const curso = cursos.find(c => c.id == cursoId);
+                if (!curso) return alert("Curso não encontrado");
+                document.getElementById("cursoId").value = curso.id;
+                document.getElementById("cursoNome").value = curso.curso;
+            });
+
+        // Envia alterações
+        document.getElementById("formEditarCurso").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const id = document.getElementById("cursoId").value;
+            const nome = document.getElementById("cursoNome").value;
+
+            fetch("http://localhost:3000/editar_curso", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ titulo: nomeCurso })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.mensagem || "Erro ao editar curso");
+                    if (data.mensagem) window.location.href = "cadastrar_curso.html";
+                });
+        });
+    </script>
+</body>
+
+</html>

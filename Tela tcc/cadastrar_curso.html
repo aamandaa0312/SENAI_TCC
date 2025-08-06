@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gerenciar Cursos - Intranet SENAI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f4f4f4;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-red-bar {
+            height: 5px;
+            background-color: #E30613;
+            width: 100%;
+        }
+
+        .navbar {
+            background-color: white;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: #E30613;
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn-senai {
+            background-color: #E30613;
+            color: white;
+        }
+
+        .btn-senai:hover {
+            background-color: #c00511;
+            color: white;
+        }
+
+        .btn-outline-senai {
+            border-color: #E30613;
+            color: #E30613;
+        }
+
+        .btn-outline-senai:hover {
+            background-color: #E30613;
+            color: white;
+        }
+
+        .barra {
+            height: 5px;
+            background-color: #E30613;
+            width: 100%;
+        }
+
+        .footer {
+            margin-top: auto;
+            background-color: white;
+            padding: 10px 0;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-red-bar"></div>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="painel.html">TCC</a></li>
+                <li class="nav-item"><a class="nav-link active" href="cadastrar_curso.html">CURSO</a></li>
+                <li class="nav-item"><a class="nav-link" href="usuarios.html">USUÁRIO</a></li>
+            </ul>
+            <a class="navbar-brand" href="#">
+                <img src="Logo.png" alt="SENAI" height="40">
+            </a>
+        </div>
+    </nav>
+
+    <main class="container py-4">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h2>Gerenciar Cursos</h2>
+            </div>
+            <div class="col-md-6 text-end">
+                <button class="btn btn-senai" data-bs-toggle="modal" data-bs-target="#cadastrarCursoModal">
+                    <i class="bi bi-plus-circle"></i> Cadastrar Curso
+                </button>
+            </div>
+        </div>
+        <!-- Modal para editar curso -->
+        <div class="modal fade" id="editarCursoModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar Curso</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formEditarCurso">
+                            <input type="hidden" id="editarCursoId">
+                            <div class="mb-3">
+                                <label for="editarNomeCurso" class="form-label">Nome do Curso</label>
+                                <input type="text" class="form-control" id="editarNomeCurso" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-senai" id="btnSalvarCursoEditado">Salvar
+                            Alterações</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Tabela de cursos -->
+        <div id="alertaCurso" class="alert alert-danger d-none" role="alert"></div>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Cursos Cadastrados</span>
+                <span class="badge bg-secondary" id="totalCursos">0 encontrados</span>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome do Curso</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaCursos">
+                            <!-- Cursos serão carregados aqui via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal para cadastrar curso -->
+    <div class="modal fade" id="cadastrarCursoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cadastrar Curso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formCurso">
+                        <div class="mb-3">
+                            <label for="nomeCurso" class="form-label">Nome do Curso</label>
+                            <input type="text" class="form-control" id="nomeCurso" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-senai" id="btnCadastrarCurso">Cadastrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para confirmar exclusão -->
+    <div class="modal fade" id="confirmarExclusaoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja excluir este curso? Esta ação não pode ser desfeita.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmarExclusao">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="text-center">
+                <p class="mb-0">SENAI - Sistema de Gerenciamento de Cursos</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="barra"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Variável para armazenar o ID do curso a ser excluído
+        let cursoIdParaExcluir = null;
+
+        // Carrega cursos ao abrir a página
+        document.addEventListener("DOMContentLoaded", carregarCursos);
+
+        // Configurar cadastro de curso
+        document.getElementById('btnCadastrarCurso').addEventListener('click', function () {
+            const nomeCurso = document.getElementById('nomeCurso').value;
+
+            if (!nomeCurso.trim()) {
+                alert('Preencha o nome do curso');
+                return;
+            }
+
+            fetch("http://localhost:3000/cadastrar_curso", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ curso: nomeCurso }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.mensagem) {
+                        alert(data.mensagem);
+                        document.getElementById('formCurso').reset();
+                        bootstrap.Modal.getInstance(document.getElementById('cadastrarCursoModal')).hide();
+                        carregarCursos();
+                    } else if (data.erro) {
+                        alert(data.erro);
+                    }
+                })
+                .catch((err) => {
+                    console.error(err);
+                    alert("Erro ao cadastrar curso.");
+                });
+        });
+
+        // Função para carregar cursos
+        function carregarCursos() {
+            fetch("http://localhost:3000/listar_cursos")
+                .then((res) => res.json())
+                .then((cursos) => {
+                    const tabela = document.getElementById("tabelaCursos");
+                    tabela.innerHTML = '';
+
+                    if (!Array.isArray(cursos)) {
+                        tabela.innerHTML = "<tr><td colspan='3'>Nenhum curso cadastrado</td></tr>";
+                        return;
+                    }
+
+                    document.getElementById('totalCursos').textContent = `${cursos.length} encontrados`;
+
+                    cursos.forEach((curso) => {
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `
+                            <td>${curso.id}</td>
+                            <td>${curso.curso}</td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-outline-success me-1" onclick="editarCurso(${curso.id}, '${curso.curso.replace(/'/g, "\\'")}')">
+                                <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="confirmarExclusao(${curso.id})">
+                                <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        `;
+                        tabela.appendChild(tr);
+                    });
+                })
+                .catch((err) => {
+                    console.error(err);
+                    alert("Erro ao carregar cursos.");
+                });
+        }
+
+        // Função para abrir modal de confirmação de exclusão
+        function confirmarExclusao(id) {
+            cursoIdParaExcluir = id;
+            const modal = new bootstrap.Modal(document.getElementById('confirmarExclusaoModal'));
+
+            // Configurar o botão de exclusão
+            document.getElementById('btnConfirmarExclusao').onclick = function () {
+                excluirCurso(cursoIdParaExcluir);
+                modal.hide();
+            };
+
+            modal.show();
+        }
+
+        // Função para excluir curso
+        function excluirCurso(id) {
+            fetch(`http://localhost:3000/excluir_curso/${id}`, {
+                method: "DELETE",
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.mensagem) {
+                        mostrarAlertaCurso(data.mensagem, 'success'); 
+                        carregarCursos();
+                    } else if (data.erro) {
+                        mostrarAlertaCurso(data.erro); 
+                    }
+                })
+                .catch((err) => {
+                    console.error(err);
+                    mostrarAlertaCurso("Erro ao excluir curso.");
+                });
+        }
+
+
+        function mostrarAlertaCurso(mensagem, tipo = 'danger') {
+            const alerta = document.getElementById('alertaCurso');
+            alerta.textContent = mensagem;
+            alerta.className = `alert alert-${tipo}`;
+            alerta.classList.remove('d-none');
+
+            setTimeout(() => {
+                alerta.classList.add('d-none');
+            }, 5000);
+        }
+
+        function editarCurso(id, nome) {
+            document.getElementById('editarCursoId').value = id;
+            document.getElementById('editarNomeCurso').value = nome;
+
+            const modal = new bootstrap.Modal(document.getElementById('editarCursoModal'));
+            modal.show();
+        }
+
+        // Salvar alterações do curso
+        document.getElementById('btnSalvarCursoEditado').addEventListener('click', function () {
+            const id = document.getElementById('editarCursoId').value;
+            const nome = document.getElementById('editarNomeCurso').value.trim();
+
+            if (!nome) {
+                alert('O nome do curso é obrigatório.');
+                return;
+            }
+
+            fetch("http://localhost:3000/editar_curso", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, curso: nome })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.mensagem) {
+                        alert(data.mensagem);
+                        bootstrap.Modal.getInstance(document.getElementById('editarCursoModal')).hide();
+                        carregarCursos();
+                    } else {
+                        alert(data.erro || 'Erro ao editar curso.');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Erro ao editar curso.');
+                });
+        });
+
+    </script>
+</body>
+
+</html>

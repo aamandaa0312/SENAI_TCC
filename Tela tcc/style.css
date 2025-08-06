@@ -1,0 +1,151 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar {
+    flex-shrink: 0;
+}
+
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-container {
+    flex-shrink: 0;
+    height: 50px;
+   
+}
+
+
+.top-red-bar {
+    background-color: #FF0000;
+    height: 18px;
+}
+
+
+.navbar {
+    background-color: white;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1.5px solid #E30613;
+}
+
+.navbar-toggler {
+    border: none;
+}
+
+
+
+.navbar-nav {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin-left: 20px;
+}
+
+.navbar-nav .nav-link {
+    position: relative;
+    padding-bottom: 5px;
+    transition: color 0.3s ease-in-out;
+}
+
+.navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+    height: 2px;
+    background-color: black;
+}
+
+.navbar-nav .nav-link:hover {
+    color: red !important;
+}
+
+.navbar-brand img {
+    height: 38px;
+    transition: filter 0.3s ease-in-out;
+}
+
+
+
+.login-container {
+
+
+    background: #e9e8e8;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+
+
+}
+
+
+
+.login-container p {
+
+    color: #0f0f0f;
+
+}
+
+.form-control {
+    transition: border 0.3s ease-in-out;
+}
+
+
+.forgot-password {
+
+    text-decoration: none;
+    color: red;
+}
+
+.forgot-password::after {
+    content: "";
+    display: block;
+
+    height: 2px;
+    background-color: red;
+    margin-top: 2px;
+}
+
+
+.btn-login {
+    background-color: red;
+
+}
+
+.btn-login:hover {
+    background-color: #b42a2a;
+}
+
+.footer-container {
+
+
+
+    margin-top: auto;
+}
+
+.barra {
+    background-color: #FF0000;
+    height: 30px;
+
+}
+
+
+.main-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
