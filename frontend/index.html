@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Leaflet CSS -->
+     <link rel="icon" href="https://proeducador.sp.senai.br/site/icons/logo-small.png">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     
     <style>
@@ -356,11 +357,20 @@
         </div>
     </footer>
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Inicializa o carrossel
+            var myCarousel = document.querySelector('#myCarousel');
+            var carousel = new bootstrap.Carousel(myCarousel, {
+                interval: 3000, // Intervalo de 5 segundos entre os slides
+                wrap: true // Permite que o carrossel volte ao início após o último slide
+            });
+        });
+
         function logout() {
             localStorage.removeItem('token');
             localStorage.removeItem('usuario');
             // Redireciona para a tela inicial após o logout
-            window.location.href = 'TelaPrincipal.html';
+            window.location.href = 'index.html';
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -498,4 +508,3 @@
 
 
 </html>
-
