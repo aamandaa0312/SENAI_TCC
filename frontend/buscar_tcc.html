@@ -268,7 +268,7 @@
           <li class="nav-item"><a class="nav-link active" href="buscar_tcc.html">TCCS</a></li>
           <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
         </ul>
-        <form class="d-flex m-3" method="get" action="http://localhost:3000/buscar_tccs">
+        <form class="d-flex m-3" method="get" action="https://backend-tcc-bwya.onrender.com/buscar_tccs">
           <input class="form-control me-2" type="search" name="query" placeholder="Pesquisar">
           <button class="btn btn-outline-danger" type="submit">Buscar</button>
         </form>
@@ -365,7 +365,7 @@
             <div class="mt-auto">
               <small class="text-muted d-block mb-2">Curso: ${cursosMap[tcc.curso_id] || tcc.curso || 'Não especificado'}</small>
               ${tcc.arquivo ?
-          `<a href="http://localhost:3000/visualizar_tcc/${tcc.arquivo}" class="btn btn-senai btn-sm w-100" target="_blank">
+          `<a href="https://backend-tcc-bwya.onrender.com/visualizar_tcc/${tcc.arquivo}" class="btn btn-senai btn-sm w-100" target="_blank">
                   <i class="bi bi-eye"></i> Visualizar TCC
                 </a>` :
           '<span class="badge bg-secondary">Arquivo não disponível</span>'
@@ -380,7 +380,7 @@
     function carregarTCCs() {
       const cursoId = document.getElementById('curso').value;
       const ano = document.getElementById('ano').value;
-      let url = 'http://localhost:3000/tccs?status=aprovado';
+      let url = 'https://backend-tcc-bwya.onrender.com/tccs?status=aprovado';
       if (cursoId) url += `&curso_id=${cursoId}`;
       if (ano) url += `&ano=${ano}`;
 
@@ -471,7 +471,7 @@
         anoSelect.appendChild(option);
       }
 
-      fetch('http://localhost:3000/listar_cursos')
+      fetch('https://backend-tcc-bwya.onrender.com/listar_cursos')
         .then(response => response.json())
         .then(cursos => {
           const selectCurso = document.getElementById('curso');
