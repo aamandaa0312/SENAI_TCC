@@ -12,7 +12,7 @@
     <!-- Leaflet CSS -->
      <link rel="icon" href="https://proeducador.sp.senai.br/site/icons/logo-small.png">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-
+    
     <style>
         :root {
         --primary: #8b2e2e;       /* Verde Floresta */
@@ -33,7 +33,7 @@
             background-color: #ff1900;
             color: #fff;
         }
-
+        
         .top-bar .redes-sociais a {
             color: #fff;
             margin-right: 10px;
@@ -102,7 +102,7 @@
     bottom: 30px;
     right: 30px;
     z-index: 1000;
-
+    
 }
 
 .chatbot-btn {
@@ -182,7 +182,7 @@
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: white;
     border-radius: 18px 18px 4px 18px;
-
+    
 }
 .chat-input-container {
     display: flex;
@@ -412,14 +412,14 @@
                 }
             }
         });
-
+   
         // ========== CHATBOT ========== //
     const chatButton = document.getElementById('chatbot-button');
     const chatWindow = document.getElementById('chat-window');
     const chatLog = document.getElementById('chat-log');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
-
+  
     // Funções auxiliares
     function addMessage(sender, text) {
       const messageDiv = document.createElement('div');
@@ -428,7 +428,7 @@
       chatLog.appendChild(messageDiv);
       chatLog.scrollTop = chatLog.scrollHeight;
     }
-
+  
     function showTypingIndicator() {
       const typingDiv = document.createElement('div');
       typingDiv.id = 'typing-indicator';
@@ -443,12 +443,12 @@
       chatLog.appendChild(typingDiv);
       chatLog.scrollTop = chatLog.scrollHeight;
     }
-
+  
     function hideTypingIndicator() {
       const typingDiv = document.getElementById('typing-indicator');
       if (typingDiv) typingDiv.remove();
     }
-
+  
     // Event Listeners
     chatButton.addEventListener('click', () => {
       chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
@@ -456,18 +456,17 @@
         userInput.focus();
       }
     });
-
+  
     async function sendMessage() {
       const message = userInput.value.trim();
       if (!message) return;
-
+      
       addMessage('user', message);
       userInput.value = '';
       showTypingIndicator();
-
+      
       try {
         const response = await fetch('http://localhost:3000/api/chat', {
-        const response = await fetch('https://backend-tcc-bwya.onrender.com/api/chat', {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json',
@@ -475,11 +474,11 @@
           },
           body: JSON.stringify({ message })
         });
-
+        
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-
+        
         const data = await response.json();
         addMessage('bot', data.response);
       } catch (error) {
@@ -489,12 +488,12 @@
         hideTypingIndicator();
       }
     }
-
+  
     sendButton.addEventListener('click', sendMessage);
     userInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') sendMessage();
     });
-
+  
     // Delegation para botões dinâmicos
     document.addEventListener('click', (e) => {
       if (e.target.classList.contains('btn-chatbot')) {
