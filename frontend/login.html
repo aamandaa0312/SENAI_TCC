@@ -119,11 +119,16 @@
                 const dados = await resposta.json();
 
                 if (resposta.ok) {
-                    alert(dados.mensagem);
-                    window.location.href = "index.html";
+    // Salvar token e usuário no localStorage
+                    localStorage.setItem('token', dados.token);
+                    localStorage.setItem('usuario', JSON.stringify(dados.usuario));
+
+                     alert(dados.mensagem);
+                     window.location.href = "index.html"; // Redireciona após salvar
                 } else {
-                    alert(dados.erro || "Falha no login.");
+                     alert(dados.erro || "Falha no login.");
                 }
+
             } catch (erro) {
                 console.error(erro);
                 alert("Erro ao conectar com o servidor.");
@@ -223,4 +228,3 @@
 
 
 </html>
-
