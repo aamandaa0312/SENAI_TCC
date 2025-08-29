@@ -373,15 +373,14 @@
             window.location.href = 'index.html';
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // Encontra o contêiner de autenticação
-            const authContainer = document.getElementById('auth-container');
-
-            // Só executa se o contêiner existir nesta página
-            if (authContainer) {
-                const token = localStorage.getItem('token');
-                const usuario = JSON.parse(localStorage.getItem('usuario'));
-
+            document.addEventListener('DOMContentLoaded', () => {
+        const authContainer = document.getElementById('auth-container');
+        if (authContainer) {
+            const token = localStorage.getItem('token');
+            const usuario = JSON.parse(localStorage.getItem('usuario'));
+            console.log('Token recuperado:', token);
+            console.log('Usuário recuperado:', usuario);
+            
                 if (token && usuario) {
                     // Usuário logado:
                     authContainer.innerHTML = `
@@ -508,4 +507,5 @@
 
 
 </html>
+
 
