@@ -2,93 +2,508 @@
 <html lang="pt-BR" data-bs-theme="auto">
 
 <head>
+    <!-- Conteúdo da tag <head> do index.html original -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SENAI TCCs</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-     <link rel="icon" href="https://proeducador.sp.senai.br/site/icons/logo-small.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet CSS -->
+     <link rel="icon" href="https://proeducador.sp.senai.br/site/icons/logo-small.png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    
     <style>
-        .carousel-item img {
-            width: 100%;
-            height: 500px;
-            object-fit: cover;
-        }
+        /* Estilos do index.html original */
+        :root {
+    /* Variáveis do index1.html (cores mais modernas e definidas) */
+    --primary: #ff1900; /* Cor principal vermelha SENAI */
+    --primary-gradient: linear-gradient(135deg, #ff1900, #cc1400);
+    --secondary: #2D3748;
+    --accent: #FFD166;
+    --light-bg: #F8FAFC;
+    --dark-text: #2D3748;
+    --light-text: #FFFFFF;
+    --card-bg: #FFFFFF;
+    --footer-bg: #1A202C;
 
-        .top-bar {
-            background-color: #ff1900;
-            color: #fff;
-        }
+    /* Variáveis do index.html original (mantidas para compatibilidade) */
+    --primary-dark: #6f221f;
+    --light: #F8F9FA;
+    --dark: #212529;
+    --gray: #6C757D;
+}
 
-        .top-bar .redes-sociais a {
-            color: #fff;
-            margin-right: 10px;
-        }
+/* Reset e corpo */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--light-bg);
+    color: var(--dark-text);
+    overflow-x: hidden;
+}
 
+/* Top Bar */
+.top-bar {
+    background-color: var(--primary);
+    color: var(--light-text);
+    width: 100%;
+    padding: 0.25rem 0;
+}
 
-        section {
-            padding: 30px 0;
-        }
+.top-bar .redes-sociais a {
+    color: var(--light-text);
+    margin-right: 15px;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
 
-        section img {
-            width: 90%;
-            max-height: 300px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
+/* Navbar */
+.navbar {
+    background: var(--card-bg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 12px 0;
+}
 
-        .back-to-top {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 1rem;
-            background-color: #ff0000;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
-            text-align: center;
-        }
+.navbar-brand img {
+    transition: transform 0.3s;
+}
 
-        .back-to-top:hover {
-            background-color: #9b0606;
-        }
+.nav-link {
+    font-weight: 500;
+    color: var(--dark-text) !important;
+    position: relative;
+    margin: 0 10px;
+    transition: color 0.3s;
+}
 
-        .section-divider {
-            margin: 20px auto;
-            border-top: 2px solid #ccc;
-            width: 80%;
-        }
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-gradient);
+    transition: width 0.3s;
+}
 
-        .carousel {
-            margin-bottom: 10px;
-        }
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
 
-        .top-bar {
-            background-color: #ff1900;
-            color: #fff;
-            width: 100%;
-        }
+.btn-cadastro {
+    background: var(--primary-gradient);
+    border: none;
+    border-radius: 30px;
+    padding: 10px 25px;
+    font-weight: 600;
+    color: white;
+    transition: background 0.3s;
+}
 
-        .redes-sociais a {
-            color: #fff;
-            margin-right: 15px;
-            /* Espaço entre os ícones */
-            font-size: 1.2rem;
-            /* Tamanho dos ícones */
-        }
+.btn-cadastro:hover {
+    background: #ff1900;
+}
 
-        .redes-sociais {
-            padding: 5px 0;
-            /* Espaçamento vertical */
-        }
+/* Carrossel index1.html */
+#mainCarousel {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    margin: 20px auto;
+}
+
+#mainCarousel .carousel-item img {
+    height: 500px;
+    object-fit: cover;
+    filter: brightness(0.8);
+}
+
+#mainCarousel .carousel-caption {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    padding: 20px;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    color: white;
+}
+
+/* Seções de conteúdo */
+.section-title {
+    position: relative;
+    margin-bottom: 30px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--primary);
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: var(--primary-gradient);
+    margin: 15px auto;
+    border-radius: 2px;
+}
+
+.content-section {
+    padding: 60px 0;
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    margin: 30px 0;
+}
+
+.content-section img {
+    border-radius: 12px;
+    width: 100%;
+    max-height: 350px;
+    object-fit: cover;
+    box-shadow: 0 8px 20px rgba(172, 22, 22, 0.12);
+}
+
+/* Botões */
+.btn-primary {
+    background: var(--primary-gradient);
+    border: none;
+    border-radius: 30px;
+    padding: 10px 25px;
+    font-weight: 600;
+    color: white;
+    transition: background 0.3s;
+}
+
+.btn-primary:hover {
+    background: #ff1900;
+}
+
+.back-to-top {
+    display: inline-block;
+    padding: 12px 25px;
+    background: var(--primary-gradient);
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    margin: 30px 0;
+    font-weight: 600;
+    box-shadow: 0 5px 15px rgba(255, 58, 45, 0.3);
+    transition: background 0.3s;
+}
+
+.back-to-top:hover {
+    background: #ff1900;
+}
+
+/* Destaques (Stats) */
+.stats-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin: 40px 0;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 20px;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    font-weight: 600;
+    color: var(--dark-text);
+}
+
+/* Mapa */
+.map-section {
+    padding: 60px 0;
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    margin: 40px 0;
+    position: relative;
+}
+
+#map {
+    height: 450px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    z-index: 1;
+}
+
+.map-overlay {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 2;
+    max-width: 300px;
+}
+
+.location-btn {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.location-btn:hover {
+    background: #ff1900;
+}
+
+/* Footer */
+footer {
+    background: var(--footer-bg);
+    color: var(--light-text);
+    padding: 40px 0 20px;
+}
+
+footer h5 {
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+footer p, footer a {
+    color: var(--light-text);
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+.social-icons a {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+    color: white;
+    margin: 0 8px;
+    transition: background 0.3s;
+}
+
+.social-icons a:hover {
+    background: var(--primary-gradient);
+}
+
+/* Acessibilidade */
+.accessibility-widget {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    z-index: 1000;
+    background: white;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.accessibility-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--dark-text);
+    font-size: 1.1rem;
+    transition: background 0.3s;
+}
+
+.accessibility-btn:hover {
+    background: var(--primary-gradient);
+    color: white;
+}
+
+/* Chatbot (estilos do index1.html, sobrescrevendo o index.html original) */
+.chatbot {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+}
+
+.chat-window {
+    width: 350px;
+    height: 450px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: height 0.3s;
+}
+
+.chat-header {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-log {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+    background: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.chat-input-container {
+    display: flex;
+    padding: 1rem;
+    background: white;
+    border-top: 1px solid #e9ecef;
+    gap: 10px;
+}
+
+.chat-input {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    outline: none;
+}
+
+.chat-send-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.chat-send-btn:hover {
+    background: #cc1400;
+}
+
+.message {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    line-height: 1.5;
+}
+
+.message-bot {
+    background: white;
+    color: var(--dark-text);
+    border-radius: 18px 18px 18px 4px;
+    align-self: flex-start;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.03);
+}
+
+.message-user {
+    background: var(--primary-gradient);
+    color: white;
+    border-radius: 18px 18px 4px 18px;
+    align-self: flex-end;
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animated-section {
+    animation: fadeIn 0.8s ease-out;
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+
+.visible {
+    opacity: 1;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .carousel-item img {
+        height: 350px;
+    }
+    .content-section {
+        padding: 30px 15px;
+    }
+    .accessibility-widget {
+        top: auto;
+        bottom: 80px;
+        transform: none;
+        flex-direction: row;
+        border-radius: 8px 8px 0 0;
+        width: 100%;
+        justify-content: center;
+    }
+    .chat-window {
+        width: 300px;
+        height: 400px;
+    }
+    #map {
+        height: 350px;
+    }
+    .map-overlay {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin-bottom: 15px;
+        max-width: 100%;
+    }
+}
+
     </style>
 </head>
 
 <body>
+    <!-- Widget de Acessibilidade do index1.html -->
+    <div class="accessibility-widget">
+        <button class="accessibility-btn" id="font-increase" title="Aumentar texto">
+            <i class="fas fa-text-height"></i>
+        </button>
+        <button class="accessibility-btn" id="font-decrease" title="Diminuir texto">
+            <i class="fas fa-text-height" style="font-size: 0.9rem;"></i>
+        </button>
+    </div>
+
     <header>
-        <!-- Top Bar Modificada -->
+        <!-- Top Bar do index.html original -->
         <div class="top-bar py-1" style="background-color: #ff1900;">
             <div class="container-fluid d-flex justify-content-between align-items-center">
                 <div class="redes-sociais ms-3">
@@ -96,268 +511,403 @@
                     <a href="https://www.instagram.com/senai.sp/"><i class="bi bi-instagram"></i></a>
                     <a href="https://www.youtube.com/channel/UCzqd0VpWU_w4BKwmSvFdieQ"><i class="bi bi-youtube"></i></a>
                 </div>
-                <div id="auth-container">
+                <div id="auth-container" >
                 </div>
             </div>
         </div>
-        <!-- Navbar -->
-
+        <!-- Navbar do index.html original -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link active" href="TelaPrincipal.html">Início</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Início</a></li>
                     <li class="nav-item"><a class="nav-link" href="buscar_tcc.html">TCCS</a></li>
                     <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
                 </ul>
-
-
                 <a class="navbar-brand" href="#">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/SENAI_S%C3%A3o_Paulo_logo.png" alt="SENAI" height="40">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/SENAI_S%C3%A3o_Paulo_logo.png" alt="SENAI"
+                    height="40" />
                 </a>
             </div>
         </nav>
     </header>
 
-    <main>
-        <!-- Carrossel -->
-        <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+    <!-- Conteúdo principal (main) do index1.html -->
+    <main class="container my-5">
+        <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-indicators">
-                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"
-                    aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
+                <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
             </div>
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="https://media.licdn.com/dms/image/v2/C4D1BAQGda9UodPC36A/company-background_10000/company-background_10000/0/1613485135605/senaidiadema_cover?e=2147483647&v=beta&t=vhISlkVS4zWCgLa_4OY697UqZ5Wc1OKaVx-DuUarQ3E"
-                        class="d-block w-100" alt="Imagem do SENAI 1">
+                    <img src="https://media.licdn.com/dms/image/v2/C4D1BAQGda9UodPC36A/company-background_10000/company-background_10000/0/1613485135605/senaidiadema_cover?e=2147483647&v=beta&t=vhISlkVS4zWCgLa_4OY697UqZ5Wc1OKaVx-DuUarQ3E" class="d-block w-100" alt="Ambiente de aprendizado SENAI">
+                    <div class="carousel-caption">
+                        <h2>Conheça os Trabalhos de Conclusão de Curso</h2>
+                        <p>Explore projetos inovadores desenvolvidos por alunos do SENAI</p>
+                    </div>
                 </div>
                 <div class="carousel-item">
-                    <img src="https://i.makeagif.com/media/7-05-2021/3VMxJI.gif" class="d-block w-100"
-                        alt="Imagem do SENAI 2">
+                    <img src="https://i.makeagif.com/media/7-05-2021/3VMxJI.gif" class="d-block w-100" alt="Tecnologia e inovação">
+                    <div class="carousel-caption">
+                        <h2>Tecnologia e Inovação</h2>
+                        <p>Projetos que unem conhecimento técnico e criatividade</p>
+                    </div>
                 </div>
                 <div class="carousel-item">
-                    <img src="https://media.licdn.com/dms/image/v2/D4D1BAQFknofuOJsJ-Q/company-background_10000/company-background_10000/0/1658493207949/senai_solues_digitais_cover?e=2147483647&v=beta&t=tm1oWeWoD7iY5KGSVRm32L-gDLeWCZFFiDMN_F_kQeA"
-                        class="d-block w-100" alt="Imagem do SENAI 3">
+                    <img src="https://media.licdn.com/dms/image/v2/D4D1BAQFknofuOJsJ-Q/company-background_10000/company-background_10000/0/1658493207949/senai_solues_digitais_cover?e=2147483647&v=beta&t=tm1oWeWoD7iY5KGSVRm32L-gDLeWCZFFiDMN_F_kQeA" class="d-block w-100" alt="Educação profissional">
+                    <div class="carousel-caption">
+                        <h2>Educação que Transforma</h2>
+                        <p>Preparando profissionais para os desafios da indústria</p>
+                    </div>
+               
                 </div>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Anterior</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Próximo</span>
             </button>
         </div>
 
-        <hr class="section-divider">
-
-
-        <!-- Seção 1 -->
-        <section class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <h3>Infraestrutura de Produção</h3>
-                    <p>Utilizamos tecnologias modernas como MySQL para o gerenciamento eficiente do banco de dados e
-                        Express.js no backend, proporcionando uma experiência ágil, estável e segura aos usuários.</p>
-                </div>
-                <div class="col-md-6">
-                    <img src="https://senaies.com.br/wp-content/uploads/2019/06/IMG_1219.jpg" alt="Produção">
-                </div>
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">TCCs Publicados</div>
             </div>
-        </section>
-
-        <hr class="section-divider">
-
-        <!-- Seção 2 -->
-        <section class="container">
-            <div class="row align-items-center flex-md-row-reverse">
-                <div class="col-md-6">
-                    <h3>Detalhes do Projeto</h3>
-                    <p>Nosso site permite que alunos e professores explorem TCCs de diferentes cursos, buscando
-                        por temas específicos e acessando os conteúdos de maneira prática. O sistema conta com um
-                        mecanismo
-                        de aprovação para garantir a qualidade dos trabalhos publicados.</p>
-                </div>
-                <div class="col-md-6">
-                    <img src="https://i0.wp.com/www2.tatui.sp.gov.br/wp-content/uploads/2022/04/ELETRICISTA-INSTALADOR.png?fit=1109%2C753&ssl=1"
-                        alt="Projeto">
-                </div>
+            <div class="stat-item">
+                <div class="stat-number">20+</div>
+                <div class="stat-label">Cursos Disponíveis</div>
             </div>
-        </section>
-
-        <hr class="section-divider">
-
-        <!-- Seção 3 -->
-        <section class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <h3>Quem Somos</h3>
-                    <p>Somos um grupo de estudantes do SENAI desenvolvendo um projeto inovador para organizar e
-                        exibir todos os TCCs já realizados na unidade. Nosso objetivo é facilitar o acesso aos trabalhos
-                        acadêmicos, proporcionando uma plataforma intuitiva e organizada para alunos e professores.</p>
-                </div>
-                <div class="col-md-6">
-                    <img src="https://www.sesirs.org.br/sites/default/files/styles/2x1_lg/public/fc-carousel/microsoftteams-image_10_0.png?itok=rIwxnI7h&c=52f74b64ad343ed6dcc4094d709068a0"
-                        alt="Sobre Nós">
-                </div>
+            <div class="stat-item">
+                <div class="stat-number">95%</div>
+                <div class="stat-label">Aprovação</div>
             </div>
-        </section>
-
-        <div class="text-center">
-            <a href="#top" class="back-to-top">Voltar para o topo</a>
         </div>
 
-        <hr class="section-divider">
+        <section class="content-section">
+            <div class="container">
+                <h2 class="section-title">Infraestrutura de Produção</h2>
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="lead">Utilizamos tecnologias modernas como MySQL para o gerenciamento eficiente do banco de dados e Express.js no backend, proporcionando uma experiência ágil, estável e segura aos usuários.</p>
+                        <p>Nossa plataforma foi desenvolvida com as melhores práticas, garantindo performance e confiabilidade.</p>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <img src="https://senaies.com.br/wp-content/uploads/2019/06/IMG_1219.jpg" alt="Infraestrutura tecnológica" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <h2 class="section-title">Detalhes do Projeto</h2>
+                <div class="row align-items-center flex-md-row-reverse">
+                    <div class="col-md-6">
+                        <p class="lead">Nosso site permite que alunos e professores explorem TCCs de diferentes cursos, buscando por temas específicos e acessando os conteúdos de maneira prática.</p>
+                        <p>O sistema conta com um mecanismo de aprovação para garantir a qualidade dos trabalhos publicados e ferramentas de busca avançada.</p>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <img src="https://i0.wp.com/www2.tatui.sp.gov.br/wp-content/uploads/2022/04/ELETRICISTA-INSTALADOR.png?fit=1109%2C753&ssl=1" alt="Detalhes do projeto" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="map-section">
+            <div class="container">
+                <h2 class="section-title">Encontre a Escola SENAI Mais Próxima</h2>
+                <div class="row">
+                    <div class="col-12 position-relative">
+                        <div class="map-overlay">
+                            <h5>Localize uma unidade</h5>
+                            <p>Clique no botão abaixo para encontrar a escola mais próxima de você.</p>
+                            <button id="find-school" class="location-btn">
+                                <i class="fas fa-map-marker-alt me-2"></i> Encontrar
+                            </button>
+                        </div>
+                        <div id="map"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <h2 class="section-title">Quem Somos</h2>
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="lead">Somos um grupo de estudantes do SENAI desenvolvendo um projeto inovador para organizar e exibir todos os TCCs já realizados na unidade.</p>
+                        <p>Nosso objetivo é facilitar o acesso aos trabalhos acadêmicos, proporcionando uma plataforma intuitiva para alunos e professores.</p>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <img src="https://pess.sesisenaispedu.org.br/Imagens/fundo/sesi-senai-fundo.jpg" alt="Equipe SENAI" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="text-center my-5">
+            <a href="#" class="back-to-top">Voltar para o topo</a>
+        </div>
     </main>
 
-    <footer class="bg-dark text-light py-3">
-        <div class="container text-center">
-            <p>&copy; 2025 SENAI - Todos os direitos reservados</p>
+    <!-- Footer do index1.html -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <h5>SENAI TCCs</h5>
+                    <p>Plataforma dedicada à divulgação dos Trabalhos de Conclusão de Curso dos alunos do SENAI.</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Links Rápidos</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light text-decoration-none">Início</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">TCCs</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Login</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Conecte-se</h5>
+                    <div class="social-icons">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-youtube"></i></a>
+                        <a href="#"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Desenvolvedores</h5>
+                    <ul class="list-unstyled">
+                        <li>Adriana Rodrigues de Araujo</li>
+                        <li>Amanda Rodrigues de Araujo</li>
+                        <li>João Pedro Cruz Rocha</li>
+                        <li>Ricardo Oliveira Fluminhan</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="bg-light">
+            <div class="text-center py-3">
+                <p>&copy; 2025 SENAI-SP - Todos os direitos reservados</p>
+            </div>
         </div>
     </footer>
+    
+
+    <!-- Chatbot do index1.html -->
+    <div class="chatbot">
+        <div id="chat-window" class="chat-window">
+            <div class="chat-header">
+                <h6 class="mb-0">Assistente Virtual</h6>
+                <button id="minimize-chat" class="btn btn-sm text-white">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+            <div id="chat-log" class="chat-log">
+                <div class="message message-bot">
+                    Olá! Sou o assistente virtual do SENAI. Como posso ajudar?
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="user-input" class="chat-input" placeholder="Digite sua mensagem...">
+                <button id="send-button" class="chat-send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VLibras do index1.html -->
+    <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
     <script>
+        // Função de Logout (do index.html original)
         function logout() {
             localStorage.removeItem('token');
             localStorage.removeItem('usuario');
-            // Redireciona para a tela inicial após o logout
-            window.location.href = 'TelaPrincipal.html';
+            window.location.href = 'index.html'; // Alterado para index.html para consistência
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // Encontra o contêiner de autenticação
+        document.addEventListener("DOMContentLoaded", function() {
+            // --- LÓGICA DE AUTENTICAÇÃO (DO ARQUIVO ORIGINAL) ---
             const authContainer = document.getElementById('auth-container');
-
-            // Só executa se o contêiner existir nesta página
             if (authContainer) {
                 const token = localStorage.getItem('token');
                 const usuario = JSON.parse(localStorage.getItem('usuario'));
 
                 if (token && usuario) {
-                    // Usuário logado:
+                    // Usuário logado
                     authContainer.innerHTML = `
-                    <div class="dropdown me-3">
-                        <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="navbarDropdownAuth" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
-                            <span class="ms-2 d-none d-lg-block">${usuario.nome}</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAuth">
-                            <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Meu Perfil</a></li>
-                            <li><a class="dropdown-item" href="#">Meus TCCs Salvos</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
-                        </ul>
-                    </div>
-                `;
+                        <div class="dropdown me-3">
+                            <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="navbarDropdownAuth" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+                                <span class="ms-2 d-none d-lg-block">${usuario.nome}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAuth">
+                                <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">Meu Perfil</a></li>
+                                <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
+                            </ul>
+                        </div>
+                    `;
                 } else {
-                    // Usuário não logado:
+                    // Usuário não logado
                     authContainer.innerHTML = `
-                    <div class="me-3">
-                        <a href="login.html" class="nav-link text-white">
-                            <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
-                        </a>
-                    </div>
-                `;
+                        <div class="me-3">
+                            <a href="login.html" class="nav-link text-white">
+                                <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+                            </a>
+                        </div>
+                    `;
                 }
             }
+            
+            // --- INICIALIZAÇÃO DO VLIBRAS (do index1.html) ---
+            if (typeof VLibras !== 'undefined') {
+                new window.VLibras.Widget('https://vlibras.gov.br/app');
+            }
+
+            // --- CONTROLE DE ACESSIBILIDADE (TAMANHO DA FONTE) (do index1.html) ---
+            const fontIncreaseBtn = document.getElementById('font-increase');
+            const fontDecreaseBtn = document.getElementById('font-decrease');
+            if (fontIncreaseBtn && fontDecreaseBtn) { // Verifica se os botões existem
+                fontIncreaseBtn.addEventListener('click', () => {
+                    const currentSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+                    document.documentElement.style.fontSize = (currentSize + 1) + 'px';
+                });
+                fontDecreaseBtn.addEventListener('click', () => {
+                    const currentSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+                    document.documentElement.style.fontSize = (currentSize - 1) + 'px';
+                });
+            }
+
+            // --- ANIMAÇÃO DE SCROLL PARA AS SEÇÕES (do index1.html) ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        entry.target.style.animation = 'fadeIn 0.8s ease-out forwards';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.content-section, .map-section').forEach(section => {
+                observer.observe(section);
+            });
+            
+            // --- FUNCIONALIDADE DO CHATBOT (do index1.html) ---
+            const chatInput = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-button');
+            const chatLog = document.getElementById('chat-log');
+            const minimizeButton = document.getElementById('minimize-chat');
+            const chatWindow = document.getElementById('chat-window');
+
+            // Verifica se os elementos do chatbot existem antes de adicionar event listeners
+            if (chatInput && sendButton && chatLog && minimizeButton && chatWindow) {
+                const responses = {
+                    'ola': 'Olá! Como posso ajudar?', 'oi': 'Oi! Em que posso ser útil?',
+                    'tcc': 'Os TCCs estão na página "TCCs". Você pode buscar por curso, ano ou palavra-chave.',
+                    'login': 'Para fazer login, clique em "Login" no menu. Se não tem uma conta, pode se cadastrar.',
+                    'cadastr': 'Para se cadastrar, clique em "Cadastre-se" no menu e preencha o formulário.',
+                    'curso': 'O SENAI oferece cursos em áreas como Mecânica, Eletrônica, Informática, e mais.',
+                    'obrigad': 'Por nada! Se tiver mais alguma dúvida, é só perguntar.'
+                };
+
+                function addMessage(text, isUser = false) {
+                    const msgDiv = document.createElement('div');
+                    msgDiv.className = `message ${isUser ? 'message-user' : 'message-bot'}`;
+                    msgDiv.textContent = text;
+                    chatLog.appendChild(msgDiv);
+                    chatLog.scrollTop = chatLog.scrollHeight;
+                }
+
+                function processMessage() {
+                    const message = chatInput.value.trim().toLowerCase();
+                    if (message === '') return;
+                    addMessage(message, true);
+                    chatInput.value = '';
+                    setTimeout(() => {
+                        let response = 'Desculpe, não entendi. Pode reformular a pergunta?';
+                        for (const [key, value] of Object.entries(responses)) {
+                            if (message.includes(key)) {
+                                response = value;
+                                break;
+                            }
+                        }
+                        addMessage(response);
+                    }, 1000);
+                }
+
+                sendButton.addEventListener('click', processMessage);
+                chatInput.addEventListener('keypress', (e) => e.key === 'Enter' && processMessage());
+                minimizeButton.addEventListener('click', () => {
+                    const isMinimized = chatWindow.style.height === '65px';
+                    chatWindow.style.height = isMinimized ? '450px' : '65px';
+                    minimizeButton.innerHTML = isMinimized ? '<i class="fas fa-minus"></i>' : '<i class="fas fa-plus"></i>';
+                });
+            }
+
+            // --- LÓGICA DO MAPA (LEAFLET.JS) (do index1.html) ---
+            const mapElement = document.getElementById('map');
+            if (mapElement) { // Verifica se o elemento do mapa existe
+                const map = L.map('map').setView([-23.5505, -46.6333], 10);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }).addTo(map);
+
+                const senaiSchools = [
+                    { name: "SENAI São Paulo", lat: -23.5505, lng: -46.6333 },
+                    { name: "SENAI Santo Amaro", lat: -23.6500, lng: -46.7200 },
+                    { name: "SENAI Itaquera", lat: -23.5400, lng: -46.4700 },
+                    { name: "SENAI Osasco", lat: -23.5320, lng: -46.7920 },
+                    { name: "SENAI Guarulhos", lat: -23.4540, lng: -46.5340 }
+                ];
+                
+                const markers = senaiSchools.map(school => L.marker([school.lat, school.lng]).addTo(map).bindPopup(`<strong>${school.name}</strong>`));
+                const group = new L.featureGroup(markers);
+                map.fitBounds(group.getBounds().pad(0.1));
+
+                document.getElementById('find-school').addEventListener('click', () => {
+                    if ("geolocation" in navigator) {
+                        navigator.geolocation.getCurrentPosition(position => {
+                            const userLat = position.coords.latitude;
+                            const userLng = position.coords.longitude;
+                            L.marker([userLat, userLng]).addTo(map).bindPopup("<strong>Sua localização</strong>").openPopup();
+                            
+                            let closestSchool = null, minDistance = Infinity;
+                            senaiSchools.forEach(school => {
+                                const distance = map.distance([userLat, userLng], [school.lat, school.lng]);
+                                if (distance < minDistance) {
+                                    minDistance = distance;
+                                    closestSchool = school;
+                                }
+                            });
+                            
+                            map.setView([closestSchool.lat, closestSchool.lng], 13);
+                            markers.find(m => m.getLatLng().equals([closestSchool.lat, closestSchool.lng])).openPopup();
+                        }, () => alert("Não foi possível obter sua localização."));
+                    } else {
+                        alert("Geolocalização não é suportada pelo seu navegador.");
+                    }
+                });
+            }
         });
-         // ========== CHATBOT ========== //
-    const chatButton = document.getElementById('chatbot-button');
-    const chatWindow = document.getElementById('chat-window');
-    const chatLog = document.getElementById('chat-log');
-    const userInput = document.getElementById('user-input');
-    const sendButton = document.getElementById('send-button');
-  
-    // Funções auxiliares
-    function addMessage(sender, text) {
-      const messageDiv = document.createElement('div');
-      messageDiv.className = `chat-message ${sender}`;
-      messageDiv.innerHTML = `<div class="message-bubble">${text}</div>`;
-      chatLog.appendChild(messageDiv);
-      chatLog.scrollTop = chatLog.scrollHeight;
-    }
-  
-    function showTypingIndicator() {
-      const typingDiv = document.createElement('div');
-      typingDiv.id = 'typing-indicator';
-      typingDiv.className = 'chat-message bot';
-      typingDiv.innerHTML = `
-        <div class="message-bubble typing">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </div>
-      `;
-      chatLog.appendChild(typingDiv);
-      chatLog.scrollTop = chatLog.scrollHeight;
-    }
-  
-    function hideTypingIndicator() {
-      const typingDiv = document.getElementById('typing-indicator');
-      if (typingDiv) typingDiv.remove();
-    }
-  
-    // Event Listeners
-    chatButton.addEventListener('click', () => {
-      chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
-      if (chatWindow.style.display === 'flex') {
-        userInput.focus();
-      }
-    });
-  
-    async function sendMessage() {
-      const message = userInput.value.trim();
-      if (!message) return;
-      
-      addMessage('user', message);
-      userInput.value = '';
-      showTypingIndicator();
-      
-      try {
-        const response = await fetch('https://backend-tcc-bwya.onrender.com/api/chat', {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({ message })
-        });
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        addMessage('bot', data.response);
-      } catch (error) {
-        console.error("Erro na requisição:", error);
-        addMessage('bot', "Erro ao conectar com o servidor. Verifique se o servidor está rodando.");
-      } finally {
-        hideTypingIndicator();
-      }
-    }
-  
-    sendButton.addEventListener('click', sendMessage);
-    userInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendMessage();
-    });
-  
-    // Delegation para botões dinâmicos
-    document.addEventListener('click', (e) => {
-      if (e.target.classList.contains('btn-chatbot')) {
-        const local = e.target.getAttribute('data-local');
-        userInput.value = `Conte mais sobre ${local}`;
-        chatWindow.style.display = 'flex';
-        userInput.focus();
-      }
-    });
     </script>
 </body>
 
-
 </html>
-
-
