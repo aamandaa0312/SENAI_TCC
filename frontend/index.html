@@ -1,510 +1,698 @@
-<!doctype html>
-<html lang="pt-BR" data-bs-theme="auto">
+require('dotenv').config();
+const express = require('express');
+const { Pool } = require('pg'); // Importar Pool do 'pg'
+const crypto = require('crypto');
+const bcrypt = require('bcrypt');
+const bcryptjs = require('bcryptjs');
+const bodyParser = require('body-parser');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const cors = require('cors');
+const jwt = require ('jsonwebtoken');
 
-<head>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SENAI TCCs</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Leaflet CSS -->
-     <link rel="icon" href="https://proeducador.sp.senai.br/site/icons/logo-small.png">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    
-    <style>
-        :root {
-        --primary: #8b2e2e;       /* Verde Floresta */
-        --primary-dark: #6f221f;
-        --secondary: #6e3a3a;     /* Azul Petróleo */
-        --accent: #FFD166;        /* Amarelo */
-        --light: #F8F9FA;
-        --dark: #212529;
-        --gray: #6C757D;
-}
-        .carousel-item img {
-            width: 100%;
-            height: 500px;
-            object-fit: cover;
+const porta = process.env.PORT || 3000;
+const app = express();
+app.use(express.json());
+
+const JWT_SECRET = 'seu_segredo_jwt';
+const SALT_ROUNDS = 10; // Custo do hash para bcrypt
+
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    const mime = file.mimetype;
+
+    if (ext === '.pdf' && mime === 'application/pdf') {
+        cb(null, true);
+    } else {
+        cb(new Error('Apenas arquivos PDF são permitidos.'), false);
+    }
+};
+
+const upload = multer({
+    storage: storage,
+    fileFilter: fileFilter,
+    limits: {
+        fileSize: 1024 * 1024 * 30 // Limite de 30MB
+    }
+});
+
+// Configuração do Pool de Conexões PostgreSQL
+const pool = new Pool({
+    user: process.env.DB_USER || "db_tcc_jygq_user",
+    host: process.env.DB_HOST || "dpg-d2kcc6ggjchc73dnnpng-a.oregon-postgres.render.com",
+    database: process.env.DB_DATABASE || "db_tcc_jygq",
+    password: process.env.DB_PASSWORD || "D9r1tKKtkH5NzSihsq0S5YUFdigyEIrM",
+    port: process.env.DB_PORT || 5432,
+    ssl: {
+        rejectUnauthorized: false // Necessário para alguns provedores de hospedagem como Render
+    }
+});
+//inicio rotas usuario
+//Middleware para verificar a conexão com o banco de dados
+function verificarToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+  
+    if (!token) {
+      return res.status(401).json({ mensagem: 'Acesso não autorizado: Token não fornecido.' });
+    }
+  
+    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+      if (err) {
+        console.error('Erro de verificação de token:', err);
+        return res.status(401).json({ mensagem: 'Acesso não autorizado: Token inválido.' });
+      }
+  
+      req.usuario = decoded;
+      next();
+    });
+  }
+   // Rota para cadastrar um novo usuário
+   app.post('/cadastrar_usuario', async (req, res) => {
+    const { nome, email, senha, tipo, curso_id, matricula } = req.body;
+  
+    if (!nome || !email || !senha || !tipo) {
+      return res.status(400).json({ mensagem: 'Todos os campos obrigatórios devem ser preenchidos.' });
+    }
+  
+    try {
+      const senhaHash = await bcrypt.hash(senha, SALT_ROUNDS);
+  
+      // Verificar se o usuário já existe
+      const checkSql = 'SELECT * FROM usuarios WHERE email = $1';
+      const checkResult = await pool.query(checkSql, [email]);
+  
+      if (checkResult.rows.length > 0) {
+        return res.status(409).json({ mensagem: 'Usuário com este email já existe.' });
+      }
+  
+      // Inserir novo usuário
+      const insertSql = `
+        INSERT INTO usuarios (nome, email, senha, tipo, curso_id, matricula)
+        VALUES ($1, $2, $3, $4, $5, $6)
+      `;
+      await pool.query(insertSql, [nome, email, senhaHash, tipo, curso_id, matricula]);
+  
+      res.status(201).json({ mensagem: 'Usuário cadastrado com sucesso!' });
+  
+    } catch (err) {
+      console.error('Erro ao cadastrar usuário:', err);
+      res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+    }
+  });
+
+  app.post('/login', async (req, res) => {
+    const { email, senha } = req.body;
+  
+    if (!email || !senha) {
+      return res.status(400).json({ erro: 'Email e senha são obrigatórios.' });
+    }
+  
+    try {
+      const sql = 'SELECT * FROM usuarios WHERE email = $1';
+      const result = await pool.query(sql, [email]);
+  
+      if (result.rows.length === 0) {
+        return res.status(401).json({ erro: 'Email ou senha incorretos.' });
+      }
+  
+      const usuario = result.rows[0];
+      const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
+  
+      if (!senhaCorreta) {
+        return res.status(401).json({ erro: 'Email ou senha incorretos.' });
+      }
+  
+      const token = jwt.sign(
+        { id: usuario.id, tipo: usuario.tipo, email: usuario.email },
+        JWT_SECRET,
+        { expiresIn: '1h' }
+      );
+  
+      res.status(200).json({
+        mensagem: 'Login bem-sucedido!',
+        token,
+        usuario: {
+          id: usuario.id,
+          nome: usuario.nome,
+          email: usuario.email,
+          tipo: usuario.tipo,
+        },
+      });
+  
+    } catch (err) {
+      console.error('Erro ao buscar usuário:', err);
+      res.status(500).json({ erro: 'Erro interno do servidor.' });
+    }
+  });
+  
+  
+  
+// Testar a conexão com o banco de dados
+pool.on('connect', () => {
+    console.log('Conectado ao banco de dados PostgreSQL');
+});
+
+pool.on('error', (err) => {
+    console.error('Erro inesperado no pool do PostgreSQL:', err);
+    process.exit(-1); // Encerrar a aplicação em caso de erro crítico no pool
+});
+
+app.listen(porta, () => {
+    console.log(`O servidor está rodando na porta ${porta}`);
+});
+
+// Rota para cadastrar um novo usuário
+app.post('/cadastrar_usuario', async (req, res) => {
+    const { nome, email, senha, tipo, curso_id } = req.body;
+
+    if (!nome || !email || !senha || !tipo) {
+        return res.status(400).json({ mensagem: 'Todos os campos obrigatórios devem ser preenchidos.' });
+    }
+
+    try {
+        const senhaHash = await bcrypt.hash(senha, SALT_ROUNDS);
+
+        const checkSql = 'SELECT * FROM usuarios WHERE email = $1';
+        const checkResult = await pool.query(checkSql, [email]);
+
+        if (checkResult.rows.length > 0) {
+            return res.status(409).json({ mensagem: 'Usuário com este email já existe.' });
         }
 
-        .top-bar {
-            background-color: #ff1900;
-            color: #fff;
-        }
-        
-        .top-bar .redes-sociais a {
-            color: #fff;
-            margin-right: 10px;
-        }
+        const sql = 'INSERT INTO usuarios (nome, email, senha, tipo, curso_id) VALUES ($1, $2, $3, $4, $5)';
+        await pool.query(sql, [nome, email, senhaHash, tipo, curso_id]);
 
+        res.status(201).json({ mensagem: 'Usuário cadastrado com sucesso!' });
+    } catch (err) {
+        console.error('Erro ao cadastrar usuário:', err);
+        res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+    }
+});
 
-        section {
-            padding: 30px 0;
-        }
+app.post('/login', async (req, res) => {
+    const { email, senha } = req.body;
 
-        section img {
-            width: 90%;
-            max-height: 300px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
+    if (!email || !senha) {
+        return res.status(400).json({ erro: 'Email e senha são obrigatórios.' });
+    }
 
-        .back-to-top {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 1rem;
-            background-color: #ff0000;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
-            text-align: center;
+    try {
+        const sql = 'SELECT * FROM usuarios WHERE email = $1';
+        const result = await pool.query(sql, [email]);
+
+        if (result.rows.length === 0) {
+            return res.status(401).json({ erro: 'Email ou senha incorretos.' });
         }
 
-        .back-to-top:hover {
-            background-color: #9b0606;
+        const usuario = result.rows[0];
+
+        const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
+
+        if (!senhaCorreta) {
+            return res.status(401).json({ erro: 'Email ou senha incorretos.' });
         }
 
-        .section-divider {
-            margin: 20px auto;
-            border-top: 2px solid #ccc;
-            width: 80%;
-        }
-
-        .carousel {
-            margin-bottom: 10px;
-        }
-
-        .top-bar {
-            background-color: #ff1900;
-            color: #fff;
-            width: 100%;
-        }
-
-        .redes-sociais a {
-            color: #fff;
-            margin-right: 15px;
-            /* Espaço entre os ícones */
-            font-size: 1.2rem;
-            /* Tamanho dos ícones */
-        }
-
-        .redes-sociais {
-            padding: 5px 0;
-            /* Espaçamento vertical */
-        }
-
-        /* Chatbot */
-.chatbot {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    z-index: 1000;
-    
-}
-
-.chatbot-btn {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: var(--primary);
-    color: rgb(255, 255, 255);
-    border: none;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.chatbot-btn:hover {
-    transform: scale(1.1);
-}
-
-.chat-window {
-    width: 350px;
-    max-height: 500px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-    display: none;
-    flex-direction: column;
-}
-
-.chat-log {
-    flex: 1;
-    padding: 1.5rem;
-    overflow-y: auto;
-    background: #c9baba; /* Fundo cinza muito claro para a área de mensagens */
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.chat-input-container {
-    display: flex;
-    padding: 0.5rem;
-    background: white;
-    border-top: 1px solid #eee;
-}
-
-.chat-input {
-    flex: 1;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    padding: 0.5rem 1rem;
-    outline: none;
-}
-
-.chat-send-btn {
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    margin-left: 0.5rem;
-    cursor: pointer;
-}
-.message-bot-content {
-    background: white !important; /* Força o fundo branco */
-    color: var(--dark);
-    padding: 12px 16px;
-    border-radius: 18px 18px 18px 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    position: relative;
-    border: 1px solid rgba(0, 0, 0, 0.03);
-    line-height: 1.5;
-}
-.message-user-content {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    color: white;
-    border-radius: 18px 18px 4px 18px;
-    
-}
-.chat-input-container {
-    display: flex;
-    padding: 1rem;
-    background: white !important; /* Força o fundo branco */
-    border-top: 1px solid #f1f5f9;
-    gap: 10px;
-}
-
-    </style>
-</head>
-
-<body>
-    <header>
-        <!-- Top Bar Modificada -->
-        <div class="top-bar py-1" style="background-color: #ff1900;">
-            <div class="container-fluid d-flex justify-content-between align-items-center">
-                <div class="redes-sociais ms-3">
-                    <a href="https://www.facebook.com/senaisaopaulo/?locale=pt_BR"><i class="bi bi-facebook"></i></a>
-                    <a href="https://www.instagram.com/senai.sp/"><i class="bi bi-instagram"></i></a>
-                    <a href="https://www.youtube.com/channel/UCzqd0VpWU_w4BKwmSvFdieQ"><i class="bi bi-youtube"></i></a>
-                </div>
-                <div id="auth-container">
-                </div>
-            </div>
-        </div>
-        <!-- Navbar -->
-
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link active" href="index.html">Início</a></li>
-                    <li class="nav-item"><a class="nav-link" href="buscar_tcc.html">TCCS</a></li>
-                    <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
-                </ul>
-
-
-                <a class="navbar-brand" href="#">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/SENAI_S%C3%A3o_Paulo_logo.png" alt="SENAI"
-                    height="40" />
-                </a>
-            </div>
-        </nav>
-    </header>
-
-    <main>
-        <!-- Carrossel -->
-        <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"
-                    aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
-                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
-                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="5" aria-label="Slide 6"></button>
-            </div>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="https://media.licdn.com/dms/image/v2/C4D1BAQGda9UodPC36A/company-background_10000/company-background_10000/0/1613485135605/senaidiadema_cover?e=2147483647&v=beta&t=vhISlkVS4zWCgLa_4OY697UqZ5Wc1OKaVx-DuUarQ3E"
-                        class="d-block w-100" alt="Imagem do SENAI 1">
-                </div>
-                <div class="carousel-item">
-                    <img src="https://i.makeagif.com/media/7-05-2021/3VMxJI.gif" class="d-block w-100"
-                        alt="Imagem do SENAI 2">
-                </div>
-                <div class="carousel-item">
-                    <img src="https://media.licdn.com/dms/image/v2/D4D1BAQFknofuOJsJ-Q/company-background_10000/company-background_10000/0/1658493207949/senai_solues_digitais_cover?e=2147483647&v=beta&t=tm1oWeWoD7iY5KGSVRm32L-gDLeWCZFFiDMN_F_kQeA"
-                        class="d-block w-100" alt="Imagem do SENAI 3">
-                </div>
-                <div class="carousel-item">
-                    <img src="/src/img/img.png" class="d-block w-100"
-                        alt="Imagem do SENAI 4">
-                </div>
-                <div class="carousel-item">
-                    <img src="/src/img/img2.png" class="d-block w-100"
-                        alt="Imagem do SENAI 5">
-                </div>
-                <div class="carousel-item">
-                    <img src="/src/img/img3.png" class="d-block w-100"
-                        alt="Imagem do SENAI 6">
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Anterior</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Próximo</span>
-            </button>
-        </div>
-
-        <hr class="section-divider">
-
-
-        <!-- Seção 1 -->
-        <section class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <h3>Infraestrutura de Produção</h3>
-                    <p>Utilizamos tecnologias modernas como MySQL para o gerenciamento eficiente do banco de dados e
-                        Express.js no backend, proporcionando uma experiência ágil, estável e segura aos usuários.</p>
-                </div>
-                <div class="col-md-6">
-                    <img src="https://senaies.com.br/wp-content/uploads/2019/06/IMG_1219.jpg" alt="Produção">
-                </div>
-            </div>
-        </section>
-
-        <hr class="section-divider">
-
-        <!-- Seção 2 -->
-        <section class="container">
-            <div class="row align-items-center flex-md-row-reverse">
-                <div class="col-md-6">
-                    <h3>Detalhes do Projeto</h3>
-                    <p>Nosso site permite que alunos e professores explorem TCCs de diferentes cursos, buscando
-                        por temas específicos e acessando os conteúdos de maneira prática. O sistema conta com um
-                        mecanismo
-                        de aprovação para garantir a qualidade dos trabalhos publicados.</p>
-                </div>
-                <div class="col-md-6">
-                    <img src="https://i0.wp.com/www2.tatui.sp.gov.br/wp-content/uploads/2022/04/ELETRICISTA-INSTALADOR.png?fit=1109%2C753&ssl=1"
-                        alt="Projeto">
-                </div>
-            </div>
-        </section>
-
-        <hr class="section-divider">
-
-        <!-- Seção 3 -->
-        <section class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <h3>Quem Somos</h3>
-                    <p>Somos um grupo de estudantes do SENAI desenvolvendo um projeto inovador para organizar e
-                        exibir todos os TCCs já realizados na unidade. Nosso objetivo é facilitar o acesso aos trabalhos
-                        acadêmicos, proporcionando uma plataforma intuitiva e organizada para alunos e professores.</p>
-                </div>
-                <div class="col-md-6">
-                    <img src="https://www.sesirs.org.br/sites/default/files/styles/2x1_lg/public/fc-carousel/microsoftteams-image_10_0.png?itok=rIwxnI7h&c=52f74b64ad343ed6dcc4094d709068a0"
-                        alt="Sobre Nós">
-                </div>
-            </div>
-        </section>
-        <!-- Chatbot -->
-    <div class="chatbot">
-        <button id="chatbot-button" class="chatbot-btn">
-            <i class="fas fa-robot"></i>
-        </button>
-        <div id="chat-window" class="chat-window">
-            <div id="chat-log" class="chat-log p-3"></div>
-            <div class="chat-input-container p-2">
-                <input type="text" id="user-input" class="chat-input" placeholder="Digite sua mensagem...">
-                <button id="send-button" class="chat-send-btn">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-        <div class="text-center">
-            <a href="#top" class="back-to-top">Voltar para o topo</a>
-        </div>
-
-        <hr class="section-divider">
-    </main>
-
-    <footer class="bg-dark text-light py-3">
-        <div class="container text-center">
-            <p>&copy; 2025 SENAI - Todos os direitos reservados</p>
-        </div>
-    </footer>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Inicializa o carrossel
-            var myCarousel = document.querySelector('#myCarousel');
-            var carousel = new bootstrap.Carousel(myCarousel, {
-                interval: 3000, // Intervalo de 5 segundos entre os slides
-                wrap: true // Permite que o carrossel volte ao início após o último slide
-            });
-        });
-
-        function logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('usuario');
-            // Redireciona para a tela inicial após o logout
-            window.location.href = 'index.html';
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // Encontra o contêiner de autenticação
-            const authContainer = document.getElementById('auth-container');
-
-            // Só executa se o contêiner existir nesta página
-            if (authContainer) {
-                const token = localStorage.getItem('token');
-                const usuario = JSON.parse(localStorage.getItem('usuario'));
-
-                if (token && usuario) {
-                    // Usuário logado:
-                    authContainer.innerHTML = `
-                    <div class="dropdown me-3">
-                        <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="navbarDropdownAuth" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
-                            <span class="ms-2 d-none d-lg-block">${usuario.nome}</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAuth">
-                            <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Meu Perfil</a></li>
-                            <li><a class="dropdown-item" href="#">Meus TCCs Salvos</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
-                        </ul>
-                    </div>
-                `;
-                } else {
-                    // Usuário não logado:
-                    authContainer.innerHTML = `
-                    <div class="me-3">
-                        <a href="login.html" class="nav-link text-white">
-                            <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
-                        </a>
-                    </div>
-                `;
-                }
+        res.status(200).json({
+            mensagem: 'Login bem-sucedido!',
+            usuario: {
+                id: usuario.id,
+                nome: usuario.nome,
+                email: usuario.email,
+                tipo: usuario.tipo
             }
         });
-   
-        // ========== CHATBOT ========== //
-    const chatButton = document.getElementById('chatbot-button');
-    const chatWindow = document.getElementById('chat-window');
-    const chatLog = document.getElementById('chat-log');
-    const userInput = document.getElementById('user-input');
-    const sendButton = document.getElementById('send-button');
-  
-    // Funções auxiliares
-    function addMessage(sender, text) {
-      const messageDiv = document.createElement('div');
-      messageDiv.className = `chat-message ${sender}`;
-      messageDiv.innerHTML = `<div class="message-bubble">${text}</div>`;
-      chatLog.appendChild(messageDiv);
-      chatLog.scrollTop = chatLog.scrollHeight;
+    } catch (err) {
+        console.error('Erro ao buscar usuário ou comparar senha:', err);
+        res.status(500).json({ erro: 'Erro interno do servidor durante a autenticação.' });
     }
-  
-    function showTypingIndicator() {
-      const typingDiv = document.createElement('div');
-      typingDiv.id = 'typing-indicator';
-      typingDiv.className = 'chat-message bot';
-      typingDiv.innerHTML = `
-        <div class="message-bubble typing">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </div>
-      `;
-      chatLog.appendChild(typingDiv);
-      chatLog.scrollTop = chatLog.scrollHeight;
+});
+
+app.delete('/excluir_usuario/:id', async (req, res) => {
+    const { id } = req.params;
+
+    if (!id) {
+        return res.status(400).json({ mensagem: "ID do usuário é obrigatório" });
     }
-  
-    function hideTypingIndicator() {
-      const typingDiv = document.getElementById('typing-indicator');
-      if (typingDiv) typingDiv.remove();
-    }
-  
-    // Event Listeners
-    chatButton.addEventListener('click', () => {
-      chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
-      if (chatWindow.style.display === 'flex') {
-        userInput.focus();
-      }
-    });
-  
-    async function sendMessage() {
-      const message = userInput.value.trim();
-      if (!message) return;
-      
-      addMessage('user', message);
-      userInput.value = '';
-      showTypingIndicator();
-      
-      try {
-        const response = await fetch('https://backend-tcc-bwya.onrender.com/api/chat', {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({ message })
-        });
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+
+    try {
+        const sql = `DELETE FROM usuarios WHERE id = $1`;
+        const result = await pool.query(sql, [id]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ mensagem: "Usuário não encontrado" });
         }
-        
-        const data = await response.json();
-        addMessage('bot', data.response);
-      } catch (error) {
-        console.error("Erro na requisição:", error);
-        addMessage('bot', "Erro ao conectar com o servidor. Verifique se o servidor está rodando.");
-      } finally {
-        hideTypingIndicator();
-      }
+        res.json({ mensagem: "Usuário deletado com sucesso" });
+    } catch (error) {
+        console.error("Erro ao deletar usuário:", error);
+        res.status(500).json({ mensagem: "Erro ao deletar usuário" });
     }
-  
-    sendButton.addEventListener('click', sendMessage);
-    userInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendMessage();
-    });
-  
-    // Delegation para botões dinâmicos
-    document.addEventListener('click', (e) => {
-      if (e.target.classList.contains('btn-chatbot')) {
-        const local = e.target.getAttribute('data-local');
-        userInput.value = `Conte mais sobre ${local}`;
-        chatWindow.style.display = 'flex';
-        userInput.focus();
-      }
-    });
-    </script>
-</body>
+});
 
+app.get('/listar_usuarios', async (req, res) => {
+    const sql = `
+        SELECT 
+            usuarios.id, 
+            usuarios.nome, 
+            usuarios.email, 
+            CASE 
+                WHEN usuarios.tipo = 'administrador' THEN 'admin'
+                ELSE usuarios.tipo
+            END as tipo,
+            CASE
+                WHEN usuarios.tipo = 'aluno' THEN cursos.curso
+                ELSE NULL
+            END AS curso
+        FROM usuarios
+        LEFT JOIN cursos ON usuarios.curso_id = cursos.id
+    `; // Usar CASE WHEN para simular IF no PostgreSQL
 
-</html>
+    try {
+        const result = await pool.query(sql);
+        res.json(result.rows);
+    } catch (err) {
+        console.error("Erro ao listar usuários:", err);
+        res.status(500).json({ erro: 'Erro ao listar usuários' });
+    }
+});
+
+app.put('/editar_usuario', async (req, res) => {
+    const { id, nome, email, tipo, curso_id } = req.body;
+
+    console.log("Dados recebidos para edição:", req.body);
+    if (!id || !nome?.trim() || !email?.trim() || !tipo?.trim()) {
+        return res.status(400).json({ mensagem: "Preencha todos os campos obrigatórios" });
+    }
+
+    const tipoNormalizado = tipo === 'admin' ? 'administrador' : tipo;
+    const cursoIdTratado = curso_id === '' ? null : curso_id;
+
+    try {
+        let sql;
+        let params;
+
+        if (tipoNormalizado === 'aluno') {
+            sql = `UPDATE usuarios SET nome = $1, email = $2, tipo = $3, curso_id = $4 WHERE id = $5`;
+            params = [nome, email, tipoNormalizado, cursoIdTratado, id];
+        } else {
+            sql = `UPDATE usuarios SET nome = $1, email = $2, tipo = $3, curso_id = NULL WHERE id = $4`;
+            params = [nome, email, tipoNormalizado, id];
+        }
+
+        const result = await pool.query(sql, params);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ mensagem: "Usuário não encontrado" });
+        }
+        res.json({ mensagem: "Usuário atualizado com sucesso" });
+    } catch (error) {
+        console.error("Erro ao editar usuário:", error);
+        res.status(500).json({ mensagem: "Erro ao editar usuário" });
+    }
+});
+
+app.get('/perfil', async (req, res) => {
+    // Assumindo que req.usuario.id é definido por um middleware de autenticação
+    // que você pode precisar implementar. Para este exemplo, vamos simular um ID.
+    const usuarioId = req.usuario ? req.usuario.id : 1; // Substitua por sua lógica de autenticação real
+
+    try {
+        const sql = 'SELECT id, nome, email, tipo FROM usuarios WHERE id = $1';
+        const result = await pool.query(sql, [usuarioId]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ mensagem: 'Usuário não encontrado.' });
+        }
+
+        res.status(200).json(result.rows[0]);
+    } catch (err) {
+        console.error('Erro ao buscar dados do perfil:', err);
+        res.status(500).json({ mensagem: 'Erro interno do servidor.' });
+    }
+});
+
+// Fim rotas usuario
+
+app.get('/listar_tccs', async (req, res) => {
+    const { status } = req.query;
+
+    let sql = 'SELECT tccs.*, cursos.curso FROM tccs JOIN cursos ON tccs.curso_id = cursos.id';
+    const params = [];
+
+    if (status) {
+        sql += ' WHERE tccs.status = $1';
+        params.push(status);
+    }
+
+    try {
+        const result = await pool.query(sql, params);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Erro ao listar TCCs:', err);
+        res.status(500).json({ erro: 'Erro ao listar TCCs' });
+    }
+});
+
+// rota para listar tccs por ano
+app.get("/listar_tccs_por_ano", async (req, res) => {
+    const { ano } = req.query;
+
+    if (!ano) {
+        return res.status(400).json({ erro: "O ano é obrigatório!" });
+    }
+
+    try {
+        const sql = "SELECT * FROM tccs WHERE ano = $1";
+        const result = await pool.query(sql, [ano]);
+
+        if (result.rows.length === 0) {
+            return res.json({ mensagem: "Nenhum TCC encontrado para este ano." });
+        }
+
+        res.json(result.rows);
+    } catch (erro) {
+        console.error("Erro ao buscar os TCCs:", erro);
+        res.status(500).json({ erro: "Erro ao buscar os TCCs." });
+    }
+});
+
+// tcc e ano
+app.get('/tccs', async (req, res) => {
+    const { curso_id, ano } = req.query; // Removido 'status' pois é fixo para 'aprovado'
+
+    let sql = `
+        SELECT tccs.*, cursos.curso 
+        FROM tccs 
+        INNER JOIN cursos ON tccs.curso_id = cursos.id
+        WHERE tccs.status = $1
+    `;
+
+    const params = ['aprovado']; // Filtro fixo para aprovados
+    let paramIndex = 2; // Começa em 2 porque $1 já é 'aprovado'
+
+    // Filtros opcionais
+    if (curso_id) {
+        sql += ` AND cursos.id = $${paramIndex}`;
+        params.push(curso_id);
+        paramIndex++;
+    }
+    if (ano) {
+        sql += ` AND tccs.ano = $${paramIndex}`;
+        params.push(ano);
+        paramIndex++;
+    }
+
+    sql += ' ORDER BY tccs.ano DESC, tccs.titulo ASC';
+
+    try {
+        const result = await pool.query(sql, params);
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Erro ao buscar TCCs:', error);
+        res.status(500).json({ erro: 'Falha ao filtrar TCCs' });
+    }
+});
+
+// INICIO ROTAS DE CURSO
+// Rota para cadastrar curso
+app.post('/cadastrar_curso', async (req, res) => {
+    const { curso } = req.body;
+
+    if (!curso || !curso.trim()) {
+        return res.status(400).json({ erro: 'O nome do curso é obrigatório' });
+    }
+
+    try {
+        const sql = 'INSERT INTO cursos (curso) VALUES ($1)';
+        await pool.query(sql, [curso]);
+        res.json({ mensagem: "Curso cadastrado com sucesso!" });
+    } catch (err) {
+        console.error('Erro ao cadastrar curso:', err);
+        res.status(500).json({ erro: 'Erro ao cadastrar curso' });
+    }
+});
+
+// Rota para listar cursos
+app.get('/listar_cursos', async (req, res) => {
+    const sql = 'SELECT id, curso FROM cursos';
+    try {
+        const result = await pool.query(sql);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Erro ao listar cursos:', err);
+        res.status(500).json({ erro: 'Erro ao listar cursos' });
+    }
+});
+
+app.delete('/excluir_curso/:id', async (req, res) => {
+    const { id } = req.params;
+
+    if (!id) {
+        return res.status(400).json({ mensagem: "ID do curso é obrigatório" });
+    }
+
+    try {
+        const sql = `DELETE FROM cursos WHERE id = $1`;
+        const result = await pool.query(sql, [id]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ mensagem: "Curso não encontrado" });
+        }
+
+        res.json({ mensagem: "Curso deletado com sucesso" });
+    } catch (error) {
+        console.error("Erro ao deletar curso:", error);
+        // PostgreSQL usa códigos de erro diferentes para violações de chave estrangeira
+        if (error.code === '23503') { // foreign_key_violation
+            return res.status(400).json({ mensagem: "Este curso está vinculado a TCCs e não pode ser excluído." });
+        }
+        res.status(500).json({ mensagem: "Erro ao deletar curso" });
+    }
+});
+
+app.put('/editar_curso', async (req, res) => {
+    const { id, curso } = req.body;
+
+    if (!id || !curso || !curso.trim()) {
+        return res.status(400).json({ mensagem: 'ID e nome do curso são obrigatórios' });
+    }
+
+    try {
+        const sql = `UPDATE cursos SET curso = $1 WHERE id = $2`;
+        const result = await pool.query(sql, [curso, id]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ mensagem: 'Curso não encontrado' });
+        }
+
+        res.json({ mensagem: 'Curso atualizado com sucesso!' });
+    } catch (err) {
+        console.error('Erro ao editar curso:', err);
+        res.status(500).json({ mensagem: 'Erro ao editar curso' });
+    }
+});
+
+// INTRANET (Rota de login duplicada, manter apenas uma ou diferenciar)
+// Esta rota de login parece ser para um sistema de intranet com matrícula.
+// Se for um sistema separado, considere mover para um arquivo ou prefixo de rota diferente.
+// Se for o mesmo sistema, decida qual método de login (email ou matrícula) será o principal.
+app.post('/login_intranet', async (req, res) => { // Renomeada para evitar conflito
+    const { matricula, senha } = req.body;
+
+    if (!matricula || !senha) {
+        return res.status(400).json({ erro: 'Matrícula e senha são obrigatórios.' });
+    }
+
+    try {
+        const sql = 'SELECT * FROM usuarios WHERE matricula = $1';
+        const result = await pool.query(sql, [matricula]);
+
+        if (result.rows.length === 0) {
+            return res.status(401).json({ erro: 'Matrícula ou senha incorretos.' });
+        }
+
+        const usuario = result.rows[0];
+
+        // Assumindo que 'senha_hash' é o nome da coluna no banco de dados para a senha hasheada
+        const senhaCorreta = await bcrypt.compare(senha, usuario.senha_hash);
+
+        if (!senhaCorreta) {
+            return res.status(401).json({ erro: 'Matrícula ou senha incorretos.' });
+        }
+
+        res.status(200).json({
+            mensagem: 'Login bem-sucedido!',
+            usuario: {
+                id: usuario.id,
+                nome: usuario.nome,
+                email: usuario.email,
+                tipo: usuario.tipo
+            }
+        });
+    } catch (err) {
+        console.error('Erro ao buscar usuário ou comparar senha (intranet):', err);
+        res.status(500).json({ erro: 'Erro interno do servidor.' });
+    }
+});
+
+// Rota para visualizar o arquivo do TCC
+app.get('/visualizar_tcc/:filename', (req, res) => {
+    const { filename } = req.params;
+    const filePath = path.join(__dirname, 'uploads', filename);
+
+    console.log('Tentando acessar arquivo:', filePath);
+
+    if (fs.existsSync(filePath)) {
+        console.log('Arquivo encontrado, enviando...');
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+        fs.createReadStream(filePath).pipe(res);
+    } else {
+        console.log('Arquivo não encontrado');
+        res.status(404).json({ erro: 'Arquivo não encontrado' });
+    }
+});
+
+app.post('/upload_tcc', upload.single('arquivo'), async (req, res) => {
+    console.log('Corpo da requisição:', req.body);
+    console.log('Arquivo recebido:', req.file);
+
+    const { titulo, ano, autor, curso } = req.body;
+    const arquivo = req.file;
+
+    if (!titulo || !ano || !autor || !curso || !arquivo) {
+        if (arquivo && fs.existsSync(arquivo.path)) {
+            fs.unlinkSync(arquivo.path);
+        }
+        return res.status(400).json({ erro: 'Todos os campos são obrigatórios' });
+    }
+
+    const extensao = path.extname(arquivo.originalname).toLowerCase();
+    if (extensao !== '.pdf') {
+        fs.unlinkSync(arquivo.path);
+        return res.status(400).json({ erro: 'Apenas arquivos PDF são permitidos' });
+    }
+
+    try {
+        const sqlCurso = 'SELECT id FROM cursos WHERE id = $1';
+        const resultCurso = await pool.query(sqlCurso, [curso]);
+
+        if (resultCurso.rows.length === 0) {
+            fs.unlinkSync(arquivo.path);
+            return res.status(400).json({ erro: 'Curso não encontrado' });
+        }
+
+        const cursoId = resultCurso.rows[0].id;
+        const sql = 'INSERT INTO tccs (titulo, ano, autor, curso_id, arquivo, status) VALUES ($1, $2, $3, $4, $5, $6)';
+
+        await pool.query(sql, [titulo, ano, autor, cursoId, arquivo.filename, 'pendente']);
+        res.json({ mensagem: 'TCC cadastrado com sucesso!' });
+    } catch (err) {
+        console.error('Erro ao inserir no banco ou verificar curso:', err);
+        if (arquivo && fs.existsSync(arquivo.path)) {
+            fs.unlinkSync(arquivo.path);
+        }
+        res.status(500).json({ erro: 'Erro ao salvar TCC no banco de dados', detalhes: err.message });
+    }
+});
+
+// Rota para aprovar/rejeitar TCC
+app.post('/avaliar_tcc', async (req, res) => {
+    const { id, status, comentario } = req.body;
+
+    if (!id || isNaN(id)) {
+        return res.status(400).json({ erro: 'ID do TCC inválido' });
+    }
+
+    if (!['aprovado', 'rejeitado'].includes(status)) {
+        return res.status(400).json({ erro: 'Status inválido. Deve ser "aprovado" ou "rejeitado"' });
+    }
+
+    try {
+        const checkSql = 'SELECT * FROM tccs WHERE id = $1';
+        const checkResult = await pool.query(checkSql, [id]);
+
+        if (checkResult.rows.length === 0) {
+            return res.status(404).json({ erro: 'TCC não encontrado' });
+        }
+
+        const updateSql = 'UPDATE tccs SET status = $1, comentario = $2, avaliado_em = NOW() WHERE id = $3';
+        await pool.query(updateSql, [status, comentario || null, id]);
+
+        res.json({
+            mensagem: `TCC ${status} com sucesso!`,
+            dados: {
+                id,
+                status,
+                comentario
+            }
+        });
+    } catch (err) {
+        console.error('Erro ao avaliar TCC:', err);
+        res.status(500).json({ erro: 'Erro ao avaliar TCC' });
+    }
+});
+
+app.delete('/excluir_tcc/:id', async (req, res) => {
+    const { id } = req.params;
+
+    if (!id) {
+        return res.status(400).json({ mensagem: "ID do TCC é obrigatório" });
+    }
+
+    try {
+        const sql = `DELETE FROM tccs WHERE id = $1`;
+        const result = await pool.query(sql, [id]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ mensagem: "TCC não encontrado" });
+        }
+        res.json({ mensagem: "TCC deletado com sucesso" });
+    } catch (error) {
+        console.error("Erro ao deletar TCC:", error);
+        res.status(500).json({ mensagem: "Erro ao deletar TCC" });
+    }
+});
+
+app.put('/editar_tcc', async (req, res) => {
+    const { id, titulo, ano, autor, curso_id } = req.body;
+
+    if (!id || !titulo || !ano || !autor || !curso_id) {
+        return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios' });
+    }
+
+    try {
+        const sql = `UPDATE tccs SET titulo = $1, ano = $2, autor = $3, curso_id = $4 WHERE id = $5`;
+        const result = await pool.query(sql, [titulo, ano, autor, curso_id, id]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ mensagem: 'TCC não encontrado' });
+        }
+
+        res.json({ mensagem: 'TCC atualizado com sucesso!' });
+    } catch (err) {
+        console.error('Erro ao editar TCC:', err);
+        res.status(500).json({ mensagem: 'Erro ao editar TCC' });
+    }
+});
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
