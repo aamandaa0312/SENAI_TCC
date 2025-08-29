@@ -42,27 +42,29 @@
 <body>
     <!-- Top Bar Modificada -->
     <div class="top-bar py-1" style="background-color: #ff1900;">
-        <div class="container-fluid ps-0">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
             <div class="redes-sociais ms-3">
                 <a href="https://www.facebook.com/senaisaopaulo/?locale=pt_BR"><i class="bi bi-facebook"></i></a>
                 <a href="https://www.instagram.com/senai.sp/"><i class="bi bi-instagram"></i></a>
                 <a href="https://www.youtube.com/channel/UCzqd0VpWU_w4BKwmSvFdieQ"><i class="bi bi-youtube"></i></a>
             </div>
+            <div id="auth-container">
+            </div>
         </div>
     </div>
-
     <!-- Navbar -->
+
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="index.html">Início</a></li>
-
+                <li class="nav-item"><a class="nav-link active" href="TelaPrincipal.html">Início</a></li>
                 <li class="nav-item"><a class="nav-link" href="buscar_tcc.html">TCCS</a></li>
                 <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
             </ul>
+
+
             <a class="navbar-brand" href="#">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/SENAI_S%C3%A3o_Paulo_logo.png" alt="SENAI"
-                    height="40">
+                <img src="Logo.png" alt="SENAI" height="40">
             </a>
         </div>
     </nav>
@@ -119,14 +121,13 @@
                 const dados = await resposta.json();
 
                 if (resposta.ok) {
-    // Salvar token e usuário no localStorage
+                    alert(dados.mensagem);
+                    // Armazenar o token 
                     localStorage.setItem('token', dados.token);
                     localStorage.setItem('usuario', JSON.stringify(dados.usuario));
-
-                     alert(dados.mensagem);
-                     window.location.href = "index.html"; // Redireciona após salvar
+                    window.location.href = "index.html";
                 } else {
-                     alert(dados.erro || "Falha no login.");
+                    alert(dados.erro || "Falha no login.");
                 }
 
             } catch (erro) {
@@ -138,55 +139,55 @@
 
 
         document.addEventListener('DOMContentLoaded', () => {
+            const authContainer = document.getElementById('auth-container');
             const token = localStorage.getItem('token');
             const usuario = JSON.parse(localStorage.getItem('usuario'));
-            const navBar = document.getElementById('main-navbar'); // Você precisará dar um id para a sua nav
 
-            if (token && usuario) {
-                // Se o usuário está logado, mostra o nome e o botão de sair
-                navBar.innerHTML = `
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">Portal SENAI TCCs</a>
-                <div class="d-flex">
-                    <span class="navbar-text me-3">
-                        Olá, ${usuario.nome}!
-                    </span>
-                    <button class="btn btn-outline-danger" onclick="logout()">Sair</button>
+            if (authContainer) {
+                if (token && usuario) {
+
+                    authContainer.innerHTML = `
+                <div class="dropdown me-3">
+                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="navbarDropdownAuth" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+                        <span class="ms-2 d-none d-lg-block">${usuario.nome}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAuth">
+                        <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Meu Perfil</a></li>
+                        <li><a class="dropdown-item" href="#">Meus TCCs Salvos</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
+                    </ul>
                 </div>
-            </div>
-        `;
-            } else {
-                // Se não está logado, mostra o botão de login
-                navBar.innerHTML = `
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">Portal SENAI TCCs</a>
-                <div class="d-flex">
-                    <a href="login.html" class="btn btn-danger">Login</a>
+            `;
+                } else {
+                    // Usuário não logado: exibe o botão de login
+                    authContainer.innerHTML = `
+                <div class="me-3">
+                    <a href="login.html" class="nav-link text-white">
+                        <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+                    </a>
                 </div>
-            </div>
-        `;
+            `;
+                }
             }
         });
 
-        function logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('usuario');
-            window.location.href = 'index.html'; // Redireciona para a tela inicial
-        }
 
 
         function logout() {
             localStorage.removeItem('token');
             localStorage.removeItem('usuario');
             // Redireciona para a tela inicial após o logout
-            window.location.href = 'index.html';
+            window.location.href = 'TelaPrincipal.html';
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Encontra o contêiner de autenticação
+
             const authContainer = document.getElementById('auth-container');
 
-            // Só executa se o contêiner existir nesta página
             if (authContainer) {
                 const token = localStorage.getItem('token');
                 const usuario = JSON.parse(localStorage.getItem('usuario'));
@@ -225,6 +226,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 
 </html>
