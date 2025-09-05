@@ -870,12 +870,22 @@ footer a:hover {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 }).addTo(map);
 
-                const senaiSchools = [
+               const senaiSchools = [
                     { name: "SENAI São Paulo", lat: -23.5505, lng: -46.6333 },
                     { name: "SENAI Santo Amaro", lat: -23.6500, lng: -46.7200 },
                     { name: "SENAI Itaquera", lat: -23.5400, lng: -46.4700 },
                     { name: "SENAI Osasco", lat: -23.5320, lng: -46.7920 },
-                    { name: "SENAI Guarulhos", lat: -23.4540, lng: -46.5340 }
+                    { name: "SENAI Guarulhos", lat: -23.4540, lng: -46.5340 },
+                    { name: "SENAI Campinas", lat: -22.9056, lng: -47.0608 },
+                    { name: "SENAI Ribeirão Preto", lat: -21.1699, lng: -47.8103 },
+                    { name: "SENAi Barra Funda", lat: -23.529517, lng: -46.529517 },
+                    { name: "SENAI Barueri", lat: -23.5200, lng: -46.8700 },
+                    { name: "SENAI Bom Retiro - Biotecnologia", lat: -23.5375, lng: -46.6356 },
+                    { name: "SENAI Brás", lat: -23.542598641792708, lng:-46.621089388984906 },
+                    { name: "SENAI Brás - Vestuário e Têxtil", lat: -23.5425320, lng: -46.618688},
+                    { name: "SENAI Cambuci - Equipamentos Biomédicos", lat:-23.56295967960583, lng:-46.6238114080168}
+
+
                 ];
                 
                 const markers = senaiSchools.map(school => L.marker([school.lat, school.lng]).addTo(map).bindPopup(`<strong>${school.name}</strong>`));
@@ -911,3 +921,4 @@ footer a:hover {
 </body>
 
 </html>
+
