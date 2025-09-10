@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TCCs - SENAI</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="icon" href="https://proeducador.sp.senai.br/site/icons/logo-small.png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <style>
     /* Seus estilos existentes permanecem iguais */
@@ -24,7 +25,88 @@
     body {
       background-color: #f8f9fa;
     }
+    .navbar {
+            background: var(--card-bg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 12px 0;
+        }
 
+        .navbar-brand img {
+            transition: transform 0.3s;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--dark-text) !important;
+            position: relative;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+        .navbar-toggler {
+            margin-left: 5px;
+            border: none;
+            padding: 0;
+            width: 30px;
+            height: 21px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: transparent;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+
+        .navbar-toggler span {
+            height: 3px;
+            width: 100%;
+            background-color: #333;
+            border-radius: 3px;
+            transition: all 0.3s;
+            display: block;
+        }
+        /* Estado inicial (hamburger) */
+        .navbar-toggler span:nth-child(1) {
+            transform: translateY(0) rotate(0);
+        }
+        
+        .navbar-toggler span:nth-child(2) {
+            opacity: 1;
+        }
+        
+        .navbar-toggler span:nth-child(3) {
+            transform: translateY(0) rotate(0);
+        }
+         /* Estado quando expandido (X) */
+         .navbar-toggler[aria-expanded="true"] span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+        
+        .navbar-toggler[aria-expanded="true"] span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .navbar-toggler[aria-expanded="true"] span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
     .card-tcc {
       transition: transform 0.3s, box-shadow 0.3s;
       height: 100%;
@@ -41,13 +123,20 @@
     }
 
     .card-img-top {
-      height: 180px;
+      height: 200px;
+      overflow: hidden;
+      min-height: 180px;
       object-fit: cover;
       background-color: #f1f1f1;
       display: flex;
-      align-items: center;
+      align-items: flex-start; /* Alinha a imagem no topo */
       justify-content: center;
-      color: #E30613;
+      color: #6c757d;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .card-img-top canvas {
+        width: 100%;
+        height: auto;
     }
 
     .card-body {
@@ -273,13 +362,28 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link" href="index.html">Início</a></li>
-
-          <li class="nav-item"><a class="nav-link active" href="buscar_tcc.html">TCCS</a></li>
-          <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
-        </ul>
-        <form class="d-flex m-3" method="get" action="http://localhost:3000/buscar_tccs">
+        <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
+        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                  <a class="nav-link active" href="index.html">Início</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="buscar_tcc.html">TCCS</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="cursos.html">Cursos</a>
+              </li>
+          </ul>
+          
+         
+      </div>
+        <form class="d-flex m-3" method="get" action="https://backend-tcc-bwya.onrender.com/buscar_tccs">
           <input class="form-control me-2" type="search" name="query" placeholder="Pesquisar">
           <button class="btn btn-outline-danger" type="submit">Buscar</button>
         </form>
@@ -292,17 +396,17 @@
   </header>
 
   <main class="container py-5">
-  <div class="row mb-4">
-    <div class="col-md-6">
-      <h1 class="page-title">Trabalhos de Conclusão de Curso</h1>
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <h1 class="page-title">Trabalhos de Conclusão de Curso</h1>
+      </div>
+      <div class="col-md-6 text-end">
+        <button class="btn btn-senai mb-4" data-bs-toggle="modal" data-bs-target="#cadastrarTccModal">
+          <i class="bi bi-plus-circle"></i> Cadastrar TCC
+        </button>
+      </div>
     </div>
-    <div class="col-md-6 text-end">
-      <button class="btn btn-senai mb-4" data-bs-toggle="modal" data-bs-target="#cadastrarTccModal">
-        <i class="bi bi-plus-circle"></i> Cadastrar TCC
-      </button>
-    </div>
-  </div>
-
+  
 
     <!-- Filtros -->
 
@@ -395,8 +499,100 @@
     </div>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
+     src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"
+    // Configuração para o PDF.js encontrar os arquivos de worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js`;
+
+    let cursosMap = {};
+
+    function gerarPreviewPDF(url, canvas) {
+        const ctx = canvas.getContext('2d');
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#6c757d';
+        ctx.fillText('Carregando preview...', canvas.width / 2, canvas.height / 2);
+
+        const loadingTask = pdfjsLib.getDocument(url);
+        loadingTask.promise.then(function(pdf) {
+            pdf.getPage(1).then(function(page) {
+            const context = canvas.getContext('2d');
+            const viewport = page.getViewport({ scale: 1 });
+
+            const scale = canvas.width / viewport.width;
+            const scaledViewport = page.getViewport({ scale: scale });
+
+            canvas.height = scaledViewport.height;
+
+            const renderContext = {
+                canvasContext: context,
+                viewport: scaledViewport
+            };
+            page.render(renderContext);
+            });
+        }).catch(function(reason) {
+            console.error('Erro ao carregar o PDF para preview:', reason);
+            const ctxError = canvas.getContext('2d');
+            ctxError.clearRect(0, 0, canvas.width, canvas.height); 
+            ctxError.textAlign = 'center';
+            ctxError.fillStyle = '#dc3545';
+            ctxError.fillText('Preview indisponível', canvas.width / 2, canvas.height / 2);
+        });
+    }
+
+    function criarCardTCC(tcc) {
+      const col = document.createElement('div');
+      col.className = 'col';
+      let badgeClass = tcc.status === 'aprovado' ? 'badge-aprovado' :
+        tcc.status === 'rejeitado' ? 'badge-rejeitado' : 'badge-pendente';
+      const showStatus = localStorage.getItem('token') !== null;
+
+      const canvasId = `pdf-preview-${tcc.id || tcc.arquivo.replace(/[^a-zA-Z0-9]/g, '')}`;
+
+      col.innerHTML = `
+        <div class="card card-tcc h-100">
+          <div class="card-img-top">
+              ${tcc.arquivo ? `<canvas id="${canvasId}"></canvas>` : '<div class="p-3 text-center"><i class="bi bi-file-earmark-excel fs-1"></i><p>Arquivo indisponível</p></div>'}
+          </div>
+          <div class="card-body">
+            ${showStatus ? `
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <span class="badge ${badgeClass}">${tcc.status || 'pendente'}</span>
+                <small class="text-muted">${tcc.ano}</small>
+              </div>
+            ` : `
+              <div class="d-flex justify-content-end mb-2">
+                <small class="text-muted">${tcc.ano}</small>
+              </div>
+            `}
+            <h5 class="card-title">${tcc.titulo}</h5>
+            <p class="card-text">${tcc.autor}</p>
+            <div class="mt-auto">
+              <small class="text-muted d-block mb-2">Curso: ${cursosMap[tcc.curso_id] || tcc.curso || 'Não especificado'}</small>
+              ${tcc.arquivo ?
+              `<a href="https://backend-tcc-bwya.onrender.com/visualizar_tcc/${tcc.arquivo}" class="btn btn-senai btn-sm w-100" target="_blank">
+                  <i class="bi bi-eye"></i> Visualizar TCC
+                </a>` :
+              '<span class="badge bg-secondary">Arquivo não disponível</span>'
+            }
+            </div>
+          </div>
+        </div>
+      `;
+
+      if (tcc.arquivo) {
+        setTimeout(() => {
+          const canvas = col.querySelector(`#${canvasId}`);
+          if (canvas) {
+            const pdfUrl = `https://backend-tcc-bwya.onrender.com/visualizar_tcc/${tcc.arquivo}`;
+            gerarPreviewPDF(pdfUrl, canvas);
+          }
+        }, 0);
+      }
+
+      return col;
+    }
     //cadastrar tcc
     function cadastrarTcc() {
   const titulo = document.getElementById('titulo').value;
@@ -504,47 +700,7 @@
       window.location.href = 'index.html'; // Redireciona para a tela inicial
     }
 
-    let cursosMap = {};
-
-    function criarCardTCC(tcc) {
-      const col = document.createElement('div');
-      col.className = 'col';
-      let badgeClass = tcc.status === 'aprovado' ? 'badge-aprovado' :
-        tcc.status === 'rejeitado' ? 'badge-rejeitado' : 'badge-pendente';
-      const showStatus = localStorage.getItem('token') !== null;
-
-      col.innerHTML = `
-        <div class="card card-tcc h-100">
-          <div class="card-img-top">
-            <i class="bi bi-file-earmark-pdf pdf-icon"></i>
-          </div>
-          <div class="card-body">
-            ${showStatus ? `
-              <div class="d-flex justify-content-between align-items-start mb-2">
-                <span class="badge ${badgeClass}">${tcc.status || 'pendente'}</span>
-                <small class="text-muted">${tcc.ano}</small>
-              </div>
-            ` : `
-              <div class="d-flex justify-content-end mb-2">
-                <small class="text-muted">${tcc.ano}</small>
-              </div>
-            `}
-            <h5 class="card-title">${tcc.titulo}</h5>
-            <p class="card-text">${tcc.autor}</p>
-            <div class="mt-auto">
-              <small class="text-muted d-block mb-2">Curso: ${cursosMap[tcc.curso_id] || tcc.curso || 'Não especificado'}</small>
-              ${tcc.arquivo ?
-          `<a href="https://backend-tcc-bwya.onrender.com/visualizar_tcc/${tcc.arquivo}" class="btn btn-senai btn-sm w-100" target="_blank">
-                  <i class="bi bi-eye"></i> Visualizar TCC
-                </a>` :
-          '<span class="badge bg-secondary">Arquivo não disponível</span>'
-        }
-            </div>
-          </div>
-        </div>
-      `;
-      return col;
-    }
+    
 
     function carregarTCCs() {
       const cursoId = document.getElementById('curso').value;
@@ -697,4 +853,3 @@
 </body>
 
 </html>
-
