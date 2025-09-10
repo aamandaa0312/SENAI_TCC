@@ -271,11 +271,12 @@
         }
 
         .content-section img {
+            color: white;
             border-radius: 12px;
             width: 100%;
             max-height: 350px;
             object-fit: cover;
-            box-shadow: 0 8px 20px rgba(172, 22, 22, 0.12);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
         }
 
         /* Botões */
@@ -431,7 +432,7 @@
             z-index: 1000;
             background: white;
             border-radius: 0 8px 8px 0;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 20px rgba(233, 0, 0, 0.15);
             padding: 12px;
             display: flex;
             flex-direction: column;
@@ -1070,7 +1071,7 @@
                 }).addTo(map);
 
                 const senaiSchools = [
-                    { name: "SENAI São Paulo", lat: -23.5505, lng: -46.6333, description:"Av.."},
+                    { name: "SENAI São Paulo", lat: -23.5505, lng: -46.6333, },
                     { name: "SENAI Santo Amaro", lat: -23.6500, lng: -46.7200 },
                     { name: "SENAI Itaquera", lat: -23.5400, lng: -46.4700 },
                     { name: "SENAI Osasco", lat: -23.5320, lng: -46.7920 },
@@ -1205,5 +1206,3 @@
 </body>
 
 </html>
-
-
