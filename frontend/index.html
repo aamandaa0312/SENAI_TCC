@@ -2,24 +2,20 @@
 <html lang="pt-BR" data-bs-theme="auto">
 
 <head>
-    <!-- Conteúdo da tag <head> do index.html original -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Meta + CSS -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SENAI TCCs</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Leaflet CSS -->
     <link rel="icon" href="https://proeducador.sp.senai.br/site/icons/logo-small.png">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
     <style>
-        /* Estilos do index.html original */
+        /* --- seu CSS (mantive a versão mais completa do arquivo) --- */
         :root {
-            /* Variáveis do index1.html (cores mais modernas e definidas) */
             --primary: #ff1900;
-            /* Cor principal vermelha SENAI */
             --primary-gradient: linear-gradient(135deg, #ff1900, #cc1400);
             --secondary: #2D3748;
             --accent: #FFD166;
@@ -28,110 +24,30 @@
             --light-text: #FFFFFF;
             --card-bg: #FFFFFF;
             --footer-bg: #1A202C;
-
-            /* Variáveis do index.html original (mantidas para compatibilidade) */
             --primary-dark: #6f221f;
             --light: #F8F9FA;
             --dark: #212529;
             --gray: #6C757D;
         }
 
-        /* Reset e corpo */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--light-bg);
             color: var(--dark-text);
             overflow-x: hidden;
         }
-        #auth-container {
-            display: flex;
-            align-items: center;
-        }
-        
-        .auth-button {
-            background-color: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-left: 10px;
-            transition: background-color 0.3s;
-            font-size: 14px;
-        }
-        
-        .auth-button:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 30px;
-            height: 21px;
-            cursor: pointer;
-        }
-        
-        .menu-toggle span {
-            height: 3px;
-            width: 100%;
-            background-color: #333;
-            border-radius: 3px;
-            transition: all 0.3s;
-        }
-        
-        .nav-menu {
-            display: flex;
-            list-style: none;
-        }
-        
-        .nav-menu li {
-            margin-left: 25px;
-            position: relative;
-        }
-        
-        /* Menu principal */
-        .main-header {
-            background-color: #fff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 15px 0;
-            position: fixed;
-            top: 40px; /* Altura da top-bar */
-            left: 0;
-            width: 100%;
-            z-index: 999;
-        }
-        
-        .main-header .container-fluid {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        
-        .nav-menu {
-            display: flex;
-            list-style: none;
-        }
-        
-        .nav-menu li {
-            margin-left: 25px;
-            position: relative;
-        }
-        
-        /* Top Bar */
+
+        /* Top bar / auth */
         .top-bar {
             background-color: var(--primary);
             color: var(--light-text);
             width: 100%;
-            padding: 0.25rem 0;
         }
 
         .top-bar .redes-sociais a {
             color: var(--light-text);
             margin-right: 15px;
             font-size: 1.2rem;
-            transition: color 0.3s;
         }
 
         /* Navbar */
@@ -168,6 +84,7 @@
         .nav-link.active::after {
             width: 100%;
         }
+
         .navbar-toggler {
             margin-left: 5px;
             border: none;
@@ -193,150 +110,39 @@
             transition: all 0.3s;
             display: block;
         }
+
         /* Estado inicial (hamburger) */
         .navbar-toggler span:nth-child(1) {
             transform: translateY(0) rotate(0);
         }
-        
+
         .navbar-toggler span:nth-child(2) {
             opacity: 1;
         }
-        
+
         .navbar-toggler span:nth-child(3) {
             transform: translateY(0) rotate(0);
         }
-         /* Estado quando expandido (X) */
-         .navbar-toggler[aria-expanded="true"] span:nth-child(1) {
+
+        /* Estado quando expandido (X) */
+        .navbar-toggler[aria-expanded="true"] span:nth-child(1) {
             transform: translateY(9px) rotate(45deg);
         }
-        
+
         .navbar-toggler[aria-expanded="true"] span:nth-child(2) {
             opacity: 0;
         }
-        
+
         .navbar-toggler[aria-expanded="true"] span:nth-child(3) {
             transform: translateY(-9px) rotate(-45deg);
         }
-        
-        /* Carrossel index1.html */
-        #mainCarousel {
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            margin: 20px auto;
-        }
 
+
+        /* Carousel */
         #mainCarousel .carousel-item img {
             height: 500px;
             object-fit: cover;
             filter: brightness(0.8);
-        }
-
-        #mainCarousel .carousel-caption {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 8px;
-            padding: 20px;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            color: white;
-        }
-
-        /* Seções de conteúdo */
-        .section-title {
-            position: relative;
-            margin-bottom: 30px;
-            font-weight: 700;
-            text-align: center;
-            color: var(--primary);
-        }
-
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 4px;
-            background: var(--primary-gradient);
-            margin: 15px auto;
-            border-radius: 2px;
-        }
-
-        .content-section {
-            padding: 60px 0;
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            margin: 30px 0;
-        }
-
-        .content-section img {
-            color: white;
-            border-radius: 12px;
-            width: 100%;
-            max-height: 350px;
-            object-fit: cover;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-        }
-
-        /* Botões */
-        .btn-primary {
-            background: var(--primary-gradient);
-            border: none;
-            border-radius: 30px;
-            padding: 10px 25px;
-            font-weight: 600;
-            color: white;
-            transition: background 0.3s;
-        }
-
-        .btn-primary:hover {
-            background: #ff1900;
-        }
-
-        .back-to-top {
-            display: inline-block;
-            padding: 12px 25px;
-            background: var(--primary-gradient);
-            color: white;
-            text-decoration: none;
-            border-radius: 30px;
-            margin: 30px 0;
-            font-weight: 600;
-            box-shadow: 0 5px 15px rgba(255, 58, 45, 0.3);
-            transition: background 0.3s;
-        }
-
-        .back-to-top:hover {
-            background: #ff1900;
-        }
-
-        /* Destaques (Stats) */
-        .stats-container {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            margin: 40px 0;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 20px;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 10px;
-        }
-
-        .stat-label {
-            font-weight: 600;
-            color: var(--dark-text);
         }
 
         /* Mapa */
@@ -384,9 +190,105 @@
         .location-btn:hover {
             background: #ff1900;
         }
+        .section-title {
+            position: relative;
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-align: center;
+            color: var(--primary);
+        }
 
-        /* Footer */
-        footer {
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--primary-gradient);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .content-section {
+            padding: 60px 0;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin: 30px 0;
+        }
+
+        .content-section img {
+            color: white;
+            border-radius: 12px;
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        .back-to-top:hover {
+            background: #ff1900;
+        }
+
+        /* Destaques (Stats) */
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+         /* Botões */
+         .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 30px;
+            padding: 10px 25px;
+            font-weight: 600;
+            color: white;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #ff1900;
+        }
+
+        .back-to-top {
+            display: inline-block;
+            padding: 12px 25px;
+            background: var(--primary-gradient);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            margin: 30px 0;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(255, 58, 45, 0.3);
+            transition: background 0.3s;
+        }
+
+        .back-to-top:hover {
+            background: #ff1900;
+        }
+         /* Footer */
+         footer {
             background: var(--footer-bg);
             color: var(--light-text);
             padding: 40px 0 20px;
@@ -423,257 +325,63 @@
             background: var(--primary-gradient);
         }
 
-        /* Acessibilidade */
-        .accessibility-widget {
-            position: fixed;
-            top: 50%;
-            left: 0;
-            transform: translateY(-50%);
-            z-index: 1000;
-            background: white;
-            border-radius: 0 8px 8px 0;
-            box-shadow: 0 4px 20px rgba(233, 0, 0, 0.15);
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        /* Chatbot */
+        .chatbot { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
+        .chat-window { width: 350px; height: 450px; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); overflow: hidden; display:flex; flex-direction:column; }
+        .chat-header { background: var(--primary); color: white; padding: 15px; display:flex; justify-content:space-between; align-items:center; }
 
-        .accessibility-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: var(--dark-text);
-            font-size: 1.1rem;
-            transition: background 0.3s;
-        }
-
-        .accessibility-btn:hover {
-            background: var(--primary-gradient);
-            color: white;
-        }
-
-        /* Chatbot (estilos do index1.html, sobrescrevendo o index.html original) */
-        .chatbot {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 1000;
-        }
-
-        .chat-window {
-            width: 350px;
-            height: 450px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: height 0.3s;
-        }
-
-        .chat-header {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .chat-log {
-            flex: 1;
-            padding: 1.5rem;
-            overflow-y: auto;
-            background: #f8f9fa;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .chat-input-container {
-            display: flex;
-            padding: 1rem;
-            background: white;
-            border-top: 1px solid #e9ecef;
-            gap: 10px;
-        }
-
-        .chat-input {
-            flex: 1;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            padding: 0.5rem 1rem;
-            outline: none;
-        }
-
-        .chat-send-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .chat-send-btn:hover {
-            background: #cc1400;
-        }
-
-        .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 18px;
-            line-height: 1.5;
-        }
-
-        .message-bot {
-            background: white;
-            color: var(--dark-text);
-            border-radius: 18px 18px 18px 4px;
-            align-self: flex-start;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0, 0, 0, 0.03);
-        }
-
-        .message-user {
-            background: var(--primary-gradient);
-            color: white;
-            border-radius: 18px 18px 4px 18px;
-            align-self: flex-end;
-        }
-
-        /* Animações */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animated-section {
-            animation: fadeIn 0.8s ease-out;
-            opacity: 0;
-            animation-fill-mode: forwards;
-        }
-
-        .visible {
-            opacity: 1;
-        }
-
-        /* Responsividade */
         @media (max-width: 768px) {
-            .carousel-item img {
-                height: 350px;
-            }
-
-            .content-section {
-                padding: 30px 15px;
-            }
-
-            .accessibility-widget {
-                top: auto;
-                bottom: 80px;
-                transform: none;
-                flex-direction: row;
-                border-radius: 8px 8px 0 0;
-                width: 100%;
-                justify-content: center;
-            }
-
-            .chat-window {
-                width: 300px;
-                height: 400px;
-            }
-
-            #map {
-                height: 350px;
-            }
-
-            .map-overlay {
-                position: relative;
-                top: 0;
-                right: 0;
-                margin-bottom: 15px;
-                max-width: 100%;
-            }
+            #mainCarousel .carousel-item img { height: 350px; }
+            #map { height: 350px; }
+            .chat-window { width: 300px; height: 400px; }
         }
     </style>
 </head>
 
 <body>
-    <!-- Widget de Acessibilidade do index1.html -->
-    <div class="accessibility-widget">
-        <button class="accessibility-btn" id="font-increase" title="Aumentar texto">
-            <i class="fas fa-text-height"></i>
-        </button>
-        <button class="accessibility-btn" id="font-decrease" title="Diminuir texto">
-            <i class="fas fa-text-height" style="font-size: 0.9rem;"></i>
-        </button>
-    </div>
-
     <header>
-        <!-- Top Bar do index.html original -->
-        <div class="top-bar py-1" style="background-color: #ff1900;">
+        <!-- Top Bar (APENAS um auth-container aqui) -->
+        <div class="top-bar py-1">
             <div class="container-fluid d-flex justify-content-between align-items-center">
                 <div class="redes-sociais ms-3">
                     <a href="https://www.facebook.com/senaisaopaulo/?locale=pt_BR"><i class="bi bi-facebook"></i></a>
                     <a href="https://www.instagram.com/senai.sp/"><i class="bi bi-instagram"></i></a>
                     <a href="https://www.youtube.com/channel/UCzqd0VpWU_w4BKwmSvFdieQ"><i class="bi bi-youtube"></i></a>
                 </div>
-                <div id="auth-container">
-                </div>
+
+                <!-- ÚNICO auth-container: aqui será injetado o dropdown / ícone -->
+                <div id="auth-container" class="d-flex align-items-center"></div>
             </div>
         </div>
-        <!-- Navbar do index.html original -->
+
+        <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
-                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span></span>
-                <span></span>
-                <span></span>
-            
-            </button>
-                
-                <div class="collapse navbar-collapse" id="navbarContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="index.html">Início</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="buscar_tcc.html">TCCS</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="login.html">Login</a>
-                        </li>
-                    </ul>
-                    
-                   
-                </div>
+            <div class="container-fluid">
                 <a class="navbar-brand" href="#">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/SENAI_S%C3%A3o_Paulo_logo.png"
                         alt="SENAI" height="40" />
                 </a>
+
+                <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span></span><span></span><span></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link active" href="index.html">Início</a></li>
+                        <li class="nav-item"><a class="nav-link" href="buscar_tcc.html">TCCS</a></li>
+                        <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                    </ul>
+                </div>
             </div>
         </nav>
     </header>
 
-    <!-- Conteúdo principal (main) do index1.html -->
+    <!-- Conteúdo principal -->
     <main class="container my-5">
+        <!-- Carrossel -->
         <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
@@ -692,19 +400,10 @@
                 <div class="carousel-item">
                     <img src="https://i.makeagif.com/media/7-05-2021/3VMxJI.gif" class="d-block w-100"
                         alt="Tecnologia e inovação">
-                    <div class="carousel-caption">
-                        <h2>Tecnologia e Inovação</h2>
-                        <p>Projetos que unem conhecimento técnico e criatividade</p>
-                    </div>
                 </div>
                 <div class="carousel-item">
                     <img src="https://media.licdn.com/dms/image/v2/D4D1BAQFknofuOJsJ-Q/company-background_10000/company-background_10000/0/1658493207949/senai_solues_digitais_cover?e=2147483647&v=beta&t=tm1oWeWoD7iY5KGSVRm32L-gDLeWCZFFiDMN_F_kQeA"
                         class="d-block w-100" alt="Educação profissional">
-                    <div class="carousel-caption">
-                        <h2>Educação que Transforma</h2>
-                        <p>Preparando profissionais para os desafios da indústria</p>
-                    </div>
-
                 </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
@@ -716,7 +415,6 @@
                 <span class="visually-hidden">Próximo</span>
             </button>
         </div>
-
         <div class="stats-container">
             <div class="stat-item">
                 <div class="stat-number">90+</div>
@@ -732,6 +430,7 @@
             </div>
         </div>
 
+        <!-- Seções de conteúdo (mantive suas seções) -->
         <section class="content-section">
             <div class="container">
                 <h2 class="section-title">Infraestrutura de Produção</h2>
@@ -787,30 +486,31 @@
             </div>
         </section>
 
-        <section class="content-section">
-            <div class="container">
-                <h2 class="section-title">Quem Somos</h2>
-                <div class="row align-items-center">
-                    <div class="col-md-6">
-                        <p class="lead">Somos um grupo de estudantes do SENAI desenvolvendo um projeto inovador para
-                            organizar e exibir todos os TCCs já realizados na unidade.</p>
-                        <p>Nosso objetivo é facilitar o acesso aos trabalhos acadêmicos, proporcionando uma plataforma
-                            intuitiva para alunos e professores.</p>
-                    </div>
-                    <div class="col-md-6 text-center">
-                        <img src="https://pess.sesisenaispedu.org.br/Imagens/fundo/sesi-senai-fundo.jpg"
-                            alt="Equipe SENAI" class="img-fluid">
-                    </div>
+    </main>
+    <section class="content-section">
+        <div class="container">
+            <h2 class="section-title">Quem Somos</h2>
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="lead">Somos um grupo de estudantes do SENAI desenvolvendo um projeto inovador para
+                        organizar e exibir todos os TCCs já realizados na unidade.</p>
+                    <p>Nosso objetivo é facilitar o acesso aos trabalhos acadêmicos, proporcionando uma plataforma
+                        intuitiva para alunos e professores.</p>
+                </div>
+                <div class="col-md-6 text-center">
+                    <img src="https://pess.sesisenaispedu.org.br/Imagens/fundo/sesi-senai-fundo.jpg"
+                        alt="Equipe SENAI" class="img-fluid">
                 </div>
             </div>
-        </section>
-
-        <div class="text-center my-5">
-            <a href="#" class="back-to-top">Voltar para o topo</a>
         </div>
-    </main>
+    </section>
 
-    <!-- Footer do index1.html -->
+    <div class="text-center my-5">
+        <a href="#" class="back-to-top">Voltar para o topo</a>
+    </div>
+</main>
+
+    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="row">
@@ -852,8 +552,7 @@
         </div>
     </footer>
 
-
-    <!-- Chatbot do index1.html -->
+    <!-- Chatbot -->
     <div class="chatbot">
         <div id="chat-window" class="chat-window">
             <div class="chat-header">
@@ -862,123 +561,78 @@
                     <i class="fas fa-minus"></i>
                 </button>
             </div>
-            <div id="chat-log" class="chat-log">
-                <div class="message message-bot">
-                    Olá! Sou o assistente virtual do SENAI. Como posso ajudar?
-                </div>
+            <div id="chat-log" class="chat-log" style="padding:1.5rem; background:#f8f9fa; overflow:auto;">
+                <div class="message message-bot">Olá! Sou o assistente virtual do SENAI. Como posso ajudar?</div>
             </div>
-            <div class="chat-input-container">
-                <input type="text" id="user-input" class="chat-input" placeholder="Digite sua mensagem...">
-                <button id="send-button" class="chat-send-btn">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
+            <div class="chat-input-container" style="display:flex; padding:1rem; gap:10px;">
+                <input type="text" id="user-input" class="chat-input form-control" placeholder="Digite sua mensagem...">
+                <button id="send-button" class="chat-send-btn btn btn-primary"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
 
-    <!-- VLibras do index1.html -->
+    <!-- VLibras -->
     <div vw class="enabled">
         <div vw-access-button class="active"></div>
-        <div vw-plugin-wrapper>
-            <div class="vw-plugin-top-wrapper"></div>
-        </div>
+        <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
     </div>
 
-    <!-- Scripts JavaScript -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+
+    <!-- Script de autenticação (modelo que você usou, com pequeno try/catch seguro) -->
     <script>
-        // JavaScript para o menu mobile
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuButton = document.getElementById('mobile-menu');
-            const navMenu = document.querySelector('.nav-menu');
-            
-            mobileMenuButton.addEventListener('click', function() {
-                navMenu.classList.toggle('active');
-                mobileMenuButton.classList.toggle('active');
-            });
-            
-            // Dropdown para mobile
-            const dropdowns = document.querySelectorAll('.dropdown > a');
-            dropdowns.forEach(dropdown => {
-                dropdown.addEventListener('click', function(e) {
-                    if (window.innerWidth <= 768) {
-                        e.preventDefault();
-                        const parent = this.parentElement;
-                        parent.classList.toggle('active');
-                    }
-                });
-            });
-            
-            // Fechar o menu ao clicar em um link (opcional)
-            const navLinks = document.querySelectorAll('.nav-menu a:not(.dropdown > a)');
-            navLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    if (window.innerWidth <= 768) {
-                        navMenu.classList.remove('active');
-                        mobileMenuButton.classList.remove('active');
-                    }
-                });
-            });
-            
-            // Fechar menu ao clicar fora dele
-            document.addEventListener('click', function(e) {
-                if (window.innerWidth <= 768 && 
-                    !e.target.closest('.nav-menu') && 
-                    !e.target.closest('#mobile-menu') &&
-                    navMenu.classList.contains('active')) {
-                    navMenu.classList.remove('active');
-                    mobileMenuButton.classList.remove('active');
-                }
-            });
-        });
-        // Função de Logout (do index.html original)
         function logout() {
             localStorage.removeItem('token');
             localStorage.removeItem('usuario');
-            window.location.href = 'index.html'; // Alterado para index.html para consistência
+            window.location.href = 'index.html';
         }
 
-        document.addEventListener("DOMContentLoaded", function () {
-            // --- LÓGICA DE AUTENTICAÇÃO (DO ARQUIVO ORIGINAL) ---
+        document.addEventListener('DOMContentLoaded', () => {
             const authContainer = document.getElementById('auth-container');
-            if (authContainer) {
-                const token = localStorage.getItem('token');
-                const usuario = JSON.parse(localStorage.getItem('usuario'));
+            if (!authContainer) return;
 
-                if (token && usuario) {
-                    // Usuário logado
-                    authContainer.innerHTML = `
-                        <div class="dropdown me-3">
+            const token = localStorage.getItem('token');
+            let usuario = null;
+            try {
+                const u = localStorage.getItem('usuario');
+                usuario = u ? JSON.parse(u) : null;
+            } catch (err) {
+                console.error('usuario inválido no localStorage:', err);
+                usuario = null;
+            }
+
+            if (token && usuario && usuario.nome) {
+                authContainer.innerHTML = `
+                    <div class="dropdown me-3 ">
                         <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="navbarDropdownAuth" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
-                            <span class="ms-2 d-none d-lg-block">${usuario.nome}</span>
+                            <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
+                            <span class="ms-2 d-none d-lg-block text-white">${usuario.nome}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAuth">
                             <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Meu Perfil</a></li>
-                            <li><a class="dropdown-item" href="#">Meus TCCs Salvos</a></li>
+                            <li><a class="dropdown-item" href="perfil.html">Meu Perfil</a></li>
+                            <li><a class="dropdown-item" href="meus_tccs.html">Meus TCCs Salvos</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
                         </ul>
                     </div>
-                    `;
-                } else {
-                    // Usuário não logado
-                    authContainer.innerHTML = `
-                        <div class="me-3">
-                            <a href="login.html" class="nav-link text-white">
-                                <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
-                            </a>
-                        </div>
-                    `;
-                }
+                `;
+            } else {
+                authContainer.innerHTML = `
+                    <div class="me-3">
+                        <a href="login.html" class="nav-link text-white">
+                            <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
+                        </a>
+                    </div>
+                `;
             }
 
-            // --- INICIALIZAÇÃO DO VLIBRAS (do index1.html) ---
-            if (typeof VLibras !== 'undefined') {
+             // --- INICIALIZAÇÃO DO VLIBRAS (do index1.html) ---
+             if (typeof VLibras !== 'undefined') {
                 new window.VLibras.Widget('https://vlibras.gov.br/app');
             }
 
@@ -1124,7 +778,7 @@
                     { name: "SENAI Bauru", lat: -22.314514, lng: -49.060631 },
                     { name: "SENAI Botucatu", lat: -22.882305, lng: -48.443787 },
                     { name: "SENAI Ourinhos", lat: -22.981634, lng: -49.867678 },
-                    { name: "SENAI Presidente Prudente", lat: -22.119940065256408, lng:  -51.405710485214044 },
+                    { name: "SENAI Presidente Prudente", lat: -22.119940065256408, lng: -51.405710485214044 },
                     { name: "SENAI São Carlos", lat: -22.017532, lng: -47.897621 },
                     { name: "SENAI Birigui", lat: -21.286202176833324, lng: -50.336130545653596 },
                     { name: "SENAI Bragança Paulista", lat: -22.92141049067649, lng: -46.54598566095153 },
