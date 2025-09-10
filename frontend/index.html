@@ -193,32 +193,31 @@
             transition: all 0.3s;
             display: block;
         }
-
-        .navbar-toggler[aria-expanded="true"] span:nth-child(1) {
-            transform: rotate(45deg) translate(6px, 6px);
+        /* Estado inicial (hamburger) */
+        .navbar-toggler span:nth-child(1) {
+            transform: translateY(0) rotate(0);
         }
-
+        
+        .navbar-toggler span:nth-child(2) {
+            opacity: 1;
+        }
+        
+        .navbar-toggler span:nth-child(3) {
+            transform: translateY(0) rotate(0);
+        }
+         /* Estado quando expandido (X) */
+         .navbar-toggler[aria-expanded="true"] span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+        
         .navbar-toggler[aria-expanded="true"] span:nth-child(2) {
             opacity: 0;
         }
-
+        
         .navbar-toggler[aria-expanded="true"] span:nth-child(3) {
-            transform: rotate(-45deg) translate(6px, -6px);
+            transform: translateY(-9px) rotate(-45deg);
         }
-        .btn-cadastro {
-            background: var(--primary-gradient);
-            border: none;
-            border-radius: 30px;
-            padding: 10px 25px;
-            font-weight: 600;
-            color: white;
-            transition: background 0.3s;
-        }
-
-        .btn-cadastro:hover {
-            background: #ff1900;
-        }
-
+        
         /* Carrossel index1.html */
         #mainCarousel {
             border-radius: 12px;
@@ -641,12 +640,13 @@
         </div>
         <!-- Navbar do index.html original -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
-                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
+            <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            
+            </button>
                 
                 <div class="collapse navbar-collapse" id="navbarContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -657,7 +657,7 @@
                             <a class="nav-link" href="buscar_tcc.html">TCCS</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="cursos.html">Cursos</a>
+                            <a class="nav-link" href="login.html">Login</a>
                         </li>
                     </ul>
                     
@@ -718,16 +718,16 @@
 
         <div class="stats-container">
             <div class="stat-item">
-                <div class="stat-number">500+</div>
-                <div class="stat-label">TCCs Publicados</div>
+                <div class="stat-number">90+</div>
+                <div class="stat-label">Unidades SENAI</div>
             </div>
             <div class="stat-item">
                 <div class="stat-number">50+</div>
                 <div class="stat-label">Unidades</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">95%</div>
-                <div class="stat-label">Aprovação</div>
+                <div class="stat-number">4</div>
+                <div class="stat-label">Desenvolveedores</div>
             </div>
         </div>
 
