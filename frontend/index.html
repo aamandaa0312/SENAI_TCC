@@ -950,17 +950,19 @@
                     // Usuário logado
                     authContainer.innerHTML = `
                         <div class="dropdown me-3">
-                            <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="navbarDropdownAuth" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
-                                <span class="ms-2 d-none d-lg-block">${usuario.nome}</span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAuth">
-                                <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Meu Perfil</a></li>
-                                <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
-                            </ul>
-                        </div>
+                        <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="navbarDropdownAuth" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+                            <span class="ms-2 d-none d-lg-block">${usuario.nome}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAuth">
+                            <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Meu Perfil</a></li>
+                            <li><a class="dropdown-item" href="#">Meus TCCs Salvos</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
+                        </ul>
+                    </div>
                     `;
                 } else {
                     // Usuário não logado
@@ -1203,4 +1205,5 @@
 </body>
 
 </html>
+
 
