@@ -36,6 +36,7 @@
             padding: 5px 0;
 
         }
+
         .navbar {
             background: var(--card-bg);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -69,6 +70,7 @@
         .nav-link.active::after {
             width: 100%;
         }
+
         .navbar-toggler {
             margin-left: 5px;
             border: none;
@@ -94,27 +96,29 @@
             transition: all 0.3s;
             display: block;
         }
+
         /* Estado inicial (hamburger) */
         .navbar-toggler span:nth-child(1) {
             transform: translateY(0) rotate(0);
         }
-        
+
         .navbar-toggler span:nth-child(2) {
             opacity: 1;
         }
-        
+
         .navbar-toggler span:nth-child(3) {
             transform: translateY(0) rotate(0);
         }
-         /* Estado quando expandido (X) */
-         .navbar-toggler[aria-expanded="true"] span:nth-child(1) {
+
+        /* Estado quando expandido (X) */
+        .navbar-toggler[aria-expanded="true"] span:nth-child(1) {
             transform: translateY(9px) rotate(45deg);
         }
-        
+
         .navbar-toggler[aria-expanded="true"] span:nth-child(2) {
             opacity: 0;
         }
-        
+
         .navbar-toggler[aria-expanded="true"] span:nth-child(3) {
             transform: translateY(-9px) rotate(-45deg);
         }
@@ -122,7 +126,6 @@
 </head>
 
 <body>
-    <!-- Top Bar Modificada -->
     <div class="top-bar py-1" style="background-color: #ff1900;">
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <div class="redes-sociais ms-3">
@@ -134,12 +137,8 @@
             </div>
         </div>
     </div>
-    <!-- Navbar -->
-
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-
-
             <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -154,8 +153,8 @@
                 </ul>
             </div>
             <a class="navbar-brand" href="#">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/SENAI_S%C3%A3o_Paulo_logo.png"
-                    alt="SENAI" height="40" />
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/SENAI_S%C3%A3o_Paulo_logo.png" alt="SENAI"
+                    height="40" />
             </a>
         </div>
     </nav>
@@ -176,7 +175,7 @@
                         <label for="senha" class="form-label">Senha:</label>
                         <input type="password" id="senha" class="form-control" placeholder="Sua senha" required>
                     </div>
-
+                    <div id="statusMessage" class="mt-3"></div>
                     <button type="submit" class="btn btn-danger w-100">ENTRAR</button>
                 </form>
 
@@ -192,9 +191,21 @@
     <div class="bg-danger" style="height: 50px;"></div>
 
     <script>
+        function showStatusMessage(message, type) {
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.innerHTML = `
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            setTimeout(() => {
+                statusMessage.innerHTML = '';
+            }, 5000); // Mensagem desaparece após 5 segundos
+        }
+
         document.getElementById('formLogin').addEventListener('submit', async function (e) {
             e.preventDefault();
-
 
             const email = document.getElementById("email").value;
             const senha = document.getElementById("senha").value;
@@ -205,29 +216,33 @@
                     headers: {
                         "Content-Type": "application/json"
                     },
-
                     body: JSON.stringify({ email, senha })
                 });
 
                 const dados = await resposta.json();
 
                 if (resposta.ok) {
-                    alert(dados.mensagem);
-                    // Armazenar o token 
+                    showStatusMessage(dados.mensagem, 'success');
                     localStorage.setItem('token', dados.token);
                     localStorage.setItem('usuario', JSON.stringify(dados.usuario));
-                    window.location.href = "index.html";
+                    // Redireciona após 1.5s para permitir que o usuário veja a mensagem de sucesso
+                    setTimeout(() => {
+                        window.location.href = "index.html";
+                    }, 1500); 
                 } else {
-                    alert(dados.erro || "Falha no login.");
+                    showStatusMessage(dados.erro || "Falha no login.", 'danger');
                 }
-
             } catch (erro) {
                 console.error(erro);
-                alert("Erro ao conectar com o servidor.");
+                showStatusMessage("Erro ao conectar com o servidor.", 'danger');
             }
         });
 
-
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('usuario');
+            window.location.href = 'TelaPrincipal.html';
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
             const authContainer = document.getElementById('auth-container');
@@ -236,80 +251,30 @@
 
             if (authContainer) {
                 if (token && usuario) {
-
                     authContainer.innerHTML = `
-                <div class="dropdown me-3">
-                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="navbarDropdownAuth" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
-                        <span class="ms-2 d-none d-lg-block">${usuario.nome}</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAuth">
-                        <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Meu Perfil</a></li>
-                        <li><a class="dropdown-item" href="#">Meus TCCs Salvos</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
-                    </ul>
-                </div>
-            `;
+                        <div class="dropdown me-3">
+                            <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="navbarDropdownAuth" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+                                <span class="ms-2 d-none d-lg-block">${usuario.nome}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAuth">
+                                <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">Meu Perfil</a></li>
+                                <li><a class="dropdown-item" href="#">Meus TCCs Salvos</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
+                            </ul>
+                        </div>
+                    `;
                 } else {
-                    // Usuário não logado: exibe o botão de login
                     authContainer.innerHTML = `
-                <div class="me-3">
-                    <a href="login.html" class="nav-link text-white">
-                        <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
-                    </a>
-                </div>
-            `;
-                }
-            }
-        });
-
-
-
-        function logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('usuario');
-            // Redireciona para a tela inicial após o logout
-            window.location.href = 'TelaPrincipal.html';
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-
-            const authContainer = document.getElementById('auth-container');
-
-            if (authContainer) {
-                const token = localStorage.getItem('token');
-                const usuario = JSON.parse(localStorage.getItem('usuario'));
-
-                if (token && usuario) {
-                    // Usuário logado:
-                    authContainer.innerHTML = `
-                    <div class="dropdown me-3">
-                        <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="navbarDropdownAuth" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
-                            <span class="ms-2 d-none d-lg-block">${usuario.nome}</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAuth">
-                            <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Meu Perfil</a></li>
-                            <li><a class="dropdown-item" href="#">Meus TCCs Salvos</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
-                        </ul>
-                    </div>
-                `;
-                } else {
-                    // Usuário não logado:
-                    authContainer.innerHTML = `
-                    <div class="me-3">
-                        <a href="login.html" class="nav-link text-white">
-                            <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
-                        </a>
-                    </div>
-                `;
+                        <div class="me-3">
+                            <a href="login.html" class="nav-link text-white">
+                                <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+                            </a>
+                        </div>
+                    `;
                 }
             }
         });
