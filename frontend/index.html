@@ -833,27 +833,39 @@
                 const group = new L.featureGroup(markers);
                 map.fitBounds(group.getBounds().pad(0.1));
 
-                document.getElementById('find-school').addEventListener('click', () => {
-                    if ("geolocation" in navigator) {
-                        navigator.geolocation.getCurrentPosition(position => {
-                            const userLat = position.coords.latitude;
-                            const userLng = position.coords.longitude;
-                            L.marker([userLat, userLng]).addTo(map).bindPopup("<strong>Sua localização</strong>").openPopup();
-
-                            let closestSchool = null, minDistance = Infinity;
-                            senaiSchools.forEach(school => {
-                                const distance = map.distance([userLat, userLng], [school.lat, school.lng]);
-                                if (distance < minDistance) {
-                                    minDistance = distance;
-                                    closestSchool = school;
-                                }
-                            });
-
-                            map.setView([closestSchool.lat, closestSchool.lng], 13);
-                            markers.find(m => m.getLatLng().equals([closestSchool.lat, closestSchool.lng])).openPopup();
-                        }, () => alert("Não foi possível obter sua localização."));
-                    } else {
+                 function getCurrentPositionAsync() {
+                    return new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject);
+                    });
+                }
+    
+                document.getElementById('find-school').addEventListener('click', async () => {
+                    if (!("geolocation" in navigator)) {
                         alert("Geolocalização não é suportada pelo seu navegador.");
+                        return;
+                    }
+    
+                    try {
+                        const position = await getCurrentPositionAsync();
+                        const userLat = position.coords.latitude;
+                        const userLng = position.coords.longitude;
+    
+                        L.marker([userLat, userLng]).addTo(map).bindPopup("<strong>Sua localização</strong>").openPopup();
+    
+                        let closestSchool = null, minDistance = Infinity;
+                        senaiSchools.forEach(school => {
+                            const distance = map.distance([userLat, userLng], [school.lat, school.lng]);
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                closestSchool = school;
+                            }
+                        });
+    
+                        map.setView([closestSchool.lat, closestSchool.lng], 13);
+                        markers.find(m => m.getLatLng().equals([closestSchool.lat, closestSchool.lng])).openPopup();
+    
+                    } catch (err) {
+                        alert("Não foi possível obter sua localização.");
                     }
                 });
             }
@@ -862,3 +874,4 @@
 </body>
 
 </html>
+
