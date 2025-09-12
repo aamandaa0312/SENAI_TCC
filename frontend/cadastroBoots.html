@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cadastro de Usuário - SENAI</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="icon" href="https://proeducador.sp.senai.br/site/icons/logo-small.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
     <style>
         .top-bar {
@@ -23,6 +22,88 @@
 
         .redes-sociais {
             padding: 5px 0;
+        }
+        .navbar {
+            background: var(--card-bg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 12px 0;
+        }
+
+        .navbar-brand img {
+            transition: transform 0.3s;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--dark-text) !important;
+            position: relative;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+        .navbar-toggler {
+            margin-left: 5px;
+            border: none;
+            padding: 0;
+            width: 30px;
+            height: 21px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: transparent;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+
+        .navbar-toggler span {
+            height: 3px;
+            width: 100%;
+            background-color: #333;
+            border-radius: 3px;
+            transition: all 0.3s;
+            display: block;
+        }
+        /* Estado inicial (hamburger) */
+        .navbar-toggler span:nth-child(1) {
+            transform: translateY(0) rotate(0);
+        }
+        
+        .navbar-toggler span:nth-child(2) {
+            opacity: 1;
+        }
+        
+        .navbar-toggler span:nth-child(3) {
+            transform: translateY(0) rotate(0);
+        }
+         /* Estado quando expandido (X) */
+         .navbar-toggler[aria-expanded="true"] span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+        
+        .navbar-toggler[aria-expanded="true"] span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .navbar-toggler[aria-expanded="true"] span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
         }
     </style>
 </head>
@@ -42,14 +123,24 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="index.html">Início</a></li>
-                <li class="nav-item"><a class="nav-link" href="buscar_tcc.html">TCCs</a></li>
-                <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
-            </ul>
+
+
+            <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="buscar_tcc.html">TCCS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                </ul>
+            </div>
             <a class="navbar-brand" href="#">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/SENAI_S%C3%A3o_Paulo_logo.png" alt="SENAI"
-                    height="40" />
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/SENAI_S%C3%A3o_Paulo_logo.png"
+                    alt="SENAI" height="40" />
             </a>
         </div>
     </nav>
@@ -109,7 +200,7 @@
         // Carregar cursos no select
         async function carregarCursos() {
             try {
-                const response = await fetch("https://backend-tcc-bwya.onrender.com/listar_cursos");
+                const response = await fetch("http://localhost:3000/listar_cursos");
                 const cursos = await response.json();
 
                 const selectCurso = document.getElementById("curso");
@@ -144,7 +235,7 @@
             }
 
             try {
-                const resposta = await fetch("https://backend-tcc-bwya.onrender.com/cadastrar_usuario", {
+                const resposta = await fetch("http://localhost:3000/cadastrar_usuario", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -174,6 +265,4 @@
     </script>
 </body>
 
-
 </html>
-
