@@ -1,205 +1,72 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tela de Login - SENAI</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="icon" href="https://proeducador.sp.senai.br/site/icons/logo-small.png">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-  <style>
-    .top-bar { background-color: #ff1900; color: #fff; width:100%;}
-    .redes-sociais a { color:#fff; margin-right:15px; font-size:1.2rem; }
-    .redes-sociais { padding:5px 0; }
-    /* força o toast acima do resto */
-    .toast-container { z-index: 2000; }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-  <!-- Top Bar -->
-  <div class="top-bar py-1">
-    <div class="container-fluid d-flex justify-content-between align-items-center">
-      <div class="redes-sociais ms-3">
-        <a href="https://www.facebook.com/senaisaopaulo/?locale=pt_BR"><i class="bi bi-facebook"></i></a>
-        <a href="https://www.instagram.com/senai.sp/"><i class="bi bi-instagram"></i></a>
-        <a href="https://www.youtube.com/channel/UCzqd0VpWU_w4BKwmSvFdieQ"><i class="bi bi-youtube"></i></a>
-      </div>
-      <div id="auth-container"></div>
+  <div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow" style="width: 350px;">
+      <h3 class="text-center mb-3">Seja Bem-vindo</h3>
+      <form id="formLogin">
+        <div class="mb-3">
+          <label for="email" class="form-label">E-mail:</label>
+          <input type="email" class="form-control" id="email" required>
+        </div>
+        <div class="mb-3">
+          <label for="senha" class="form-label">Senha:</label>
+          <input type="password" class="form-control" id="senha" required>
+        </div>
+        <button type="submit" class="btn btn-danger w-100">Entrar</button>
+      </form>
     </div>
   </div>
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link active" href="index.html">Início</a></li>
-        <li class="nav-item"><a class="nav-link" href="buscar_tcc.html">TCCS</a></li>
-        <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
-      </ul>
-      <a class="navbar-brand" href="#">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/SENAI_S%C3%A3o_Paulo_logo.png" alt="SENAI" height="40">
-      </a>
-    </div>
-  </nav>
-
-  <!-- Formulário de login -->
-  <div class="container d-flex justify-content-center align-items-center" style="height: calc(100vh - 72px);">
-    <div class="bg-light p-4 rounded-3 shadow" style="max-width: 400px; width: 100%;">
-      <div class="text-center">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/SENAI_S%C3%A3o_Paulo_logo.png" alt="SENAI" height="40">
-        <h3 class="mt-3">Seja Bem-vindo</h3>
-        <p class="mb-4">Efetue seu login</p>
-        <form id="formLogin">
-          <div class="mb-3">
-            <label for="email" class="form-label">E-mail:</label>
-            <input type="email" id="email" class="form-control" placeholder="Seu e-mail" required>
-          </div>
-          <div class="mb-3">
-            <label for="senha" class="form-label">Senha:</label>
-            <input type="password" id="senha" class="form-control" placeholder="Sua senha" required>
-          </div>
-          <button type="submit" id="btnEntrar" class="btn btn-danger w-100">ENTRAR</button>
-        </form>
-        <p class="text-center mt-3">Não tem uma conta? <a href="cadastroBoots.html">Faça seu cadastro</a></p>
-      </div>
-    </div>
-  </div>
-
-  <div class="bg-light" style="height: 25px;"></div>
-  <div class="bg-danger" style="height: 50px;"></div>
-
-  <!-- Toast container (fica no topo direito) -->
-  <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index:2000;">
-    <div id="toastMensagem" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="3500">
+  <div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="toastMensagem" class="toast text-bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="d-flex">
         <div class="toast-body" id="toastTexto"></div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
       </div>
     </div>
   </div>
 
-  <!-- Bootstrap JS (bundle com Popper) - IMPORTANTE: carregar antes do script que usa bootstrap -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Script do app (deve ficar após o bootstrap.bundle) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Mostrar toast com fallback para alert() caso algo dê errado
-    function mostrarMensagem(texto, tipo = 'danger', delay = 3500) {
-      const toastEl = document.getElementById('toastMensagem');
-      const toastTexto = document.getElementById('toastTexto');
-
-      if (!toastEl || !toastTexto) {
-        alert(texto);
-        return;
-      }
-
-      // Atualiza classes e texto
-      toastEl.className = `toast align-items-center text-bg-${tipo} border-0`;
-      toastEl.setAttribute('data-bs-delay', String(delay));
+    function mostrarMensagem(texto, tipo = "primary") {
+      const toast = document.getElementById("toastMensagem");
+      const toastTexto = document.getElementById("toastTexto");
+      toast.className = `toast text-bg-${tipo}`;
       toastTexto.textContent = texto;
-
-      try {
-        if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
-          // pega instância existente ou cria nova
-          const bsToast = bootstrap.Toast.getOrCreateInstance(toastEl);
-          bsToast.show();
-        } else {
-          // fallback se bootstrap não estiver carregado
-          alert(texto);
-        }
-      } catch (err) {
-        console.error('Erro ao exibir toast:', err);
-        alert(texto);
-      }
+      new bootstrap.Toast(toast).show();
     }
 
-    // Login
-    document.getElementById('formLogin').addEventListener('submit', async function (e) {
-      e.preventDefault();
-
-      const btn = document.getElementById('btnEntrar');
-      btn.disabled = true;
-      const email = document.getElementById('email').value.trim();
-      const senha = document.getElementById('senha').value;
+    document.getElementById("formLogin").addEventListener("submit", async function(event) {
+      event.preventDefault();
+      const email = document.getElementById("email").value;
+      const senha = document.getElementById("senha").value;
 
       try {
-        const resposta = await fetch("https://backend-tcc-bwya.onrender.com/login", {
+        const resposta = await fetch("https://seu-backend.com/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, senha })
         });
 
-        // tenta parsear JSON, mas não quebra se não for JSON
-        let dados = null;
-        try { dados = await resposta.json(); } catch (parseErr) { console.warn('Resposta não é JSON:', parseErr); }
-
-        console.log('Resposta do login', resposta, dados); // --> abra Console (F12) para debug
+        const dados = await resposta.json();
 
         if (resposta.ok) {
-          const nome = dados?.usuario?.nome || '';
-          mostrarMensagem('✅ Login realizado com sucesso! Bem-vindo(a) ' + nome, 'success', 1500);
-
-          // armazena apenas se existir token
-          if (dados?.token) localStorage.setItem('token', dados.token);
-          if (dados?.usuario) localStorage.setItem('usuario', JSON.stringify(dados.usuario));
-
-          // dá tempo pro toast aparecer (ajuste conforme desejar)
-          setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+          mostrarMensagem("✅ Login realizado com sucesso! Bem-vindo(a), " + dados.usuario.nome, "success");
+          localStorage.setItem("token", dados.token);
+          localStorage.setItem("usuario", JSON.stringify(dados.usuario));
+          setTimeout(() => { window.location.href = "index.html"; }, 2000);
         } else {
-          // usa mensagem do backend se existir
-          const mensagemErro = dados?.erro || dados?.mensagem || 'E-mail ou senha inválidos. Tente novamente.';
-          mostrarMensagem('⚠️ ' + mensagemErro, 'danger', 5000);
+          mostrarMensagem("⚠️ E-mail ou senha inválidos!", "danger");
         }
-
       } catch (erro) {
-        console.error('Erro ao conectar ao servidor:', erro);
-        mostrarMensagem('❌ Erro ao conectar com o servidor. Verifique a conexão ou console para mais detalhes.', 'danger', 5000);
-      } finally {
-        btn.disabled = false;
-      }
-    });
-
-    // Função de logout (mantida)
-    function logout() {
-      localStorage.removeItem('token');
-      localStorage.removeItem('usuario');
-      mostrarMensagem('Você saiu. Até mais!', 'warning', 1200);
-      setTimeout(() => { window.location.href = 'index.html'; }, 900);
-    }
-
-    // Atualizar UI de autenticação (quando a página carregar)
-    document.addEventListener('DOMContentLoaded', () => {
-      const authContainer = document.getElementById('auth-container');
-      if (!authContainer) return;
-      const token = localStorage.getItem('token');
-      const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
-
-      if (token && usuario?.nome) {
-        authContainer.innerHTML = `
-          <div class="dropdown me-3">
-            <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#"
-               id="navbarDropdownAuth" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
-              <span class="ms-2 d-none d-lg-block">${usuario.nome}</span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAuth">
-              <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="perfil.html">Meu Perfil</a></li>
-              <li><a class="dropdown-item" href="#">Meus TCCs Salvos</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
-            </ul>
-          </div>
-        `;
-      } else {
-        authContainer.innerHTML = `
-          <div class="me-3">
-            <a href="login.html" class="nav-link text-white">
-              <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
-            </a>
-          </div>
-        `;
+        mostrarMensagem("❌ Erro ao conectar ao servidor.", "danger");
       }
     });
   </script>
