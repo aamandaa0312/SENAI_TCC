@@ -2,7 +2,6 @@
 <html lang="pt-BR" data-bs-theme="auto">
 
 <head>
-    <!-- Meta + CSS -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SENAI TCCs</title>
@@ -13,7 +12,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
     <style>
-        /* --- seu CSS (mantive a versão mais completa do arquivo) --- */
+       
         :root {
             --primary: #ff1900;
             --primary-gradient: linear-gradient(135deg, #ff1900, #cc1400);
@@ -190,6 +189,7 @@
         .location-btn:hover {
             background: #ff1900;
         }
+
         .section-title {
             position: relative;
             margin-bottom: 30px;
@@ -224,6 +224,7 @@
             object-fit: cover;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
         }
+
         .back-to-top:hover {
             background: #ff1900;
         }
@@ -256,8 +257,8 @@
             color: var(--dark-text);
         }
 
-         /* Botões */
-         .btn-primary {
+        /* Botões */
+        .btn-primary {
             background: var(--primary-gradient);
             border: none;
             border-radius: 30px;
@@ -287,8 +288,9 @@
         .back-to-top:hover {
             background: #ff1900;
         }
-         /* Footer */
-         footer {
+
+        /* Footer */
+        footer {
             background: var(--footer-bg);
             color: var(--light-text);
             padding: 40px 0 20px;
@@ -304,7 +306,9 @@
             color: var(--light-text);
         }
 
+        /* Adicionando hover vermelho nos links do rodapé */
         footer a:hover {
+            color: var(--primary) !important;
             text-decoration: underline;
         }
 
@@ -325,22 +329,279 @@
             background: var(--primary-gradient);
         }
 
+        /* Adicionando hover vermelho nos links do cabeçalho */
+        .navbar .nav-link:hover {
+            color: var(--primary) !important;
+        }
+
         /* Chatbot */
-        .chatbot { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
-        .chat-window { width: 350px; height: 450px; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); overflow: hidden; display:flex; flex-direction:column; }
-        .chat-header { background: var(--primary); color: white; padding: 15px; display:flex; justify-content:space-between; align-items:center; }
+        .chatbot {
+            position: fixed;
+            bottom: 33px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .chat-window {
+            width: 350px;
+            height: 450px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
         @media (max-width: 768px) {
-            #mainCarousel .carousel-item img { height: 350px; }
-            #map { height: 350px; }
-            .chat-window { width: 300px; height: 400px; }
+            #mainCarousel .carousel-item img {
+                height: 350px;
+            }
+
+            #map {
+                height: 350px;
+            }
+
+            .chat-window {
+                width: 300px;
+                height: 400px;
+            }
+        }
+
+        /* --- Início do CSS da Acessibilidade - Posição Esquerda --- */
+        .accessibility-panel {
+            position: fixed;
+            top: 50%;
+            left: -300px;
+            /* Alterado para a esquerda */
+            transform: translateY(-50%);
+            z-index: 9999;
+            transition: left 0.4s ease-in-out;
+        }
+
+        .accessibility-panel.is-open {
+            left: 0;
+        }
+
+        /* --- CÓDIGO DE CORREÇÃO --- */
+        /* Esta regra garante que o painel de acessibilidade e seu botão de abrir/fechar
+           (o "boneco") NÃO sejam afetados pelos filtros de cor quando eles são
+           aplicados ao restante da página. */
+        body.high-contrast .accessibility-panel,
+        body.grayscale .accessibility-panel,
+        body.invert-colors .accessibility-panel,
+        body.dark-mode-accessibility .accessibility-panel,
+        body.light-mode-accessibility .accessibility-panel {
+            filter: none !important;
+        }
+
+        /* --- FIM DO CÓDIGO DE CORREÇÃO --- */
+
+        .accessibility-toggle {
+            position: absolute;
+            top: 50%;
+            right: -60px;
+            /* Alterado para a direita */
+            transform: translateY(-50%);
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 0 50px 50px 0;
+            /* Alterado para o lado direito */
+            padding: 10px 20px;
+            cursor: pointer;
+            box-shadow: 5px 0 10px rgba(0, 0, 0, 0.1);
+            /* Alterado para a direita */
+        }
+
+        .accessibility-icon {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .accessibility-options {
+            width: 300px;
+            height: 100vh;
+            background-color: #fff;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+            /* Alterado para a direita */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: var(--primary);
+            color: #fff;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h4 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .content {
+            padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+
+        /* --- CÓDIGO MODIFICADO AQUI --- */
+        .option-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 95px; /* Aumentado de 80px para 95px */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            position: relative;
+            padding: 5px; /* Adicionado padding */
+        }
+
+        .option-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .option-item i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        /* --- CÓDIGO MODIFICADO AQUI --- */
+        .option-item span {
+            font-size: 0.75rem;
+            margin-top: 5px;
+            line-height: 1.2; /* Adicionado para controlar o espaçamento entre linhas */
+            word-wrap: break-word; /* Garante a quebra de palavra */
+        }
+
+        /* Color Picker */
+        .color-options {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .color-box {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+        }
+
+        .light-mode {
+            background-color: #f8f9fa;
+        }
+
+        .dark-mode {
+            background-color: #212529;
+        }
+
+        .sepia-mode {
+            background-color: #f4f0e6;
+        }
+
+        /* Classes para acessibilidade */
+        .high-contrast {
+            filter: contrast(2);
+        }
+
+        .dark-mode-accessibility {
+            background-color: #000;
+            color: #fff;
+        }
+
+        .light-mode-accessibility {
+            background-color: #fff;
+            color: #000;
+        }
+
+        .grayscale {
+            filter: grayscale(100%);
+        }
+
+        .invert-colors {
+            filter: invert(100%);
+        }
+
+        /* Font size adjustments */
+        body.font-small {
+            font-size: 0.9em;
+        }
+
+        body.font-large {
+            font-size: 1.1em;
+        }
+
+        /* Tooltip para leitor de texto */
+        .option-item .tooltip-text {
+            visibility: hidden;
+            width: 120px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .option-item:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
         }
     </style>
 </head>
 
 <body>
     <header>
-        <!-- Top Bar (APENAS um auth-container aqui) -->
         <div class="top-bar py-1">
             <div class="container-fluid d-flex justify-content-between align-items-center">
                 <div class="redes-sociais ms-3">
@@ -349,12 +610,10 @@
                     <a href="https://www.youtube.com/channel/UCzqd0VpWU_w4BKwmSvFdieQ"><i class="bi bi-youtube"></i></a>
                 </div>
 
-                <!-- ÚNICO auth-container: aqui será injetado o dropdown / ícone -->
                 <div id="auth-container" class="d-flex align-items-center"></div>
             </div>
         </div>
 
-        <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse"
@@ -370,7 +629,7 @@
                         <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
                     </ul>
                 </div>
-                 <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="#">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/SENAI_S%C3%A3o_Paulo_logo.png"
                         alt="SENAI" height="40" />
                 </a>
@@ -378,9 +637,7 @@
         </nav>
     </header>
 
-    <!-- Conteúdo principal -->
     <main class="container my-5">
-        <!-- Carrossel -->
         <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
@@ -429,7 +686,6 @@
             </div>
         </div>
 
-        <!-- Seções de conteúdo (mantive suas seções) -->
         <section class="content-section">
             <div class="container">
                 <h2 class="section-title">Infraestrutura de Produção</h2>
@@ -502,16 +758,13 @@
                 </div>
             </div>
         </section>
-
     </main>
-   
+
 
     <div class="text-center my-5">
         <a href="#" class="back-to-top">Voltar para o topo</a>
     </div>
-</main>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="row">
@@ -553,37 +806,93 @@
         </div>
     </footer>
 
-    <!-- Chatbot -->
     <div class="chatbot">
-        <div id="chat-window" class="chat-window">
+        <button id="open-chat-btn" class="btn rounded-circle"
+            style="background: var(--primary-gradient); color: white; width: 60px; height: 60px; font-size: 1.8rem; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center;">
+            <i class="bi bi-chat-dots-fill"></i>
+        </button>
+
+        <div id="chat-window" class="chat-window" style="display: none;">
             <div class="chat-header">
                 <h6 class="mb-0">Assistente Virtual</h6>
                 <button id="minimize-chat" class="btn btn-sm text-white">
                     <i class="fas fa-minus"></i>
                 </button>
             </div>
-            <div id="chat-log" class="chat-log" style="padding:1.5rem; background:#f8f9fa; overflow:auto;">
+            <div id="chat-log" class="chat-log" style="padding:1.5rem; background:#f8f9fa; overflow:auto; flex-grow: 1;">
                 <div class="message message-bot">Olá! Sou o assistente virtual do SENAI. Como posso ajudar?</div>
             </div>
             <div class="chat-input-container" style="display:flex; padding:1rem; gap:10px;">
                 <input type="text" id="user-input" class="chat-input form-control" placeholder="Digite sua mensagem...">
-                <button id="send-button" class="chat-send-btn btn btn-primary"><i class="fas fa-paper-plane"></i></button>
+                <button id="send-button" class="chat-send-btn btn btn-primary"><i
+                        class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
 
-    <!-- VLibras -->
+    <div id="accessibility-panel" class="accessibility-panel">
+        <button id="accessibility-toggle" class="accessibility-toggle">
+            <div class="accessibility-icon">
+                <i class="bi bi-person-walking" style="font-size: 1.5rem; color: white;"></i>
+            </div>
+        </button>
+        <div id="accessibility-options" class="accessibility-options">
+            <div class="header">
+                <h4>Acessibilidade</h4>
+                <button id="close-panel" class="close-btn">&times;</button>
+            </div>
+            <div class="content">
+                <div class="section">
+                    <span class="section-title">Ajuste de Cor</span>
+                    <div class="options-grid">
+                        <button class="option-item" data-mode="high-contrast">
+                            <i class="bi bi-brightness-high-fill"></i>
+                            <span>Alto contraste</span>
+                        </button>
+                        <button class="option-item" data-mode="dark">
+                            <i class="bi bi-moon-fill"></i>
+                            <span>Alto contraste escuro</span>
+                        </button>
+                        <button class="option-item" data-mode="light">
+                            <i class="bi bi-sun-fill"></i>
+                            <span>Alto contraste claro</span>
+                        </button>
+                        <button class="option-item" data-mode="grayscale">
+                            <i class="bi bi-eyedropper-half"></i>
+                            <span>Escala de Cinza</span>
+                        </button>
+                        <button class="option-item" data-mode="invert">
+                            <i class="bi bi-brush-fill"></i>
+                            <span>Inverter Cores</span>
+                        </button>
+                        <button class="option-item" data-action="font-increase">
+                            <i class="bi bi-plus-lg"></i>
+                            <span>Aumentar Fonte</span>
+                        </button>
+                        <button class="option-item" data-action="font-decrease">
+                            <i class="bi bi-dash-lg"></i>
+                            <span>Diminuir Fonte</span>
+                        </button>
+                        <button class="option-item" data-action="reset">
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                            <span>Redefinir</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div vw class="enabled">
         <div vw-access-button class="active"></div>
-        <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
     </div>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
 
-    <!-- Script de autenticação (modelo que você usou, com pequeno try/catch seguro) -->
     <script>
         function logout() {
             localStorage.removeItem('token');
@@ -607,114 +916,34 @@
 
             if (token && usuario && usuario.nome) {
                 authContainer.innerHTML = `
-                    <div class="dropdown me-3 text-white ">
-                        <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="navbarDropdownAuth" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
-                            <span class="ms-2 d-none d-lg-block text-white">${usuario.nome}</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAuth">
-                            <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="perfil.html">Meu Perfil</a></li>
-                            <li><a class="dropdown-item" href="meus_tccs.html">Meus TCCs Salvos</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
-                        </ul>
-                    </div>
-                `;
+                                <div class="dropdown me-3 text-white ">
+                                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="navbarDropdownAuth" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
+                                        <span class="ms-2 d-none d-lg-block text-white">${usuario.nome}</span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAuth">
+                                        <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="perfil.html">Meu Perfil</a></li>
+                                        <li><a class="dropdown-item" href="meus_tccs.html">Meus TCCs Salvos</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
+                                    </ul>
+                                </div>
+                            `;
             } else {
                 authContainer.innerHTML = `
-                    <div class="me-3">
-                        <a href="login.html" class="nav-link text-white">
-                            <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
-                        </a>
-                    </div>
-                `;
+                                <div class="me-3">
+                                    <a href="login.html" class="nav-link text-white">
+                                        <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
+                                    </a>
+                                </div>
+                            `;
             }
 
-             // --- INICIALIZAÇÃO DO VLIBRAS (do index1.html) ---
-             if (typeof VLibras !== 'undefined') {
+            // --- INICIALIZAÇÃO DO VLIBRAS (do index1.html) ---
+            if (typeof VLibras !== 'undefined') {
                 new window.VLibras.Widget('https://vlibras.gov.br/app');
-            }
-
-            // --- CONTROLE DE ACESSIBILIDADE (TAMANHO DA FONTE) (do index1.html) ---
-            const fontIncreaseBtn = document.getElementById('font-increase');
-            const fontDecreaseBtn = document.getElementById('font-decrease');
-            if (fontIncreaseBtn && fontDecreaseBtn) { // Verifica se os botões existem
-                fontIncreaseBtn.addEventListener('click', () => {
-                    const currentSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
-                    document.documentElement.style.fontSize = (currentSize + 1) + 'px';
-                });
-                fontDecreaseBtn.addEventListener('click', () => {
-                    const currentSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
-                    document.documentElement.style.fontSize = (currentSize - 1) + 'px';
-                });
-            }
-
-            // --- ANIMAÇÃO DE SCROLL PARA AS SEÇÕES (do index1.html) ---
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        entry.target.style.animation = 'fadeIn 0.8s ease-out forwards';
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            document.querySelectorAll('.content-section, .map-section').forEach(section => {
-                observer.observe(section);
-            });
-
-            // --- FUNCIONALIDADE DO CHATBOT (do index1.html) ---
-            const chatInput = document.getElementById('user-input');
-            const sendButton = document.getElementById('send-button');
-            const chatLog = document.getElementById('chat-log');
-            const minimizeButton = document.getElementById('minimize-chat');
-            const chatWindow = document.getElementById('chat-window');
-
-            // Verifica se os elementos do chatbot existem antes de adicionar event listeners
-            if (chatInput && sendButton && chatLog && minimizeButton && chatWindow) {
-                const responses = {
-                    'ola': 'Olá! Como posso ajudar?', 'oi': 'Oi! Em que posso ser útil?',
-                    'tcc': 'Os TCCs estão na página "TCCs". Você pode buscar por curso, ano ou palavra-chave.',
-                    'login': 'Para fazer login, clique em "Login" no menu. Se não tem uma conta, pode se cadastrar.',
-                    'cadastr': 'Para se cadastrar, clique em "Cadastre-se" no menu e preencha o formulário.',
-                    'curso': 'O SENAI oferece cursos em áreas como Mecânica, Eletrônica, Informática, e mais.',
-                    'obrigad': 'Por nada! Se tiver mais alguma dúvida, é só perguntar.'
-                };
-
-                function addMessage(text, isUser = false) {
-                    const msgDiv = document.createElement('div');
-                    msgDiv.className = `message ${isUser ? 'message-user' : 'message-bot'}`;
-                    msgDiv.textContent = text;
-                    chatLog.appendChild(msgDiv);
-                    chatLog.scrollTop = chatLog.scrollHeight;
-                }
-
-                function processMessage() {
-                    const message = chatInput.value.trim().toLowerCase();
-                    if (message === '') return;
-                    addMessage(message, true);
-                    chatInput.value = '';
-                    setTimeout(() => {
-                        let response = 'Desculpe, não entendi. Pode reformular a pergunta?';
-                        for (const [key, value] of Object.entries(responses)) {
-                            if (message.includes(key)) {
-                                response = value;
-                                break;
-                            }
-                        }
-                        addMessage(response);
-                    }, 1000);
-                }
-
-                sendButton.addEventListener('click', processMessage);
-                chatInput.addEventListener('keypress', (e) => e.key === 'Enter' && processMessage());
-                minimizeButton.addEventListener('click', () => {
-                    const isMinimized = chatWindow.style.height === '65px';
-                    chatWindow.style.height = isMinimized ? '450px' : '65px';
-                    minimizeButton.innerHTML = isMinimized ? '<i class="fas fa-minus"></i>' : '<i class="fas fa-plus"></i>';
-                });
             }
 
             // --- LÓGICA DO MAPA (LEAFLET.JS) (do index1.html) ---
@@ -725,133 +954,33 @@
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 }).addTo(map);
 
-                const senaiSchools = [
-                    { name: "SENAI São Paulo", lat: -23.5505, lng: -46.6333, },
-                    { name: "SENAI Santo Amaro", lat: -23.6500, lng: -46.7200 },
-                    { name: "SENAI Itaquera", lat: -23.5400, lng: -46.4700 },
-                    { name: "SENAI Osasco", lat: -23.5320, lng: -46.7920 },
-                    { name: "SENAI Guarulhos", lat: -23.4540, lng: -46.5340 },
-                    { name: "SENAI Campinas", lat: -22.9056, lng: -47.0608 },
-                    { name: "SENAI Ribeirão Preto", lat: -21.1699, lng: -47.8103 },
-                    { name: "SENAi Barra Funda", lat: -23.529517, lng: -46.529517 },
-                    { name: "SENAI Barueri", lat: -23.5200, lng: -46.8700 },
-                    { name: "SENAI Bom Retiro - Biotecnologia", lat: -23.5375, lng: -46.6356 },
-                    { name: "SENAI Brás", lat: -23.542598641792708, lng: -46.621089388984906 },
-                    { name: "SENAI Brás - Vestuário e Têxtil", lat: -23.5425320, lng: -46.618688 },
-                    { name: "SENAI Cambuci - Equipamentos Biomédicos", lat: -23.56295967960583, lng: -46.6238114080168 },
-                    { name: "SENAI Cotia", lat: -23.591058531271415, lng: -46.8611 },
-                    { name: "SENAI Diadema", lat: -23.6796001447524, lng: -46.6100881919205 },
-                    { name: "SENAI Guarulhos", lat: -23.4563844239138, lng: -46.52716729541166 },
-                    { name: "SENAI Guarulhos - Dutra", lat: -23.433081853563205, lng: -46.43268938007718 },
-                    { name: "SENAI Ipiranga - Automobilística", lat: -23.5893, lng: -46.5884 },
-                    { name: "SENAI Ipiranga - Refrigeração", lat: -23.58519244581797, lng: -46.58857683849399 },
-                    { name: "SENAI Jabaquara", lat: -23.6263, lng: -46.6329 },
-                    { name: "SENAI Lapa", lat: -23.5234, lng: -46.7021 },
-                    { name: "SENAI Mauá", lat: -23.6676, lng: -46.4617 },
-                    { name: "SENAI Osasco - Automobilística", lat: -23.5320, lng: -46.7920 },
-                    { name: "SENAI Osasco - Eletroeletrônica", lat: -23.5320, lng: -46.7920 },
-                    { name: "SENAI Pirituba", lat: -23.4855, lng: -46.7346 },
-                    { name: "SENAI Santana", lat: -23.4971, lng: -46.6325 },
-                    { name: "SENAI Santo Amaro - Automobilística", lat: -23.6500, lng: -46.7200 },
-                    { name: "SENAI São Caetano do Sul - Informática", lat: -23.614381749893447, lng: -46.57153974930355 },
-                    { name: "SENAI São Caetano do Sul - Mecatrônica", lat: -23.643695754885453, lng: -46.5582937424588 },
-                    { name: "SENAI São José dos Campos", lat: -23.164031081706625, lng: -45.89643381861569 },
-                    { name: "SENAI Taubaté - Construção Civil", lat: -23.536035129732912, lng: -46.5741020657979 },
-                    { name: "SENAI Taubaté - Manutenção", lat: -23.536035129732912, lng: -46.5741020657979 },
-                    { name: "SENAI Vila Leopoldina", lat: -23.526224838132165, lng: -46.73634111020674 },
-                    { name: "SENAI Mogi das Cruzes", lat: -23.522397425116132, lng: -46.18601197951903 },
-                    { name: "SENAI Mooca", lat: -23.5558017355576, lng: -46.598529418125885 },
-                    { name: "SENAI Mooca - Gráfica", lat: -23.5488422347099, lng: -46.59968356059743 },
-                    { name: "SENAI Santana de Parnaíba", lat: -23.407263845898818, lng: -46.87651493124241 },
-                    { name: "SENAI Santo Amaro - Suíço-Brasileira", lat: -23.647657543266536, lng: -46.71967592140208 },
-                    { name: "SENAI Santo André", lat: -23.665311190852655, lng: -46.51797384300836 },
-                    { name: "SENAI São Bernardo do Campo", lat: -23.694146580183233, lng: -46.55313845386375 },
-                    { name: "SENAI São Bernardo do Campo - Mercedes Benz", lat: -23.660139257148156, lng: -46.57966496350674 },
-                    { name: "SENAI Sorocaba", lat: -23.501462, lng: -47.452583 },
-                    { name: "SENAI Votorantim", lat: -23.528778, lng: -47.479694 },
-                    { name: "SENAI Franca", lat: -20.538737, lng: -47.400902 },
-                    { name: "SENAI Suzano", lat: -23.55566778194568, lng: -46.31236791293247 },
-                    { name: "SENAI Vila Anastácio - CPTM", lat: -23.511336251191445, lng: -46.71217469021942 },
-                    { name: "SENAI Vila Mariana", lat: -23.59061891475101, lng: -46.64529970384842 },
-                    { name: "SENAI Alumínio", lat: -23.531735466263417, lng: -47.253363832098685 },
-                    { name: "SENAI Americana", lat: -22.753676857237338, lng: -47.35083176095598 },
-                    { name: "SENAI Araraquara", lat: -21.794878, lng: -48.175648 },
-                    { name: "SENAI Bauru", lat: -22.314514, lng: -49.060631 },
-                    { name: "SENAI Botucatu", lat: -22.882305, lng: -48.443787 },
-                    { name: "SENAI Ourinhos", lat: -22.981634, lng: -49.867678 },
-                    { name: "SENAI Presidente Prudente", lat: -22.119940065256408, lng: -51.405710485214044 },
-                    { name: "SENAI São Carlos", lat: -22.017532, lng: -47.897621 },
-                    { name: "SENAI Birigui", lat: -21.286202176833324, lng: -50.336130545653596 },
-                    { name: "SENAI Bragança Paulista", lat: -22.92141049067649, lng: -46.54598566095153 },
-                    { name: "SENAI Campinas - R. Mange", lat: -22.913574758551132, lng: -47.06279841095579 },
-                    { name: "SENAI Campo Limpo Paulista", lat: -23.20321557588946, lng: -46.783077832108 },
-                    { name: "SENAI Cruzeiro", lat: -22.58886906638557, lng: -44.97539502698685 },
-                    { name: "SENAI Cubatão", lat: -23.882293823221566, lng: -46.4221281609244 },
-                    { name: "SENAI Indaiatuba", lat: -23.14319111252288, lng: -47.2190476609451 },
-                    { name: "SENAI Iracemápolis", lat: -22.57730006079684, lng: -47.495619809112235 },
-                    { name: "SENAI Itatiba", lat: -22.999617476256955, lng: -46.83514260142948 },
-                    { name: "SENAI Itu", lat: -23.259271298515703, lng: -47.29540878977743 },
-                    { name: "SENAI Jacareí", lat: -23.316381826174513, lng: -45.9840695032693 },
-                    { name: "SENAI Jaguariúna", lat: -22.70278964066302, lng: -46.992869559108975 },
-                    { name: "SENAI Jaú", lat: -22.287093178379546, lng: -48.54993367631095 },
-                    { name: "SENAI Jundiaí", lat: -23.195003900359875, lng: -46.89132794560152 },
-                    { name: "SENAI Lençóis Paulista", lat: -22.57326765551765, lng: -48.81918246096105 },
-                    { name: "SENAI Limeira", lat: -22.570749829983, lng: -47.40376994164524 },
-                    { name: "SENAI Mairinque", lat: -23.546034403552124, lng: -47.193286005111496 },
-                    { name: "SENAI Marília", lat: -22.213499745433698, lng: -49.95033727116447 },
-                    { name: "SENAI Matão", lat: -21.613813388798604, lng: -48.35175781680931 },
-                    { name: "SENAI Mirassol", lat: -20.819664597666897, lng: -49.510625172228025 },
-                    { name: "SENAI Mogi Guaçu", lat: -22.342469124646883, lng: -46.9514442898029 },
-                    { name: "SENAI Paulínia", lat: -22.761111, lng: -47.154167 },
-                    { name: "SENAI Pindamonhangaba", lat: -22.923611, lng: -45.461111 },
-                    { name: "SENAI Piracicaba - Centro", lat: -22.725, lng: -47.6475 },
-                    { name: "SENAI Piracicaba - Vila", lat: -22.725, lng: -47.6475 },
-                    { name: "SENAI Pompéia", lat: -22.108333, lng: -50.172222 },
-                    { name: "SENAI Rafard", lat: -23.011111, lng: -47.527778 },
-                    { name: "SENAI Registro", lat: -24.4875, lng: -47.843611 },
-                    { name: "SENAI Ribeirão Preto", lat: -21.178333, lng: -47.806667 },
-                    { name: "SENAI Rio Claro", lat: -22.410833, lng: -47.560833 },
-                    { name: "SENAI Santa Bárbara d'Oeste", lat: -22.753889, lng: -47.413889 },
-                    { name: "SENAI Santos", lat: -23.960833, lng: -46.333889 },
-                    { name: "SENAI São Carlos", lat: -22.0175, lng: -47.890833 },
-                    { name: "SENAI São João da Boa Vista", lat: -21.970833, lng: -46.798056 },
-                    { name: "SENAI São José do Rio Preto", lat: -20.811111, lng: -49.379167 },
-                    { name: "SENAI Sertãozinho", lat: -21.12547151718516, lng: -48.02073144417763 },
-                    { name: "SENAI Sorocaba - Santa Cecília", lat: -23.429099226342245, lng: -47.48363513395026 },
-                    { name: "SENAI Sumaré", lat: -22.834032003794867, lng: -47.26293892698685 },
-                    { name: "SENAI Taubaté", lat: -23.03668374482389, lng: -45.57998232883553 },
-                    { name: "SENAI Valinhos", lat: -22.978532574033018, lng: -47.010143918620926 },
-                    { name: "SENAI Votuporanga", lat: -20.435889837235592, lng: -49.97154948465791 }
-
-
-
-
-                ];
+                const senaiSchools = [{ name: "SENAI São Paulo", lat: -23.5505, lng: -46.6333, }, { name: "SENAI Santo Amaro", lat: -23.6500, lng: -46.7200 }, { name: "SENAI Itaquera", lat: -23.5400, lng: -46.4700 }, { name: "SENAI Osasco", lat: -23.5320, lng: -46.7920 }, { name: "SENAI Guarulhos", lat: -23.4540, lng: -46.5340 }, { name: "SENAI Campinas", lat: -22.9056, lng: -47.0608 }, { name: "SENAI Ribeirão Preto", lat: -21.1699, lng: -47.8103 }, { name: "SENAI Barra Funda", lat: -23.529517, lng: -46.529517 }, { name: "SENAI Barueri", lat: -23.5200, lng: -46.8700 }, { name: "SENAI Bom Retiro - Biotecnologia", lat: -23.5375, lng: -46.6356 }, { name: "SENAI Brás", lat: -23.542598641792708, lng: -46.621089388984906 }, { name: "SENAI Brás - Vestuário e Têxtil", lat: -23.5425320, lng: -46.618688 }, { name: "SENAI Cambuci - Equipamentos Biomédicos", lat: -23.56295967960583, lng: -46.6238114080168 }, { name: "SENAI Cotia", lat: -23.591058531271415, lng: -46.8611 }, { name: "SENAI Diadema", lat: -23.6796001447524, lng: -46.6100881919205 }, { name: "SENAI Guarulhos", lat: -23.4563844239138, lng: -46.52716729541166 }, { name: "SENAI Guarulhos - Dutra", lat: -23.433081853563205, lng: -46.43268938007718 }, { name: "SENAI Ipiranga - Automobilística", lat: -23.5893, lng: -46.5884 }, { name: "SENAI Ipiranga - Refrigeração", lat: -23.58519244581797, lng: -46.58857683849399 }, { name: "SENAI Jabaquara", lat: -23.6263, lng: -46.6329 }, { name: "SENAI Lapa", lat: -23.5234, lng: -46.7021 }, { name: "SENAI Mauá", lat: -23.6676, lng: -46.4617 }, { name: "SENAI Osasco - Automobilística", lat: -23.5320, lng: -46.7920 }, { name: "SENAI Osasco - Eletroeletrônica", lat: -23.5320, lng: -46.7920 }, { name: "SENAI Pirituba", lat: -23.4855, lng: -46.7346 }, { name: "SENAI Santana", lat: -23.4971, lng: -46.6325 }, { name: "SENAI Santo Amaro - Automobilística", lat: -23.6500, lng: -46.7200 }, { name: "SENAI São Caetano do Sul - Informática", lat: -23.614381749893447, lng: -46.57153974930355 }, { name: "SENAI São Caetano do Sul - Mecatrônica", lat: -23.643695754885453, lng: -46.5582937424588 }, { name: "SENAI São José dos Campos", lat: -23.164031081706625, lng: -45.89643381861569 }, { name: "SENAI Taubaté - Construção Civil", lat: -23.536035129732912, lng: -46.5741020657979 }, { name: "SENAI Taubaté - Manutenção", lat: -23.536035129732912, lng: -46.5741020657979 }, { name: "SENAI Vila Leopoldina", lat: -23.526224838132165, lng: -46.73634111020674 }, { name: "SENAI Mogi das Cruzes", lat: -23.522397425116132, lng: -46.18601197951903 }, { name: "SENAI Mooca", lat: -23.5558017355576, lng: -46.598529418125885 }, { name: "SENAI Mooca - Gráfica", lat: -23.5488422347099, lng: -46.59968356059743 }, { name: "SENAI Santana de Parnaíba", lat: -23.407263845898818, lng: -46.87651493124241 }, { name: "SENAI Santo Amaro - Suíço-Brasileira", lat: -23.647657543266536, lng: -46.71967592140208 }, { name: "SENAI Santo André", lat: -23.665311190852655, lng: -46.51797384300836 }, { name: "SENAI São Bernardo do Campo", lat: -23.694146580183233, lng: -46.55313845386375 }, { name: "SENAI São Bernardo do Campo - Mercedes Benz", lat: -23.660139257148156, lng: -46.57966496350674 }, { name: "SENAI Sorocaba", lat: -23.501462, lng: -47.452583 }, { name: "SENAI Votorantim", lat: -23.528778, lng: -47.479694 }, { name: "SENAI Franca", lat: -20.538737, lng: -47.400902 }, { name: "SENAI Suzano", lat: -23.55566778194568, lng: -46.31236791293247 }, { name: "SENAI Vila Anastácio - CPTM", lat: -23.511336251191445, lng: -46.71217469021942 }, { name: "SENAI Vila Mariana", lat: -23.59061891475101, lng: -46.64529970384842 }, { name: "SENAI Alumínio", lat: -23.531735466263417, lng: -47.253363832098685 }, { name: "SENAI Americana", lat: -22.753676857237338, lng: -47.35083176095598 }, { name: "SENAI Araraquara", lat: -21.794878, lng: -48.175648 }, { name: "SENAI Bauru", lat: -22.314514, lng: -49.060631 }, { name: "SENAI Botucatu", lat: -22.882305, lng: -48.443787 }, { name: "SENAI Ourinhos", lat: -22.981634, lng: -49.867678 }, { name: "SENAI Presidente Prudente", lat: -22.119940065256408, lng: -51.405710485214044 }, { name: "SENAI São Carlos", lat: -22.017532, lng: -47.897621 }, { name: "SENAI Birigui", lat: -21.286202176833324, lng: -50.336130545653596 }, { name: "SENAI Bragança Paulista", lat: -22.92141049067649, lng: -46.54598566095153 }, { name: "SENAI Campinas - R. Mange", lat: -22.913574758551132, lng: -47.06279841095579 }, { name: "SENAI Campo Limpo Paulista", lat: -23.20321557588946, lng: -46.783077832108 }, { name: "SENAI Cruzeiro", lat: -22.58886906638557, lng: -44.97539502698685 }, { name: "SENAI Cubatão", lat: -23.882293823221566, lng: -46.4221281609244 }, { name: "SENAI Indaiatuba", lat: -23.14319111252288, lng: -47.2190476609451 }, { name: "SENAI Iracemápolis", lat: -22.57730006079684, lng: -47.495619809112235 }, { name: "SENAI Itatiba", lat: -22.999617476256955, lng: -46.83514260142948 }, { name: "SENAI Itu", lat: -23.259271298515703, lng: -47.29540878977743 }, { name: "SENAI Jacareí", lat: -23.316381826174513, lng: -45.9840695032693 }, { name: "SENAI Jaguariúna", lat: -22.70278964066302, lng: -46.992869559108975 }, { name: "SENAI Jaú", lat: -22.287093178379546, lng: -48.54993367631095 }, { name: "SENAI Jundiaí", lat: -23.195003900359875, lng: -46.89132794560152 }, { name: "SENAI Lençóis Paulista", lat: -22.57326765551765, lng: -48.81918246096105 }, { name: "SENAI Limeira", lat: -22.570749829983, lng: -47.40376994164524 }, { name: "SENAI Mairinque", lat: -23.546034403552124, lng: -47.193286005111496 }, { name: "SENAI Marília", lat: -22.213499745433698, lng: -49.95033727116447 }, { name: "SENAI Matão", lat: -21.613813388798604, lng: -48.35175781680931 }, { name: "SENAI Mirassol", lat: -20.819664597666897, lng: -49.510625172228025 }, { name: "SENAI Mogi Guaçu", lat: -22.342469124646883, lng: -46.9514442898029 }, { name: "SENAI Paulínia", lat: -22.761111, lng: -47.154167 }, { name: "SENAI Pindamonhangaba", lat: -22.923611, lng: -45.461111 }, { name: "SENAI Piracicaba - Centro", lat: -22.725, lng: -47.6475 }, { name: "SENAI Piracicaba - Vila", lat: -22.725, lng: -47.6475 }, { name: "SENAI Pompéia", lat: -22.108333, lng: -50.172222 }, { name: "SENAI Rafard", lat: -23.011111, lng: -47.527778 }, { name: "SENAI Registro", lat: -24.4875, lng: -47.843611 }, { name: "SENAI Ribeirão Preto", lat: -21.178333, lng: -47.806667 }, { name: "SENAI Rio Claro", lat: -22.410833, lng: -47.560833 }, { name: "SENAI Santa Bárbara d'Oeste", lat: -22.753889, lng: -47.413889 }, { name: "SENAI Santos", lat: -23.960833, lng: -46.333889 }, { name: "SENAI São Carlos", lat: -22.0175, lng: -47.890833 }, { name: "SENAI São João da Boa Vista", lat: -21.970833, lng: -46.798056 }, { name: "SENAI São José do Rio Preto", lat: -20.811111, lng: -49.379167 }, { name: "SENAI Sertãozinho", lat: -21.12547151718516, lng: -48.02073144417763 }, { name: "SENAI Sorocaba - Santa Cecília", lat: -23.429099226342245, lng: -47.48363513395026 }, { name: "SENAI Sumaré", lat: -22.834032003794867, lng: -47.26293892698685 }, { name: "SENAI Taubaté", lat: -23.03668374482389, lng: -45.57998232883553 }, { name: "SENAI Valinhos", lat: -22.978532574033018, lng: -47.010143918620926 }, { name: "SENAI Votuporanga", lat: -20.435889837235592, lng: -49.97154948465791 }];
 
                 const markers = senaiSchools.map(school => L.marker([school.lat, school.lng]).addTo(map).bindPopup(`<strong>${school.name}</strong>`));
                 const group = new L.featureGroup(markers);
                 map.fitBounds(group.getBounds().pad(0.1));
 
-                 function getCurrentPositionAsync() {
+                function getCurrentPositionAsync() {
                     return new Promise((resolve, reject) => {
                         navigator.geolocation.getCurrentPosition(resolve, reject);
                     });
                 }
-    
+
                 document.getElementById('find-school').addEventListener('click', async () => {
                     if (!("geolocation" in navigator)) {
                         alert("Geolocalização não é suportada pelo seu navegador.");
                         return;
                     }
-    
+
                     try {
                         const position = await getCurrentPositionAsync();
                         const userLat = position.coords.latitude;
                         const userLng = position.coords.longitude;
-    
+
                         L.marker([userLat, userLng]).addTo(map).bindPopup("<strong>Sua localização</strong>").openPopup();
-    
-                        let closestSchool = null, minDistance = Infinity;
+
+                        let closestSchool = null,
+                            minDistance = Infinity;
                         senaiSchools.forEach(school => {
                             const distance = map.distance([userLat, userLng], [school.lat, school.lng]);
                             if (distance < minDistance) {
@@ -859,19 +988,96 @@
                                 closestSchool = school;
                             }
                         });
-    
+
                         map.setView([closestSchool.lat, closestSchool.lng], 13);
                         markers.find(m => m.getLatLng().equals([closestSchool.lat, closestSchool.lng])).openPopup();
-    
+
                     } catch (err) {
                         alert("Não foi possível obter sua localização.");
                     }
                 });
             }
+
+            // --- Início do JavaScript da Acessibilidade ---
+            const accessibilityPanel = document.getElementById('accessibility-panel');
+            const accessibilityToggle = document.getElementById('accessibility-toggle');
+            const closePanelButton = document.getElementById('close-panel');
+            const body = document.body;
+            let currentFontSize = 16; // Tamanho de fonte padrão em pixels
+
+            if (accessibilityPanel && accessibilityToggle && closePanelButton) {
+                accessibilityToggle.addEventListener('click', () => {
+                    accessibilityPanel.classList.toggle('is-open');
+                });
+
+                closePanelButton.addEventListener('click', () => {
+                    accessibilityPanel.classList.remove('is-open');
+                });
+            }
+
+            function removeAllAccessibilityClasses() {
+                body.classList.remove('high-contrast', 'dark-mode-accessibility', 'light-mode-accessibility', 'grayscale', 'invert-colors', 'font-small', 'font-large');
+                body.style.fontSize = ''; // Remove o estilo de fonte embutido
+                currentFontSize = 16; // Reseta o tamanho da fonte para o valor padrão
+            }
+
+            document.querySelectorAll('.option-item[data-mode]').forEach(button => {
+                button.addEventListener('click', () => {
+                    const mode = button.getAttribute('data-mode');
+                    removeAllAccessibilityClasses();
+
+                    if (mode === 'high-contrast') {
+                        body.classList.add('high-contrast');
+                    } else if (mode === 'dark') {
+                        body.classList.add('dark-mode-accessibility');
+                    } else if (mode === 'light') {
+                        body.classList.add('light-mode-accessibility');
+                    } else if (mode === 'grayscale') {
+                        body.classList.add('grayscale');
+                    } else if (mode === 'invert') {
+                        body.classList.add('invert-colors');
+                    }
+                });
+            });
+
+            document.querySelector('[data-action="font-increase"]').addEventListener('click', () => {
+                currentFontSize += 2;
+                body.style.fontSize = `${currentFontSize}px`;
+            });
+
+            document.querySelector('[data-action="font-decrease"]').addEventListener('click', () => {
+                currentFontSize -= 2;
+                body.style.fontSize = `${currentFontSize}px`;
+            });
+            
+            // --- CÓDIGO MODIFICADO AQUI ---
+            document.querySelector('[data-action="reset"]').addEventListener('click', () => {
+                removeAllAccessibilityClasses();
+                body.style.fontSize = '';
+                // A linha do alert foi removida daqui
+            });
+
+            // --- MODIFICAÇÃO 2: Adicionado JavaScript para o Chatbot ---
+            const openChatBtn = document.getElementById('open-chat-btn');
+            const chatWindow = document.getElementById('chat-window');
+            const minimizeChatBtn = document.getElementById('minimize-chat');
+
+            if (openChatBtn && chatWindow && minimizeChatBtn) {
+                // Abrir a janela do chat
+                openChatBtn.addEventListener('click', () => {
+                    chatWindow.style.display = 'flex'; // 'flex' para manter o layout interno
+                    openChatBtn.style.display = 'none';
+                });
+
+                // Minimizar (fechar) a janela do chat
+                minimizeChatBtn.addEventListener('click', () => {
+                    chatWindow.style.display = 'none';
+                    openChatBtn.style.display = 'flex'; // 'flex' para manter o layout do ícone
+                });
+            }
+
         });
     </script>
 </body>
 
 </html>
-
-
