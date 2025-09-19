@@ -163,7 +163,9 @@
                 <form id="cadastroForm">
                     <div class="mb-3 text-start">
                         <label for="nomeCompleto" class="form-label">Nome Completo:</label>
-                        <input type="text" id="nomeCompleto" name="nome" class="form-control" required />
+                        <input type="text" id="nomeCompleto" name="nome" class="form-control" required
+                            pattern="[A-Za-zÀ-ÿ\s]+" />
+                        <span id="erroNome" style="color: red; font-size: 14px;"></span>
                     </div>
 
 
@@ -327,7 +329,23 @@
                 erroNome.textContent = "";
             }
         });
+                const nomeInput = document.getElementById("nomeCompleto");
+        const erroNome = document.getElementById("erroNome");
+
+        nomeInput.addEventListener("input", function () {
+            const regex = /^[A-Za-zÀ-ÿ\s]+$/;
+
+            if (!regex.test(this.value)) {
+                this.setCustomValidity("Digite apenas letras.");
+                erroNome.textContent = "⚠ Digite apenas letras no nome.";
+            } else {
+                this.setCustomValidity("");
+                erroNome.textContent = "";
+            }
+        });
+
     </script>
 </body>
 
 </html>
+
