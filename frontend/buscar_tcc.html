@@ -561,11 +561,7 @@
         // Variáveis globais
         let cursosMap = {};
         
-        function logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('usuario');
-            window.location.href = 'index.html';
-        }
+
 
         function gerarPreviewPDF(url, canvas) {
             const ctx = canvas.getContext('2d');
@@ -864,6 +860,111 @@
                 }
             });
         });
+        async function atualizarAuthUI() {
+            const authContainer = document.getElementById('auth-container');
+            const token = localStorage.getItem('token');
+            const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+
+            if (token && usuario.nome) {
+                // MELHORIA: Busca a foto do usuário para exibir no cabeçalho
+                const avatarUrl = await getAvatarUrl(token, usuario);
+
+                authContainer.innerHTML = `
+                <div class="dropdown me-3">
+                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                        <img src="${avatarUrl}" alt="Avatar" id="headerAvatar" class="header-profile-photo">
+                        <span class="ms-2 d-none d-lg-block">${usuario.nome}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item active" href="perfil.html"><b>Meu Perfil</b></a></li>
+                         <li><a class="dropdown-item" href="meus_tccs.html">Meus TCCs Salvos</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
+                    </ul>
+                </div>
+            `;
+            } else {
+                authContainer.innerHTML = `
+                 <div class="me-3">
+                     <a href="login.html" class="nav-link text-white">
+                         <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
+                     </a>
+                 </div>
+            `;
+            }
+        }
+
+        // Função para logout
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('usuario');
+            window.location.href = "index.html"; // Redireciona após logout
+        }
+
+        // Inicialização quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', async () => {
+            const perfilContainer = document.getElementById('perfil-container');
+            const token = localStorage.getItem('token');
+            const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+
+            await atualizarAuthUI();
+
+            if (token && usuario.id) {
+                perfilContainer.innerHTML = renderizarPerfil(usuario);
+                carregarTCCsUsuario();
+
+                // Carrega a foto real por cima da padrão
+                const avatarUrl = await getAvatarUrl(token, usuario);
+                const perfilAvatar = document.getElementById('perfilAvatar');
+                if (perfilAvatar) perfilAvatar.src = avatarUrl;
+
+                const avatarWrapper = document.getElementById('avatarWrapper');
+                const avatarInput = document.getElementById('avatarInput');
+
+                avatarWrapper.addEventListener('click', function () {
+                    avatarInput.click();
+                });
+
+                avatarInput.addEventListener('change', function (e) {
+                    if (this.files && this.files[0]) {
+                        selectedFile = this.files[0];
+
+                        if (!selectedFile.type.match('image.*')) {
+                            showToast('Por favor, selecione uma imagem.', 'error');
+                            return;
+                        }
+
+                        if (selectedFile.size > 5 * 1024 * 1024) {
+                            showToast('A imagem deve ter no máximo 5MB.', 'error');
+                            return;
+                        }
+
+                        const reader = new FileReader();
+                        reader.onload = function (event) {
+                            const modal = new bootstrap.Modal(document.getElementById('cropImageModal'));
+                            document.getElementById('imageToCrop').src = event.target.result;
+                            modal.show();
+                        };
+                        reader.readAsDataURL(selectedFile);
+                    }
+                });
+
+                const cropModalElement = document.getElementById('cropImageModal');
+                cropModalElement.addEventListener('shown.bs.modal', inicializarCropper);
+
+                cropModalElement.addEventListener('hidden.bs.modal', function () {
+                    if (cropper) {
+                        cropper.destroy();
+                        cropper = null;
+                    }
+                    document.getElementById('avatarInput').value = '';
+                });
+
+            } else {
+                perfilContainer.innerHTML = renderizarNaoLogado();
+            }
+        });
     </script>
 </body>
 </html>
+
