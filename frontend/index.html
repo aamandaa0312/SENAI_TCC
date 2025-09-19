@@ -48,7 +48,7 @@
             font-size: 1.2rem;
         }
 
-        /* --- CÓDIGO CSS MODIFICADO AQUI --- */
+        /* --- CÓDIGO CSS ADICIONADO AQUI --- */
         .user-profile-photo {
             width: 30px;
             /* Largura da imagem */
@@ -61,12 +61,18 @@
             border: 1px solid white;
             /* Borda branca opcional */
         }
-        /* A classe .user-name-underline foi removida */
-        /* --- FIM DO CÓDIGO CSS MODIFICADO --- */
+
+        .user-name-underline {
+            border-bottom: 1px solid white;
+            /* Linha branca embaixo do nome */
+            padding-bottom: 2px;
+            /* Espaçamento entre o nome e a linha */
+        }
+
+        /* --- FIM DO CÓDIGO CSS ADICIONADO --- */
 
         /* Navbar */
-       /* Navbar */
-       .navbar {
+        .navbar {
             background: var(--card-bg);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             padding: 12px 0;
@@ -84,23 +90,17 @@
             transition: color 0.3s;
         }
 
-        /* --- CÓDIGO CSS MODIFICADO AQUI --- */
         .nav-link::after {
             content: '';
             position: absolute;
             bottom: 0;
             left: 0;
             width: 0;
-            height: 1px; /* Linha mais fina */
-            background: var(--primary); /* Cor da linha alterada para a cor primária (vermelho) */
+            height: 2px;
+            background: var(--primary-gradient);
             transition: width 0.3s;
         }
-        /* --- FIM DO CÓDIGO CSS MODIFICADO --- */
 
-        .nav-link:hover::after,
-        .nav-link.active::after {
-            width: 100%;
-        }
         .nav-link:hover::after,
         .nav-link.active::after {
             width: 100%;
@@ -598,11 +598,12 @@
             <div class="top-bar py-1">
                 <div class="container-fluid d-flex justify-content-between align-items-center">
                     <div class="redes-sociais ms-3">
-                        <a href="https://www.facebook.com/senaisaopaulo/?locale=pt_BR" target="_blank" rel="noopener noreferrer"><i
-                                class="bi bi-facebook"></i></a>
-                        <a href="https://www.instagram.com/senai.sp/" target="_blank" rel="noopener noreferrer"><i class="bi bi-instagram"></i></a>
-                        <a href="https://www.youtube.com/channel/UCzqd0VpWU_w4BKwmSvFdieQ" target="_blank" rel="noopener noreferrer"><i
-                                class="bi bi-youtube"></i></a>
+                        <a href="https://www.facebook.com/senaisaopaulo/?locale=pt_BR" target="_blank"
+                            rel="noopener noreferrer"><i class="bi bi-facebook"></i></a>
+                        <a href="https://www.instagram.com/senai.sp/" target="_blank" rel="noopener noreferrer"><i
+                                class="bi bi-instagram"></i></a>
+                        <a href="https://www.youtube.com/channel/UCzqd0VpWU_w4BKwmSvFdieQ" target="_blank"
+                            rel="noopener noreferrer"><i class="bi bi-youtube"></i></a>
                     </div>
 
                     <div id="auth-container" class="d-flex align-items-center"></div>
@@ -666,7 +667,7 @@
                     <span class="visually-hidden">Próximo</span>
                 </button>
             </div>
-            
+
             <div class="stats-container">
                 <div class="stat-item">
                     <div class="stat-number">90+</div>
@@ -781,10 +782,14 @@
                     <div class="col-md-3 mb-4">
                         <h5>Conecte-se</h5>
                         <div class="social-icons">
-                            <a href="https://www.facebook.com/senaisaopaulo/?locale=pt_BR" target="_blank" rel="noopener noreferrer"><i class="bi bi-facebook"></i></a>
-                            <a href="https://www.instagram.com/senai.sp/" target="_blank" rel="noopener noreferrer"><i class="bi bi-instagram"></i></a>
-                            <a href="https://www.youtube.com/channel/UCzqd0VpWU_w4BKwmSvFdieQ" target="_blank" rel="noopener noreferrer"><i class="bi bi-youtube"></i></a>
-                            <a href="https://www.linkedin.com/school/senai-sp/" target="_blank" rel="noopener noreferrer"><i class="bi bi-linkedin"></i></a>
+                            <a href="https://www.facebook.com/senaisaopaulo/?locale=pt_BR" target="_blank"
+                                rel="noopener noreferrer"><i class="bi bi-facebook"></i></a>
+                            <a href="https://www.instagram.com/senai.sp/" target="_blank" rel="noopener noreferrer"><i
+                                    class="bi bi-instagram"></i></a>
+                            <a href="https://www.youtube.com/channel/UCzqd0VpWU_w4BKwmSvFdieQ" target="_blank"
+                                rel="noopener noreferrer"><i class="bi bi-youtube"></i></a>
+                            <a href="https://www.linkedin.com/school/senai-sp/" target="_blank"
+                                rel="noopener noreferrer"><i class="bi bi-linkedin"></i></a>
                         </div>
                     </div>
                     <div class="col-md-3 mb-4">
@@ -894,11 +899,6 @@
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
 
     <script>
-        function logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('usuario');
-            window.location.href = 'index.html';
-        }
 
         document.addEventListener('DOMContentLoaded', () => {
             const authContainer = document.getElementById('auth-container');
@@ -913,39 +913,39 @@
                 console.error('usuario inválido no localStorage:', err);
                 usuario = null;
             }
-            
+
             // --- CÓDIGO JAVASCRIPT MODIFICADO AQUI ---
             if (token && usuario && usuario.nome) {
                 // Tenta pegar a foto do perfil do objeto 'usuario', se não tiver, usa uma imagem padrão
                 const fotoUrl = usuario.foto || 'https://via.placeholder.com/150'; // Use uma URL de imagem padrão aqui
 
                 authContainer.innerHTML = `
-                        <div class="dropdown me-3 text-white">
-                            <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="navbarDropdownAuth" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                
-                                <img src="${fotoUrl}" alt="Foto de Perfil" class="user-profile-photo">
-                                
-                                <span class="ms-2 d-none d-lg-block text-white">${usuario.nome}</span>
+                    <div class="dropdown me-3 text-white">
+                        <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="navbarDropdownAuth" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            
+                            <img src="${fotoUrl}" alt="Foto de Perfil" class="user-profile-photo">
+                            
+                            <span class="ms-2 d-none d-lg-block text-white user-name-underline">${usuario.nome}</span>
 
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAuth">
-                                <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="perfil.html">Meu Perfil</a></li>
-                                <li><a class="dropdown-item" href="meus_tccs.html">Meus TCCs Salvos</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
-                            </ul>
-                        </div>
-                    `;
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAuth">
+                            <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="perfil.html">Meu Perfil</a></li>
+                            <li><a class="dropdown-item" href="meus_tccs.html">Meus TCCs Salvos</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
+                        </ul>
+                    </div>
+                `;
             } else {
                 authContainer.innerHTML = `
-                        <div class="me-3">
-                            <a href="login.html" class="nav-link text-white">
-                                <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
-                            </a>
-                        </div>
-                    `;
+                    <div class="me-3">
+                        <a href="login.html" class="nav-link text-white">
+                            <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
+                        </a>
+                    </div>
+                `;
             }
             // --- FIM DO CÓDIGO JAVASCRIPT MODIFICADO ---
 
@@ -1019,7 +1019,7 @@
             const accessibilityToggle = document.getElementById('accessibility-toggle');
             const closePanelButton = document.getElementById('close-panel');
             const body = document.body;
-            const pageWrapper = document.getElementById('page-wrapper'); 
+            const pageWrapper = document.getElementById('page-wrapper');
 
             // CORREÇÃO: Valores de tamanho de fonte com limites
             let currentFontSize = 16;
@@ -1039,8 +1039,8 @@
 
             function removeAllAccessibilityClasses() {
                 pageWrapper.classList.remove('high-contrast', 'dark-mode-accessibility', 'light-mode-accessibility', 'grayscale', 'invert-colors');
-                body.style.fontSize = ''; 
-                currentFontSize = 16; 
+                body.style.fontSize = '';
+                currentFontSize = 16;
             }
 
             document.querySelectorAll('.option-item[data-mode]').forEach(button => {
@@ -1100,6 +1100,110 @@
             }
 
         });
+        async function atualizarAuthUI() {
+        const authContainer = document.getElementById('auth-container');
+        const token = localStorage.getItem('token');
+        const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+
+        if (token && usuario.nome) {
+            // MELHORIA: Busca a foto do usuário para exibir no cabeçalho
+            const avatarUrl = await getAvatarUrl(token, usuario);
+
+            authContainer.innerHTML = `
+                <div class="dropdown me-3">
+                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                        <img src="${avatarUrl}" alt="Avatar" id="headerAvatar" class="header-profile-photo">
+                        <span class="ms-2 d-none d-lg-block">${usuario.nome}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item active" href="perfil.html"><b>Meu Perfil</b></a></li>
+                         <li><a class="dropdown-item" href="meus_tccs.html">Meus TCCs Salvos</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
+                    </ul>
+                </div>
+            `;
+        } else {
+            authContainer.innerHTML = `
+                 <div class="me-3">
+                     <a href="login.html" class="nav-link text-white">
+                         <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
+                     </a>
+                 </div>
+            `;
+        }
+    }
+
+    // Função para logout
+    function logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        window.location.href = "index.html"; // Redireciona após logout
+    }
+
+    // Inicialização quando o DOM estiver carregado
+    document.addEventListener('DOMContentLoaded', async () => {
+        const perfilContainer = document.getElementById('perfil-container');
+        const token = localStorage.getItem('token');
+        const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+
+        await atualizarAuthUI();
+
+        if (token && usuario.id) {
+            perfilContainer.innerHTML = renderizarPerfil(usuario);
+            carregarTCCsUsuario();
+           
+            // Carrega a foto real por cima da padrão
+            const avatarUrl = await getAvatarUrl(token, usuario);
+            const perfilAvatar = document.getElementById('perfilAvatar');
+            if (perfilAvatar) perfilAvatar.src = avatarUrl;
+           
+            const avatarWrapper = document.getElementById('avatarWrapper');
+            const avatarInput = document.getElementById('avatarInput');
+           
+            avatarWrapper.addEventListener('click', function() {
+                avatarInput.click();
+            });
+
+            avatarInput.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    selectedFile = this.files[0];
+                   
+                    if (!selectedFile.type.match('image.*')) {
+                        showToast('Por favor, selecione uma imagem.', 'error');
+                        return;
+                    }
+                   
+                    if (selectedFile.size > 5 * 1024 * 1024) {
+                        showToast('A imagem deve ter no máximo 5MB.', 'error');
+                        return;
+                    }
+                   
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const modal = new bootstrap.Modal(document.getElementById('cropImageModal'));
+                        document.getElementById('imageToCrop').src = event.target.result;
+                        modal.show();
+                    };
+                    reader.readAsDataURL(selectedFile);
+                }
+            });
+           
+            const cropModalElement = document.getElementById('cropImageModal');
+            cropModalElement.addEventListener('shown.bs.modal', inicializarCropper);
+           
+            cropModalElement.addEventListener('hidden.bs.modal', function() {
+                if (cropper) {
+                    cropper.destroy();
+                    cropper = null;
+                }
+                document.getElementById('avatarInput').value = '';
+            });
+
+        } else {
+            perfilContainer.innerHTML = renderizarNaoLogado();
+        }
+    });
     </script>
 </body>
 
