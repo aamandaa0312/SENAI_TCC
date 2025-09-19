@@ -168,7 +168,6 @@
                         <span id="erroNome" style="color: red; font-size: 14px;"></span>
                     </div>
 
-
                     <div class="mb-3 text-start">
                         <label for="email" class="form-label">Email:</label>
                         <input type="email" id="email" name="email" class="form-control" required />
@@ -329,23 +328,9 @@
                 erroNome.textContent = "";
             }
         });
-                const nomeInput = document.getElementById("nomeCompleto");
-        const erroNome = document.getElementById("erroNome");
 
-        nomeInput.addEventListener("input", function () {
-            const regex = /^[A-Za-zÀ-ÿ\s]+$/;
-
-            if (!regex.test(this.value)) {
-                this.setCustomValidity("Digite apenas letras.");
-                erroNome.textContent = "⚠ Digite apenas letras no nome.";
-            } else {
-                this.setCustomValidity("");
-                erroNome.textContent = "";
-            }
-        });
 
     </script>
 </body>
 
 </html>
-
