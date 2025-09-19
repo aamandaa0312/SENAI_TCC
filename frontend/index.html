@@ -544,15 +544,6 @@
             filter: invert(100%);
         }
 
-        /* Font size adjustments (permanece no body) */
-        body.font-small {
-            font-size: 0.9em;
-        }
-
-        body.font-large {
-            font-size: 1.1em;
-        }
-
         /* Tooltip para leitor de texto */
         .option-item .tooltip-text {
             visibility: hidden;
@@ -584,10 +575,10 @@
             <div class="top-bar py-1">
                 <div class="container-fluid d-flex justify-content-between align-items-center">
                     <div class="redes-sociais ms-3">
-                        <a href="https://www.facebook.com/senaisaopaulo/?locale=pt_BR"><i
+                        <a href="https://www.facebook.com/senaisaopaulo/?locale=pt_BR" target="_blank" rel="noopener noreferrer"><i
                                 class="bi bi-facebook"></i></a>
-                        <a href="https://www.instagram.com/senai.sp/"><i class="bi bi-instagram"></i></a>
-                        <a href="https://www.youtube.com/channel/UCzqd0VpWU_w4BKwmSvFdieQ"><i
+                        <a href="https://www.instagram.com/senai.sp/" target="_blank" rel="noopener noreferrer"><i class="bi bi-instagram"></i></a>
+                        <a href="https://www.youtube.com/channel/UCzqd0VpWU_w4BKwmSvFdieQ" target="_blank" rel="noopener noreferrer"><i
                                 class="bi bi-youtube"></i></a>
                     </div>
 
@@ -610,7 +601,7 @@
                             <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
                         </ul>
                     </div>
-                    <a class="navbar-brand" href="#">
+                    <a class="navbar-brand" href="index.html">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/SENAI_S%C3%A3o_Paulo_logo.png"
                             alt="SENAI" height="40" />
                     </a>
@@ -652,18 +643,19 @@
                     <span class="visually-hidden">Próximo</span>
                 </button>
             </div>
+            
             <div class="stats-container">
                 <div class="stat-item">
                     <div class="stat-number">90+</div>
                     <div class="stat-label">Unidades SENAI</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">50+</div>
-                    <div class="stat-label">Unidades</div>
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">Projetos Anuais</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-number">4</div>
-                    <div class="stat-label">Desenvolveedores</div>
+                    <div class="stat-label">Desenvolvedores</div>
                 </div>
             </div>
 
@@ -758,18 +750,18 @@
                     <div class="col-md-3 mb-4">
                         <h5>Links Rápidos</h5>
                         <ul class="list-unstyled">
-                            <li><a href="#" class="text-light text-decoration-none">Início</a></li>
-                            <li><a href="#" class="text-light text-decoration-none">TCCs</a></li>
-                            <li><a href="#" class="text-light text-decoration-none">Login</a></li>
+                            <li><a href="index.html" class="text-light text-decoration-none">Início</a></li>
+                            <li><a href="buscar_tcc.html" class="text-light text-decoration-none">TCCs</a></li>
+                            <li><a href="login.html" class="text-light text-decoration-none">Login</a></li>
                         </ul>
                     </div>
                     <div class="col-md-3 mb-4">
                         <h5>Conecte-se</h5>
                         <div class="social-icons">
-                            <a href="#"><i class="bi bi-facebook"></i></a>
-                            <a href="#"><i class="bi bi-instagram"></i></a>
-                            <a href="#"><i class="bi bi-youtube"></i></a>
-                            <a href="#"><i class="bi bi-linkedin"></i></a>
+                            <a href="https://www.facebook.com/senaisaopaulo/?locale=pt_BR" target="_blank" rel="noopener noreferrer"><i class="bi bi-facebook"></i></a>
+                            <a href="https://www.instagram.com/senai.sp/" target="_blank" rel="noopener noreferrer"><i class="bi bi-instagram"></i></a>
+                            <a href="https://www.youtube.com/channel/UCzqd0VpWU_w4BKwmSvFdieQ" target="_blank" rel="noopener noreferrer"><i class="bi bi-youtube"></i></a>
+                            <a href="https://www.linkedin.com/school/senai-sp/" target="_blank" rel="noopener noreferrer"><i class="bi bi-linkedin"></i></a>
                         </div>
                     </div>
                     <div class="col-md-3 mb-4">
@@ -939,11 +931,15 @@
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 }).addTo(map);
 
+                // NOTA PARA O TCC: Em uma aplicação real, esta lista de escolas deveria ser carregada de um banco de dados via API, e não estar fixa no código.
                 const senaiSchools = [{ name: "SENAI São Paulo", lat: -23.5505, lng: -46.6333, }, { name: "SENAI Santo Amaro", lat: -23.6500, lng: -46.7200 }, { name: "SENAI Itaquera", lat: -23.5400, lng: -46.4700 }, { name: "SENAI Osasco", lat: -23.5320, lng: -46.7920 }, { name: "SENAI Guarulhos", lat: -23.4540, lng: -46.5340 }, { name: "SENAI Campinas", lat: -22.9056, lng: -47.0608 }, { name: "SENAI Ribeirão Preto", lat: -21.1699, lng: -47.8103 }, { name: "SENAI Barra Funda", lat: -23.529517, lng: -46.529517 }, { name: "SENAI Barueri", lat: -23.5200, lng: -46.8700 }, { name: "SENAI Bom Retiro - Biotecnologia", lat: -23.5375, lng: -46.6356 }, { name: "SENAI Brás", lat: -23.542598641792708, lng: -46.621089388984906 }, { name: "SENAI Brás - Vestuário e Têxtil", lat: -23.5425320, lng: -46.618688 }, { name: "SENAI Cambuci - Equipamentos Biomédicos", lat: -23.56295967960583, lng: -46.6238114080168 }, { name: "SENAI Cotia", lat: -23.591058531271415, lng: -46.8611 }, { name: "SENAI Diadema", lat: -23.6796001447524, lng: -46.6100881919205 }, { name: "SENAI Guarulhos", lat: -23.4563844239138, lng: -46.52716729541166 }, { name: "SENAI Guarulhos - Dutra", lat: -23.433081853563205, lng: -46.43268938007718 }, { name: "SENAI Ipiranga - Automobilística", lat: -23.5893, lng: -46.5884 }, { name: "SENAI Ipiranga - Refrigeração", lat: -23.58519244581797, lng: -46.58857683849399 }, { name: "SENAI Jabaquara", lat: -23.6263, lng: -46.6329 }, { name: "SENAI Lapa", lat: -23.5234, lng: -46.7021 }, { name: "SENAI Mauá", lat: -23.6676, lng: -46.4617 }, { name: "SENAI Osasco - Automobilística", lat: -23.5320, lng: -46.7920 }, { name: "SENAI Osasco - Eletroeletrônica", lat: -23.5320, lng: -46.7920 }, { name: "SENAI Pirituba", lat: -23.4855, lng: -46.7346 }, { name: "SENAI Santana", lat: -23.4971, lng: -46.6325 }, { name: "SENAI Santo Amaro - Automobilística", lat: -23.6500, lng: -46.7200 }, { name: "SENAI São Caetano do Sul - Informática", lat: -23.614381749893447, lng: -46.57153974930355 }, { name: "SENAI São Caetano do Sul - Mecatrônica", lat: -23.643695754885453, lng: -46.5582937424588 }, { name: "SENAI São José dos Campos", lat: -23.164031081706625, lng: -45.89643381861569 }, { name: "SENAI Taubaté - Construção Civil", lat: -23.536035129732912, lng: -46.5741020657979 }, { name: "SENAI Taubaté - Manutenção", lat: -23.536035129732912, lng: -46.5741020657979 }, { name: "SENAI Vila Leopoldina", lat: -23.526224838132165, lng: -46.73634111020674 }, { name: "SENAI Mogi das Cruzes", lat: -23.522397425116132, lng: -46.18601197951903 }, { name: "SENAI Mooca", lat: -23.5558017355576, lng: -46.598529418125885 }, { name: "SENAI Mooca - Gráfica", lat: -23.5488422347099, lng: -46.59968356059743 }, { name: "SENAI Santana de Parnaíba", lat: -23.407263845898818, lng: -46.87651493124241 }, { name: "SENAI Santo Amaro - Suíço-Brasileira", lat: -23.647657543266536, lng: -46.71967592140208 }, { name: "SENAI Santo André", lat: -23.665311190852655, lng: -46.51797384300836 }, { name: "SENAI São Bernardo do Campo", lat: -23.694146580183233, lng: -46.55313845386375 }, { name: "SENAI São Bernardo do Campo - Mercedes Benz", lat: -23.660139257148156, lng: -46.57966496350674 }, { name: "SENAI Sorocaba", lat: -23.501462, lng: -47.452583 }, { name: "SENAI Votorantim", lat: -23.528778, lng: -47.479694 }, { name: "SENAI Franca", lat: -20.538737, lng: -47.400902 }, { name: "SENAI Suzano", lat: -23.55566778194568, lng: -46.31236791293247 }, { name: "SENAI Vila Anastácio - CPTM", lat: -23.511336251191445, lng: -46.71217469021942 }, { name: "SENAI Vila Mariana", lat: -23.59061891475101, lng: -46.64529970384842 }, { name: "SENAI Alumínio", lat: -23.531735466263417, lng: -47.253363832098685 }, { name: "SENAI Americana", lat: -22.753676857237338, lng: -47.35083176095598 }, { name: "SENAI Araraquara", lat: -21.794878, lng: -48.175648 }, { name: "SENAI Bauru", lat: -22.314514, lng: -49.060631 }, { name: "SENAI Botucatu", lat: -22.882305, lng: -48.443787 }, { name: "SENAI Ourinhos", lat: -22.981634, lng: -49.867678 }, { name: "SENAI Presidente Prudente", lat: -22.119940065256408, lng: -51.405710485214044 }, { name: "SENAI São Carlos", lat: -22.017532, lng: -47.897621 }, { name: "SENAI Birigui", lat: -21.286202176833324, lng: -50.336130545653596 }, { name: "SENAI Bragança Paulista", lat: -22.92141049067649, lng: -46.54598566095153 }, { name: "SENAI Campinas - R. Mange", lat: -22.913574758551132, lng: -47.06279841095579 }, { name: "SENAI Campo Limpo Paulista", lat: -23.20321557588946, lng: -46.783077832108 }, { name: "SENAI Cruzeiro", lat: -22.58886906638557, lng: -44.97539502698685 }, { name: "SENAI Cubatão", lat: -23.882293823221566, lng: -46.4221281609244 }, { name: "SENAI Indaiatuba", lat: -23.14319111252288, lng: -47.2190476609451 }, { name: "SENAI Iracemápolis", lat: -22.57730006079684, lng: -47.495619809112235 }, { name: "SENAI Itatiba", lat: -22.999617476256955, lng: -46.83514260142948 }, { name: "SENAI Itu", lat: -23.259271298515703, lng: -47.29540878977743 }, { name: "SENAI Jacareí", lat: -23.316381826174513, lng: -45.9840695032693 }, { name: "SENAI Jaguariúna", lat: -22.70278964066302, lng: -46.992869559108975 }, { name: "SENAI Jaú", lat: -22.287093178379546, lng: -48.54993367631095 }, { name: "SENAI Jundiaí", lat: -23.195003900359875, lng: -46.89132794560152 }, { name: "SENAI Lençóis Paulista", lat: -22.57326765551765, lng: -48.81918246096105 }, { name: "SENAI Limeira", lat: -22.570749829983, lng: -47.40376994164524 }, { name: "SENAI Mairinque", lat: -23.546034403552124, lng: -47.193286005111496 }, { name: "SENAI Marília", lat: -22.213499745433698, lng: -49.95033727116447 }, { name: "SENAI Matão", lat: -21.613813388798604, lng: -48.35175781680931 }, { name: "SENAI Mirassol", lat: -20.819664597666897, lng: -49.510625172228025 }, { name: "SENAI Mogi Guaçu", lat: -22.342469124646883, lng: -46.9514442898029 }, { name: "SENAI Paulínia", lat: -22.761111, lng: -47.154167 }, { name: "SENAI Pindamonhangaba", lat: -22.923611, lng: -45.461111 }, { name: "SENAI Piracicaba - Centro", lat: -22.725, lng: -47.6475 }, { name: "SENAI Piracicaba - Vila", lat: -22.725, lng: -47.6475 }, { name: "SENAI Pompéia", lat: -22.108333, lng: -50.172222 }, { name: "SENAI Rafard", lat: -23.011111, lng: -47.527778 }, { name: "SENAI Registro", lat: -24.4875, lng: -47.843611 }, { name: "SENAI Ribeirão Preto", lat: -21.178333, lng: -47.806667 }, { name: "SENAI Rio Claro", lat: -22.410833, lng: -47.560833 }, { name: "SENAI Santa Bárbara d'Oeste", lat: -22.753889, lng: -47.413889 }, { name: "SENAI Santos", lat: -23.960833, lng: -46.333889 }, { name: "SENAI São Carlos", lat: -22.0175, lng: -47.890833 }, { name: "SENAI São João da Boa Vista", lat: -21.970833, lng: -46.798056 }, { name: "SENAI São José do Rio Preto", lat: -20.811111, lng: -49.379167 }, { name: "SENAI Sertãozinho", lat: -21.12547151718516, lng: -48.02073144417763 }, { name: "SENAI Sorocaba - Santa Cecília", lat: -23.429099226342245, lng: -47.48363513395026 }, { name: "SENAI Sumaré", lat: -22.834032003794867, lng: -47.26293892698685 }, { name: "SENAI Taubaté", lat: -23.03668374482389, lng: -45.57998232883553 }, { name: "SENAI Valinhos", lat: -22.978532574033018, lng: -47.010143918620926 }, { name: "SENAI Votuporanga", lat: -20.435889837235592, lng: -49.97154948465791 }];
 
                 const markers = senaiSchools.map(school => L.marker([school.lat, school.lng]).addTo(map).bindPopup(`<strong>${school.name}</strong>`));
                 const group = new L.featureGroup(markers);
                 map.fitBounds(group.getBounds().pad(0.1));
+
+                // CORREÇÃO: Variável para armazenar o marcador do usuário e evitar duplicatas
+                let userMarker = null;
 
                 function getCurrentPositionAsync() {
                     return new Promise((resolve, reject) => {
@@ -962,7 +958,11 @@
                         const userLat = position.coords.latitude;
                         const userLng = position.coords.longitude;
 
-                        L.marker([userLat, userLng]).addTo(map).bindPopup("<strong>Sua localização</strong>").openPopup();
+                        // CORREÇÃO: Remove o marcador anterior antes de adicionar um novo
+                        if (userMarker) {
+                            map.removeLayer(userMarker);
+                        }
+                        userMarker = L.marker([userLat, userLng]).addTo(map).bindPopup("<strong>Sua localização</strong>").openPopup();
 
                         let closestSchool = null,
                             minDistance = Infinity;
@@ -988,8 +988,13 @@
             const accessibilityToggle = document.getElementById('accessibility-toggle');
             const closePanelButton = document.getElementById('close-panel');
             const body = document.body;
-            const pageWrapper = document.getElementById('page-wrapper'); // Pega o novo wrapper
+            const pageWrapper = document.getElementById('page-wrapper'); 
+
+            // CORREÇÃO: Valores de tamanho de fonte com limites
             let currentFontSize = 16;
+            const MIN_FONT_SIZE = 10;
+            const MAX_FONT_SIZE = 28;
+
 
             if (accessibilityPanel && accessibilityToggle && closePanelButton) {
                 accessibilityToggle.addEventListener('click', () => {
@@ -1002,18 +1007,14 @@
             }
 
             function removeAllAccessibilityClasses() {
-                // Remove classes de filtro do wrapper
                 pageWrapper.classList.remove('high-contrast', 'dark-mode-accessibility', 'light-mode-accessibility', 'grayscale', 'invert-colors');
-                // Remove classes de fonte do body
-                body.classList.remove('font-small', 'font-large');
-                body.style.fontSize = ''; // Remove o estilo de fonte embutido
-                currentFontSize = 16; // Reseta o tamanho da fonte para o valor padrão
+                body.style.fontSize = ''; 
+                currentFontSize = 16; 
             }
 
             document.querySelectorAll('.option-item[data-mode]').forEach(button => {
                 button.addEventListener('click', () => {
                     const mode = button.getAttribute('data-mode');
-                    // Limpa apenas as classes de filtro antes de adicionar uma nova
                     pageWrapper.classList.remove('high-contrast', 'dark-mode-accessibility', 'light-mode-accessibility', 'grayscale', 'invert-colors');
 
                     if (mode === 'high-contrast') {
@@ -1031,13 +1032,19 @@
             });
 
             document.querySelector('[data-action="font-increase"]').addEventListener('click', () => {
-                currentFontSize += 2;
-                body.style.fontSize = `${currentFontSize}px`;
+                // CORREÇÃO: Adiciona limite máximo
+                if (currentFontSize < MAX_FONT_SIZE) {
+                    currentFontSize += 2;
+                    body.style.fontSize = `${currentFontSize}px`;
+                }
             });
 
             document.querySelector('[data-action="font-decrease"]').addEventListener('click', () => {
-                currentFontSize -= 2;
-                body.style.fontSize = `${currentFontSize}px`;
+                // CORREÇÃO: Adiciona limite mínimo
+                if (currentFontSize > MIN_FONT_SIZE) {
+                    currentFontSize -= 2;
+                    body.style.fontSize = `${currentFontSize}px`;
+                }
             });
 
             document.querySelector('[data-action="reset"]').addEventListener('click', () => {
