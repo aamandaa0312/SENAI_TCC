@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil - SENAI TCCs</title>
 
-    <!-- Bootstrap e ícones -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="icon" href="https://proeducador.sp.senai.br/site/icons/logo-small.png">
@@ -17,6 +16,11 @@
             --primary: #E30613;
             --senai-dark-red: #c00511;
             --senai-light-grey: #f8f9fa;
+            /* Adicionando variáveis do código anterior para consistência */
+            --dark-text: #2D3748;
+            --light-text: #FFFFFF;
+            --card-bg: #FFFFFF;
+            --footer-bg: #1A202C;
         }
 
         body {
@@ -33,6 +37,15 @@
             color: #fff;
             margin-right: 15px;
             font-size: 1.2rem;
+        }
+       
+        /* Estilo para a foto de perfil no cabeçalho */
+        .header-profile-photo {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid white;
         }
 
         /* Navbar */
@@ -54,6 +67,7 @@
             transition: color 0.3s;
         }
 
+        /* --- ANIMAÇÃO DO CABEÇALHO CORRIGIDA --- */
         .nav-link::after {
             content: '';
             position: absolute;
@@ -61,14 +75,19 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: var(--primary-gradient);
+            background: var(--primary); /* Corrigido para usar a variável correta */
             transition: width 0.3s;
+        }
+       
+        .navbar .nav-link:hover {
+            color: var(--primary) !important;
         }
 
         .nav-link:hover::after,
         .nav-link.active::after {
             width: 100%;
         }
+        /* --- FIM DA CORREÇÃO --- */
 
         .navbar-toggler {
             margin-left: 5px;
@@ -96,20 +115,6 @@
             display: block;
         }
 
-        /* Estado inicial (hamburger) */
-        .navbar-toggler span:nth-child(1) {
-            transform: translateY(0) rotate(0);
-        }
-
-        .navbar-toggler span:nth-child(2) {
-            opacity: 1;
-        }
-
-        .navbar-toggler span:nth-child(3) {
-            transform: translateY(0) rotate(0);
-        }
-
-        /* Estado quando expandido (X) */
         .navbar-toggler[aria-expanded="true"] span:nth-child(1) {
             transform: translateY(9px) rotate(45deg);
         }
@@ -198,9 +203,45 @@
             color: white;
         }
 
+        /* --- RODAPÉ ATUALIZADO --- */
         footer {
-            background-color: #212529;
+            background: var(--footer-bg);
+            color: var(--light-text);
+            padding: 40px 0 20px;
         }
+
+        footer h5 {
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        footer p,
+        footer a {
+            color: var(--light-text);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: var(--primary) !important;
+            text-decoration: underline;
+        }
+       
+        .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            color: white;
+            margin: 0 8px;
+            transition: background 0.3s;
+        }
+        .social-icons a:hover {
+            background: var(--primary);
+        }
+        /* --- FIM DO RODAPÉ --- */
 
         /* PERFIL */
         .perfil-header {
@@ -262,16 +303,6 @@
             font-weight: bold;
         }
 
-        .social-links a {
-            font-size: 1.8rem;
-            color: #555;
-            transition: color 0.3s;
-        }
-
-        .social-links a:hover {
-            color: var(--primary);
-        }
-
         .not-logged-in {
             text-align: center;
             padding: 3rem;
@@ -284,7 +315,7 @@
             display: flex;
             align-items: center;
         }
-        
+       
         .toast-container {
             position: fixed;
             top: 20px;
@@ -296,7 +327,7 @@
 
 <body>
     <div class="toast-container" id="toastContainer"></div>
-    
+   
     <header>
         <div class="top-bar py-1">
             <div class="container-fluid d-flex justify-content-between align-items-center">
@@ -305,13 +336,12 @@
                     <a href="#"><i class="bi bi-instagram"></i></a>
                     <a href="#"><i class="bi bi-youtube"></i></a>
                 </div>
-                <!-- auth-container dinâmico -->
                 <div id="auth-container" class="auth-container"></div>
             </div>
         </div>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="index.html">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/SENAI_S%C3%A3o_Paulo_logo.png"
                         alt="SENAI" height="40" />
                 </a>
@@ -335,10 +365,8 @@
 
     <main class="container py-5">
         <div id="perfil-container">
-            <!-- Conteúdo será carregado dinamicamente -->
-        </div>
-        
-        <!-- Modal para cortar a imagem -->
+            </div>
+       
         <div class="modal fade" id="cropImageModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -359,18 +387,54 @@
             </div>
         </div>
     </main>
-
-    <footer class="bg-dark text-light py-4 mt-5">
-        <div class="container text-center">
-            <p>&copy; 2025 SENAI - Todos os direitos reservados</p>
+   
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <h5>SENAI TCCs</h5>
+                    <p>Plataforma dedicada à divulgação dos Trabalhos de Conclusão de Curso dos alunos do SENAI.</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Links Rápidos</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html">Início</a></li>
+                        <li><a href="buscar_tcc.html">TCCs</a></li>
+                        <li><a href="login.html">Login</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Conecte-se</h5>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/senaisaopaulo/?locale=pt_BR" target="_blank" rel="noopener noreferrer"><i class="bi bi-facebook"></i></a>
+                        <a href="https://www.instagram.com/senai.sp/" target="_blank" rel="noopener noreferrer"><i class="bi bi-instagram"></i></a>
+                        <a href="https://www.youtube.com/channel/UCzqd0VpWU_w4BKwmSvFdieQ" target="_blank" rel="noopener noreferrer"><i class="bi bi-youtube"></i></a>
+                        <a href="https://www.linkedin.com/school/senai-sp/" target="_blank" rel="noopener noreferrer"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Desenvolvedores</h5>
+                    <ul class="list-unstyled">
+                        <li>Adriana Rodrigues de Araujo</li>
+                        <li>Amanda Rodrigues de Araujo</li>
+                        <li>João Pedro Cruz Rocha</li>
+                        <li>Ricardo Oliveira Fluminhan</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="bg-light">
+            <div class="text-center py-3">
+                <p>&copy; 2025 SENAI-SP - Todos os direitos reservados</p>
+            </div>
         </div>
     </footer>
 
-    <!-- Incluir Cropper.js -->
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
     // Variáveis globais
     let cropper;
@@ -380,14 +444,14 @@
     function showToast(message, type = 'success') {
         const toastContainer = document.getElementById('toastContainer');
         const toastId = 'toast-' + Date.now();
-        
+       
         const toast = document.createElement('div');
         toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : 'danger'} border-0`;
         toast.setAttribute('role', 'alert');
         toast.setAttribute('aria-live', 'assertive');
         toast.setAttribute('aria-atomic', 'true');
         toast.id = toastId;
-        
+       
         toast.innerHTML = `
             <div class="d-flex">
                 <div class="toast-body">
@@ -396,68 +460,63 @@
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
         `;
-        
+       
         toastContainer.appendChild(toast);
-        
+       
         const bsToast = new bootstrap.Toast(toast, {
             autohide: true,
             delay: 3000
         });
-        
+       
         bsToast.show();
-        
-        // Remover o toast do DOM após ser escondido
+       
         toast.addEventListener('hidden.bs.toast', () => {
             toast.remove();
         });
     }
-
-    // Função para carregar a foto do usuário
-    async function carregarFotoUsuario() {
-        const token = localStorage.getItem('token');
-        const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
-        
-        if (!token || !usuario.id) return;
-        
+   
+    // Função para obter a URL do avatar (real ou padrão)
+    async function getAvatarUrl(token, usuario) {
         try {
             const response = await fetch(`https://backend-tcc-bwya.onrender.com/usuario/foto`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            
             if (response.ok) {
                 const blob = await response.blob();
-                const imageUrl = URL.createObjectURL(blob);
-                document.getElementById('perfilAvatar').src = imageUrl;
-            } else {
-                const nome = usuario.nome || 'Usuário';
-                document.getElementById('perfilAvatar').src =
-                    `https://ui-avatars.com/api/?name=${encodeURIComponent(nome)}&background=E30613&color=fff&size=150`;
+                return URL.createObjectURL(blob);
             }
         } catch (error) {
-            console.error('Erro ao carregar foto:', error);
-            const nome = usuario.nome || 'Usuário';
-            document.getElementById('perfilAvatar').src =
-                `https://ui-avatars.com/api/?name=${encodeURIComponent(nome)}&background=E30613&color=fff&size=150`;
+            console.error('Erro ao buscar foto, usando avatar padrão.', error);
         }
+        // Retorno padrão caso a busca falhe ou não encontre foto
+        const nome = usuario.nome || 'Usuário';
+        return `https://ui-avatars.com/api/?name=${encodeURIComponent(nome)}&background=E30613&color=fff&size=150`;
     }
+
 
     // Função para enviar a foto para o servidor
     async function enviarFotoParaServidor(blob) {
         const token = localStorage.getItem('token');
         const formData = new FormData();
         formData.append('foto', blob, 'foto-perfil.jpg');
-        
+       
         try {
             const response = await fetch('https://backend-tcc-bwya.onrender.com/usuario/foto', {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` },
                 body: formData
             });
-            
+           
             if (response.ok) {
                 showToast('Foto de perfil atualizada com sucesso!');
+                // Atualiza a foto tanto no perfil quanto no cabeçalho
                 const imageUrl = URL.createObjectURL(blob);
-                document.getElementById('perfilAvatar').src = imageUrl;
+                const perfilAvatar = document.getElementById('perfilAvatar');
+                if (perfilAvatar) perfilAvatar.src = imageUrl;
+
+                const headerAvatar = document.getElementById('headerAvatar');
+                if(headerAvatar) headerAvatar.src = imageUrl;
+               
             } else {
                 throw new Error('Erro ao enviar foto');
             }
@@ -470,21 +529,19 @@
     // Função para inicializar o cropper
     function inicializarCropper() {
         const image = document.getElementById('imageToCrop');
-        
+       
         if (cropper) {
             cropper.destroy();
         }
-        
+       
         cropper = new Cropper(image, {
             aspectRatio: 1,
-            viewMode: 2,
+            viewMode: 1,
             guides: true,
-            movable: true,
-            zoomable: true,
-            rotatable: true,
-            scalable: true
+            background: false,
+            autoCropArea: 0.8
         });
-        
+       
         document.getElementById('cropImageBtn').onclick = function() {
             const canvas = cropper.getCroppedCanvas({
                 width: 300,
@@ -492,7 +549,7 @@
                 imageSmoothingEnabled: true,
                 imageSmoothingQuality: 'high'
             });
-            
+           
             canvas.toBlob(async (blob) => {
                 await enviarFotoParaServidor(blob);
                 const modal = bootstrap.Modal.getInstance(document.getElementById('cropImageModal'));
@@ -544,8 +601,8 @@
                                 </div>
                                 <h5 class="card-title">${tcc.titulo}</h5>
                                 <div class="mt-auto pt-2">
-                                    <a href="https://backend-tcc-bwya.onrender.com/visualizar_tcc/${tcc.arquivo}" 
-                                       target="_blank" class="btn btn-senai btn-sm w-100">
+                                    <a href="https://backend-tcc-bwya.onrender.com/visualizar_tcc/${tcc.arquivo}"
+                                        target="_blank" class="btn btn-senai btn-sm w-100">
                                         <i class="bi bi-eye"></i> Visualizar
                                     </a>
                                 </div>
@@ -562,11 +619,14 @@
 
     // Função para renderizar o perfil do usuário
     function renderizarPerfil(usuario) {
+        // CORREÇÃO: Carrega um avatar padrão imediatamente para evitar o "bug da circunferência"
+        const nome = usuario.nome || 'Usuário';
+        const avatarPadrao = `https://ui-avatars.com/api/?name=${encodeURIComponent(nome)}&background=E30613&color=fff&size=150`;
+
         return `
             <div class="perfil-header text-center mb-5">
                 <div class="perfil-avatar-wrapper" id="avatarWrapper">
-                    <img src="" alt="Foto de Perfil" class="perfil-avatar" id="perfilAvatar">
-
+                    <img src="${avatarPadrao}" alt="Foto de Perfil" class="perfil-avatar" id="perfilAvatar">
                     <div class="avatar-overlay">
                         <i class="bi bi-camera-fill"></i>
                     </div>
@@ -596,8 +656,7 @@
                 <div class="col-lg-8">
                     <h2 class="page-title">Meus TCCs Enviados</h2>
                     <div id="tcc-list" class="row row-cols-1 row-cols-md-2 g-4">
-                        <!-- TCCs serão carregados aqui -->
-                    </div>
+                        </div>
                 </div>
             </div>
         `;
@@ -618,20 +677,24 @@
     }
 
     // Função para atualizar a UI de autenticação
-    function atualizarAuthUI() {
+    async function atualizarAuthUI() {
         const authContainer = document.getElementById('auth-container');
         const token = localStorage.getItem('token');
         const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
 
         if (token && usuario.nome) {
+            // MELHORIA: Busca a foto do usuário para exibir no cabeçalho
+            const avatarUrl = await getAvatarUrl(token, usuario);
+
             authContainer.innerHTML = `
                 <div class="dropdown me-3">
                     <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-                        <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+                        <img src="${avatarUrl}" alt="Avatar" id="headerAvatar" class="header-profile-photo">
                         <span class="ms-2 d-none d-lg-block">${usuario.nome}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item active" href="perfil.html"><b>Meu Perfil</b></a></li>
+                         <li><a class="dropdown-item" href="meus_tccs.html">Meus TCCs Salvos</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
                     </ul>
@@ -639,9 +702,11 @@
             `;
         } else {
             authContainer.innerHTML = `
-                <a href="login.html" class="btn btn-outline-light btn-sm">
-                    <i class="bi bi-box-arrow-in-right me-1"></i> Login
-                </a>
+                 <div class="me-3">
+                     <a href="login.html" class="nav-link text-white">
+                         <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
+                     </a>
+                 </div>
             `;
         }
     }
@@ -650,25 +715,29 @@
     function logout() {
         localStorage.removeItem('token');
         localStorage.removeItem('usuario');
-        window.location.reload();
+        window.location.href = "index.html"; // Redireciona após logout
     }
 
     // Inicialização quando o DOM estiver carregado
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
         const perfilContainer = document.getElementById('perfil-container');
         const token = localStorage.getItem('token');
         const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
 
-        atualizarAuthUI();
+        await atualizarAuthUI();
 
         if (token && usuario.id) {
             perfilContainer.innerHTML = renderizarPerfil(usuario);
             carregarTCCsUsuario();
-            carregarFotoUsuario();
-            
+           
+            // Carrega a foto real por cima da padrão
+            const avatarUrl = await getAvatarUrl(token, usuario);
+            const perfilAvatar = document.getElementById('perfilAvatar');
+            if (perfilAvatar) perfilAvatar.src = avatarUrl;
+           
             const avatarWrapper = document.getElementById('avatarWrapper');
             const avatarInput = document.getElementById('avatarInput');
-            
+           
             avatarWrapper.addEventListener('click', function() {
                 avatarInput.click();
             });
@@ -676,44 +745,45 @@
             avatarInput.addEventListener('change', function(e) {
                 if (this.files && this.files[0]) {
                     selectedFile = this.files[0];
-                    
+                   
                     if (!selectedFile.type.match('image.*')) {
                         showToast('Por favor, selecione uma imagem.', 'error');
                         return;
                     }
-                    
+                   
                     if (selectedFile.size > 5 * 1024 * 1024) {
                         showToast('A imagem deve ter no máximo 5MB.', 'error');
                         return;
                     }
-                    
+                   
                     const reader = new FileReader();
                     reader.onload = function(event) {
                         const modal = new bootstrap.Modal(document.getElementById('cropImageModal'));
                         document.getElementById('imageToCrop').src = event.target.result;
                         modal.show();
-                        setTimeout(inicializarCropper, 500);
                     };
                     reader.readAsDataURL(selectedFile);
                 }
             });
-            
-            document.getElementById('cropImageModal').addEventListener('shown.bs.modal', inicializarCropper);
-            
-            document.getElementById('cropImageModal').addEventListener('hidden.bs.modal', function() {
+           
+            const cropModalElement = document.getElementById('cropImageModal');
+            cropModalElement.addEventListener('shown.bs.modal', inicializarCropper);
+           
+            cropModalElement.addEventListener('hidden.bs.modal', function() {
                 if (cropper) {
                     cropper.destroy();
                     cropper = null;
                 }
                 document.getElementById('avatarInput').value = '';
             });
+
         } else {
             perfilContainer.innerHTML = renderizarNaoLogado();
         }
     });
+
 </script>
 
 </body>
-
 
 </html>
