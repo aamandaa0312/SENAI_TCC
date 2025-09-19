@@ -114,7 +114,7 @@
             display: block;
         }
 
-        /* Estado inicial (hamburger) */
+       
         .navbar-toggler span:nth-child(1) {
             transform: translateY(0) rotate(0);
         }
@@ -411,6 +411,46 @@
         .back-to-top:hover {
             background: #ff1900;
         }
+        /* Footer */
+        footer {
+            background: var(--footer-bg);
+            color: var(--light-text);
+            padding: 40px 0 20px;
+        }
+
+        footer h5 {
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        footer p,
+        footer a {
+            color: var(--light-text);
+        }
+
+        /* Adicionando hover vermelho nos links do rodapé */
+        footer a:hover {
+            color: var(--primary) !important;
+            text-decoration: underline;
+        }
+
+        .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            color: white;
+            margin: 0 8px;
+            transition: background 0.3s;
+        }
+
+        .social-icons a:hover {
+            background: var(--primary-gradient);
+        }
+
     </style>
 </head>
 
@@ -987,5 +1027,6 @@
 </body>
 
 </html>
+
 
 
