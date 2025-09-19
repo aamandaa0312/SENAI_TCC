@@ -9,7 +9,6 @@
     <link rel="icon" href="https://proeducador.sp.senai.br/site/icons/logo-small.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
-        /* Seu CSS continua o mesmo, sem alterações necessárias aqui */
         :root {
             --primary: #ff1900;
             --primary-gradient: linear-gradient(135deg, #ff1900, #cc1400);
@@ -164,7 +163,6 @@
             background-color: #f1f1f1;
             display: flex;
             align-items: flex-start;
-            /* Alinha a imagem no topo */
             justify-content: center;
             color: #6c757d;
             border-bottom: 1px solid #dee2e6;
@@ -459,10 +457,12 @@
             <div class="col-md-6">
                 <h1 class="page-title">Trabalhos de Conclusão de Curso</h1>
             </div>
-            <div class="col-md-6 text-end" id="cadastro-tcc-container" style="display: none;">
-                <button class="btn btn-senai mb-4" data-bs-toggle="modal" data-bs-target="#cadastrarTccModal">
-                    <i class="bi bi-plus-circle"></i> Cadastrar TCC
-                </button>
+            <div class="col-md-6 text-end">
+                <div id="btn-container-cadastrar" style="display: none;">
+                    <button class="btn btn-senai mb-4" data-bs-toggle="modal" data-bs-target="#cadastrarTccModal">
+                        <i class="bi bi-plus-circle"></i> Cadastrar TCC
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -470,22 +470,22 @@
         <div class="filter-section mb-5">
             <div class="row">
                 <div class="col-md-4 position-relative">
-                    <label for="curso-filtro" class="form-label">Curso</label>
-                    <select id="curso-filtro" class="form-select">
+                    <label for="curso-filter" class="form-label">Curso</label>
+                    <select id="curso-filter" class="form-select">
                         <option value="" selected>Todos os cursos</option>
                     </select>
                     <button class="btn btn-sm btn-outline-secondary position-absolute end-0 top-50 mt-1 me-2 clear-filter"
-                        data-target="curso-filtro" title="Limpar filtro">
+                        data-target="curso-filter" title="Limpar filtro">
                         <i class="bi bi-x"></i>
                     </button>
                 </div>
                 <div class="col-md-4 position-relative">
-                    <label for="ano-filtro" class="form-label">Ano</label>
-                    <select id="ano-filtro" class="form-select">
+                    <label for="ano-filter" class="form-label">Ano</label>
+                    <select id="ano-filter" class="form-select">
                         <option value="" selected>Todos os anos</option>
                     </select>
                     <button class="btn btn-sm btn-outline-secondary position-absolute end-0 top-50 mt-1 me-2 clear-filter"
-                        data-target="ano-filtro" title="Limpar filtro">
+                        data-target="ano-filter" title="Limpar filtro">
                         <i class="bi bi-x"></i>
                     </button>
                 </div>
@@ -507,6 +507,7 @@
             </ul>
         </nav>
     </main>
+
     <div class="modal fade" id="cadastrarTccModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -535,7 +536,7 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="arquivoTcc" class="form-label">Arquivo do TCC</label>
+                            <label for="arquivoTcc" class="form-label">Arquivo do TCC (PDF)</label>
                             <input class="form-control" type="file" id="arquivoTcc" required accept=".pdf,application/pdf">
                         </div>
                     </form>
@@ -547,6 +548,7 @@
             </div>
         </div>
     </div>
+
     <footer class="bg-dark text-light py-4 mt-5">
         <div class="container text-center">
             <p>&copy; 2025 SENAI - Todos os direitos reservados</p>
@@ -556,25 +558,104 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Limpei e organizei o JavaScript para ficar mais legível e eficiente.
-       
+        // Variáveis globais
         let cursosMap = {};
-       
-        // Função de Logout
+        
         function logout() {
             localStorage.removeItem('token');
             localStorage.removeItem('usuario');
             window.location.href = 'index.html';
         }
 
-        // Função de Cadastro com o Token
-        function cadastrarTcc() {
-            // ALTERAÇÃO 2: Pega o token do localStorage
-            const token = localStorage.getItem('token');
+        function gerarPreviewPDF(url, canvas) {
+            const ctx = canvas.getContext('2d');
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#6c757d';
+            ctx.fillText('Carregando preview...', canvas.width / 2, canvas.height / 2);
 
-            // Validação de segurança: se não há token, não prossegue
+            const loadingTask = pdfjsLib.getDocument(url);
+            loadingTask.promise.then(function (pdf) {
+                pdf.getPage(1).then(function (page) {
+                    const context = canvas.getContext('2d');
+                    const viewport = page.getViewport({ scale: 1 });
+                    const scale = canvas.width / viewport.width;
+                    const scaledViewport = page.getViewport({ scale: scale });
+
+                    canvas.height = scaledViewport.height;
+
+                    const renderContext = {
+                        canvasContext: context,
+                        viewport: scaledViewport
+                    };
+                    page.render(renderContext);
+                });
+            }).catch(function (reason) {
+                console.error('Erro ao carregar o PDF para preview:', reason);
+                const ctxError = canvas.getContext('2d');
+                ctxError.clearRect(0, 0, canvas.width, canvas.height);
+                ctxError.textAlign = 'center';
+                ctxError.fillStyle = '#dc3545';
+                ctxError.fillText('Preview indisponível', canvas.width / 2, canvas.height / 2);
+            });
+        }
+
+        function criarCardTCC(tcc) {
+            const col = document.createElement('div');
+            col.className = 'col';
+            let badgeClass = tcc.status === 'aprovado' ? 'badge-aprovado' :
+                tcc.status === 'rejeitado' ? 'badge-rejeitado' : 'badge-pendente';
+            const showStatus = localStorage.getItem('token') !== null;
+            const canvasId = `pdf-preview-${tcc.id || tcc.arquivo.replace(/[^a-zA-Z0-9]/g, '')}`;
+
+            col.innerHTML = `
+                <div class="card card-tcc h-100">
+                    <div class="card-img-top">
+                        ${tcc.arquivo ? `<canvas id="${canvasId}"></canvas>` : '<div class="p-3 text-center"><i class="bi bi-file-earmark-excel fs-1"></i><p>Arquivo indisponível</p></div>'}
+                    </div>
+                    <div class="card-body">
+                        ${showStatus ? `
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge ${badgeClass}">${tcc.status || 'pendente'}</span>
+                                <small class="text-muted">${tcc.ano}</small>
+                            </div>
+                        ` : `
+                            <div class="d-flex justify-content-end mb-2">
+                                <small class="text-muted">${tcc.ano}</small>
+                            </div>
+                        `}
+                        <h5 class="card-title">${tcc.titulo}</h5>
+                        <p class="card-text">${tcc.autor}</p>
+                        <div class="mt-auto">
+                            <small class="text-muted d-block mb-2">Curso: ${cursosMap[tcc.curso_id] || 'Não especificado'}</small>
+                            ${tcc.arquivo ?
+                                `<a href="https://backend-tcc-bwya.onrender.com/visualizar_tcc/${tcc.arquivo}" class="btn btn-senai btn-sm w-100" target="_blank">
+                                    <i class="bi bi-eye"></i> Visualizar TCC
+                                </a>` :
+                                '<span class="badge bg-secondary">Arquivo não disponível</span>'
+                            }
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            if (tcc.arquivo) {
+                setTimeout(() => {
+                    const canvas = col.querySelector(`#${canvasId}`);
+                    if (canvas) {
+                        const pdfUrl = `https://backend-tcc-bwya.onrender.com/visualizar_tcc/${tcc.arquivo}`;
+                        gerarPreviewPDF(pdfUrl, canvas);
+                    }
+                }, 0);
+            }
+
+            return col;
+        }
+        
+        function cadastrarTcc() {
+            // Verificação dupla no cliente: o usuário ainda está logado?
+            const token = localStorage.getItem('token');
             if (!token) {
-                alert('Acesso negado. Por favor, faça o login para cadastrar um TCC.');
+                alert('Sua sessão expirou. Por favor, faça login novamente para cadastrar um TCC.');
                 return;
             }
 
@@ -592,23 +673,19 @@
             formData.append('titulo', titulo);
             formData.append('ano', ano);
             formData.append('autor', autor);
-            formData.append('curso_id', curso); // Corrigido para enviar curso_id
-            formData.append('arquivo_tcc', arquivo); // Corrigido para arquivo_tcc
+            formData.append('curso_id', curso);
+            formData.append('arquivo', arquivo);
 
-            // ALTERAÇÃO 3: Adiciona o cabeçalho de Autorização com o token na requisição
             fetch('https://backend-tcc-bwya.onrender.com/upload_tcc', {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}` // Enviar o token para o backend
                 },
                 body: formData
             })
             .then(res => {
-                if (res.status === 401) { // Erro de não autorizado
-                    throw new Error('Sua sessão expirou. Faça login novamente.');
-                }
-                if (!res.ok) { // Outros erros do servidor
-                    throw new Error('Ocorreu um erro ao enviar o TCC.');
+                if (!res.ok) {
+                    throw new Error('Falha na autenticação ou erro no servidor.');
                 }
                 return res.json();
             })
@@ -616,101 +693,155 @@
                 alert(data.mensagem || 'TCC cadastrado com sucesso!');
                 document.getElementById('tccForm').reset();
                 bootstrap.Modal.getInstance(document.getElementById('cadastrarTccModal')).hide();
-                carregarTCCs();
+                carregarTCCs(); // recarrega lista
             })
             .catch(err => {
                 console.error('Erro ao cadastrar:', err);
-                alert(err.message || 'Erro ao cadastrar TCC.');
+                alert('Erro ao cadastrar TCC. Verifique se você está logado.');
             });
         }
-       
-        // Funções de UI (criação de card, preview de PDF, etc.)
-        function gerarPreviewPDF(url, canvas) {
-            // ... seu código de preview ...
-        }
 
-        function criarCardTCC(tcc) {
-            // ... seu código para criar o card ...
-        }
-       
         function carregarTCCs() {
-            // ... seu código para carregar os TCCs ...
+            const cursoId = document.getElementById('curso-filter').value;
+            const ano = document.getElementById('ano-filter').value;
+            let url = 'https://backend-tcc-bwya.onrender.com/tccs?status=aprovado';
+            if (cursoId) url += `&curso_id=${cursoId}`;
+            if (ano) url += `&ano=${ano}`;
+
+            const container = document.getElementById('tccs-container');
+            container.innerHTML = `
+                <div class="col-12">
+                    <div class="empty-state">
+                        <div class="spinner-border text-danger" role="status">
+                            <span class="visually-hidden">Carregando...</span>
+                        </div>
+                        <h3 class="mt-3">Carregando TCCs...</h3>
+                    </div>
+                </div>`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(tccs => {
+                    container.innerHTML = '';
+                    if (tccs.length === 0) {
+                        container.innerHTML = `
+                            <div class="col-12">
+                                <div class="empty-state">
+                                    <i class="bi bi-file-earmark-excel"></i>
+                                    <h3>Nenhum TCC encontrado com os filtros selecionados.</h3>
+                                    <p>Tente ajustar ou limpar os filtros</p>
+                                </div>
+                            </div>`;
+                        return;
+                    }
+                    tccs.forEach(tcc => container.appendChild(criarCardTCC(tcc)));
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar TCCs:', error);
+                    container.innerHTML = `
+                        <div class="col-12">
+                            <div class="alert alert-danger text-center p-4">
+                                <i class="bi bi-exclamation-triangle fs-3 d-block mb-2"></i>
+                                Erro ao carregar TCCs. Tente novamente mais tarde.
+                            </div>
+                        </div>`;
+                });
         }
-       
+        
         function configurarFiltros() {
-            // ... seu código para configurar os filtros ...
+            const cursoSelect = document.getElementById('curso-filter');
+            const anoSelect = document.getElementById('ano-filter');
+            const clearButtons = document.querySelectorAll('.clear-filter');
+
+            const aplicarFiltros = () => {
+                clearButtons.forEach(btn => {
+                    btn.style.display = document.getElementById(btn.dataset.target).value ? 'block' : 'none';
+                });
+                carregarTCCs();
+            };
+
+            cursoSelect.addEventListener('change', aplicarFiltros);
+            anoSelect.addEventListener('change', aplicarFiltros);
+            
+            clearButtons.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    document.getElementById(this.dataset.target).value = '';
+                    aplicarFiltros();
+                });
+            });
         }
 
-        // Evento principal que roda quando a página carrega
+        // --- FUNÇÃO PRINCIPAL QUE RODA QUANDO A PÁGINA CARREGA ---
         document.addEventListener('DOMContentLoaded', () => {
+            // 1. Gerenciar Autenticação e visibilidade de botões
             const authContainer = document.getElementById('auth-container');
-            const cadastroContainer = document.getElementById('cadastro-tcc-container');
+            const btnContainerCadastrar = document.getElementById('btn-container-cadastrar');
             const token = localStorage.getItem('token');
-            let usuario = null;
-
-            try {
-                usuario = JSON.parse(localStorage.getItem('usuario'));
-            } catch (e) {
-                console.error("Erro ao ler dados do usuário", e);
-            }
-           
-            // Lógica para exibir/esconder elementos baseada no login
-            if (token && usuario) {
-                // Usuário LOGADO
-                document.body.classList.add('logged-in');
-
-                // Mostra o menu do usuário
-                authContainer.innerHTML = `
-                    <div class="dropdown text-white">
-                        <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
-                            <span class="ms-2 d-none d-lg-block text-white">${usuario.nome}</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="perfil.html">Meu Perfil</a></li>
-                            <li><a class="dropdown-item" href="meus_tccs.html">Meus TCCs Salvos</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
-                        </ul>
-                    </div>`;
-
-                // ALTERAÇÃO 4: Mostra o botão de cadastrar TCC
-                if (cadastroContainer) {
-                    cadastroContainer.style.display = 'block';
+            
+            if (token) {
+                // Se está logado, mostra o botão de cadastrar
+                if (btnContainerCadastrar) {
+                    btnContainerCadastrar.style.display = 'block';
+                }
+                
+                try {
+                    const usuario = JSON.parse(localStorage.getItem('usuario'));
+                    if (usuario && usuario.nome) {
+                        authContainer.innerHTML = `
+                            <div class="dropdown text-white">
+                                <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="navbarDropdownAuth" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
+                                    <span class="ms-2 d-none d-lg-block text-white">${usuario.nome}</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAuth">
+                                    <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="perfil.html">Meu Perfil</a></li>
+                                    <li><a class="dropdown-item" href="meus_tccs.html">Meus TCCs Salvos</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
+                                </ul>
+                            </div>`;
+                    }
+                } catch (e) {
+                    console.error("Erro ao parsear dados do usuário", e);
+                    logout(); // Limpa dados corrompidos
                 }
 
             } else {
-                // Usuário DESLOGADO
+                // Se não está logado, esconde o botão e mostra o link de login
+                if (btnContainerCadastrar) {
+                    btnContainerCadastrar.style.display = 'none';
+                }
                 authContainer.innerHTML = `
-                    <a href="login.html" class="nav-link text-white">
-                        <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
-                    </a>`;
+                    <div>
+                        <a href="login.html" class="nav-link text-white">
+                            <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
+                        </a>
+                    </div>`;
             }
 
-            // Inicialização do restante da página
-            const anoSelectFiltro = document.getElementById('ano-filtro');
-            for (let year = 2025; year >= 2012; year--) {
+            const anoSelect = document.getElementById('ano-filter');
+            const currentYear = new Date().getFullYear();
+            for (let year = currentYear; year >= 2012; year--) {
                 const option = document.createElement('option');
                 option.value = year;
                 option.textContent = year;
-                anoSelectFiltro.appendChild(option);
+                anoSelect.appendChild(option);
             }
-           
+
             fetch('https://backend-tcc-bwya.onrender.com/listar_cursos')
                 .then(response => response.json())
                 .then(cursos => {
-                    const selectCursoFiltro = document.getElementById('curso-filtro');
+                    const selectCursoFilter = document.getElementById('curso-filter');
                     const selectCursoCadastro = document.getElementById('curso-cadastro');
+                    
                     cursos.forEach(curso => {
-                        // Popula o filtro
-                        const optionFiltro = document.createElement('option');
-                        optionFiltro.value = curso.id;
-                        optionFiltro.textContent = curso.curso;
-                        selectCursoFiltro.appendChild(optionFiltro);
-                       
-                        // Popula o modal de cadastro
+                        const optionFilter = document.createElement('option');
+                        optionFilter.value = curso.id;
+                        optionFilter.textContent = curso.curso;
+                        selectCursoFilter.appendChild(optionFilter);
+
                         const optionCadastro = document.createElement('option');
                         optionCadastro.value = curso.id;
                         optionCadastro.textContent = curso.curso;
@@ -718,11 +849,20 @@
 
                         cursosMap[curso.id] = curso.curso;
                     });
+                    
                     carregarTCCs();
                     configurarFiltros();
                 });
 
+
             document.getElementById('btnCadastrarTcc').addEventListener('click', cadastrarTcc);
+            document.getElementById('arquivoTcc').addEventListener('change', function (e) {
+                const file = e.target.files[0];
+                if (file && file.type !== 'application/pdf') {
+                    alert('Por favor, selecione um arquivo no formato PDF.');
+                    e.target.value = '';
+                }
+            });
         });
     </script>
 </body>
