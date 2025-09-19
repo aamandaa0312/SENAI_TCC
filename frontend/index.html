@@ -48,6 +48,28 @@
             font-size: 1.2rem;
         }
 
+        /* --- CÓDIGO CSS ADICIONADO AQUI --- */
+        .user-profile-photo {
+            width: 30px;
+            /* Largura da imagem */
+            height: 30px;
+            /* Altura da imagem */
+            border-radius: 50%;
+            /* Deixa a imagem redonda */
+            object-fit: cover;
+            /* Garante que a imagem preencha o círculo */
+            border: 1px solid white;
+            /* Borda branca opcional */
+        }
+
+        .user-name-underline {
+            border-bottom: 1px solid white;
+            /* Linha branca embaixo do nome */
+            padding-bottom: 2px;
+            /* Espaçamento entre o nome e a linha */
+        }
+        /* --- FIM DO CÓDIGO CSS ADICIONADO --- */
+
         /* Navbar */
         .navbar {
             background: var(--card-bg);
@@ -891,32 +913,40 @@
                 usuario = null;
             }
 
+            // --- CÓDIGO JAVASCRIPT MODIFICADO AQUI ---
             if (token && usuario && usuario.nome) {
+                // Tenta pegar a foto do perfil do objeto 'usuario', se não tiver, usa uma imagem padrão
+                const fotoUrl = usuario.foto || 'https://via.placeholder.com/150'; // Use uma URL de imagem padrão aqui
+
                 authContainer.innerHTML = `
-                                <div class="dropdown me-3 text-white ">
-                                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="navbarDropdownAuth" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
-                                        <span class="ms-2 d-none d-lg-block text-white">${usuario.nome}</span>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAuth">
-                                        <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="perfil.html">Meu Perfil</a></li>
-                                        <li><a class="dropdown-item" href="meus_tccs.html">Meus TCCs Salvos</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
-                                    </ul>
-                                </div>
-                                `;
+                    <div class="dropdown me-3 text-white">
+                        <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="navbarDropdownAuth" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            
+                            <img src="${fotoUrl}" alt="Foto de Perfil" class="user-profile-photo">
+                            
+                            <span class="ms-2 d-none d-lg-block text-white user-name-underline">${usuario.nome}</span>
+
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAuth">
+                            <li><span class="dropdown-item-text">Logado como: <strong>${usuario.nome}</strong></span></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="perfil.html">Meu Perfil</a></li>
+                            <li><a class="dropdown-item" href="meus_tccs.html">Meus TCCs Salvos</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><button class="dropdown-item" onclick="logout()">Sair</button></li>
+                        </ul>
+                    </div>
+                `;
             } else {
                 authContainer.innerHTML = `
-                                <div class="me-3">
-                                    <a href="login.html" class="nav-link text-white">
-                                        <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
-                                    </a>
-                                </div>
-                                `;
+                    <div class="me-3">
+                        <a href="login.html" class="nav-link text-white">
+                            <i class="bi bi-person-circle text-white" style="font-size: 1.5rem;"></i>
+                        </a>
+                    </div>
+                `;
             }
+            // --- FIM DO CÓDIGO JAVASCRIPT MODIFICADO ---
 
             // --- INICIALIZAÇÃO DO VLIBRAS ---
             if (typeof VLibras !== 'undefined') {
@@ -1073,4 +1103,3 @@
 </body>
 
 </html>
-
