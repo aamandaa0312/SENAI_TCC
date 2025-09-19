@@ -597,11 +597,13 @@
     }
 
     // Função para renderizar o perfil do usuário
+     // Função para renderizar o perfil do usuário
     function renderizarPerfil(usuario) {
         return `
             <div class="perfil-header text-center mb-5">
                 <div class="perfil-avatar-wrapper" id="avatarWrapper">
                     <img src="" alt="Foto de Perfil" class="perfil-avatar" id="perfilAvatar">
+
                     <div class="avatar-overlay">
                         <i class="bi bi-camera-fill"></i>
                     </div>
@@ -610,7 +612,7 @@
                 <h1 class="display-5">${usuario.nome || 'Usuário'}</h1>
                 <p class="lead">${usuario.curso || 'Curso SENAI'}</p>
             </div>
-
+F
             <div class="row">
                 <div class="col-lg-4 mb-4">
                     <div class="card info-card">
@@ -752,6 +754,7 @@
 
 
 </html>
+
 
 
 
