@@ -7,8 +7,6 @@
     <title>Cadastro de Usuário - SENAI</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
-    <link rel="icon" href="https://proeducador.sp.senai.br/site/icons/logo-small.png">
-
     <style>
         .top-bar {
             background-color: #ff1900;
@@ -25,7 +23,6 @@
         .redes-sociais {
             padding: 5px 0;
         }
-
         .navbar {
             background: var(--card-bg);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -59,7 +56,6 @@
         .nav-link.active::after {
             width: 100%;
         }
-
         .navbar-toggler {
             margin-left: 5px;
             border: none;
@@ -85,29 +81,27 @@
             transition: all 0.3s;
             display: block;
         }
-
         /* Estado inicial (hamburger) */
         .navbar-toggler span:nth-child(1) {
             transform: translateY(0) rotate(0);
         }
-
+        
         .navbar-toggler span:nth-child(2) {
             opacity: 1;
         }
-
+        
         .navbar-toggler span:nth-child(3) {
             transform: translateY(0) rotate(0);
         }
-
-        /* Estado quando expandido (X) */
-        .navbar-toggler[aria-expanded="true"] span:nth-child(1) {
+         /* Estado quando expandido (X) */
+         .navbar-toggler[aria-expanded="true"] span:nth-child(1) {
             transform: translateY(9px) rotate(45deg);
         }
-
+        
         .navbar-toggler[aria-expanded="true"] span:nth-child(2) {
             opacity: 0;
         }
-
+        
         .navbar-toggler[aria-expanded="true"] span:nth-child(3) {
             transform: translateY(-9px) rotate(-45deg);
         }
@@ -145,8 +139,8 @@
                 </ul>
             </div>
             <a class="navbar-brand" href="#">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/SENAI_S%C3%A3o_Paulo_logo.png" alt="SENAI"
-                    height="40" />
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/SENAI_S%C3%A3o_Paulo_logo.png"
+                    alt="SENAI" height="40" />
             </a>
         </div>
     </nav>
@@ -163,9 +157,7 @@
                 <form id="cadastroForm">
                     <div class="mb-3 text-start">
                         <label for="nomeCompleto" class="form-label">Nome Completo:</label>
-                        <input type="text" id="nomeCompleto" name="nome" class="form-control" required
-                            pattern="[A-Za-zÀ-ÿ\s]+" />
-                        <span id="erroNome" style="color: red; font-size: 14px;"></span>
+                        <input type="text" id="nomeCompleto" name="nome" class="form-control" required />
                     </div>
 
                     <div class="mb-3 text-start">
@@ -175,8 +167,7 @@
 
                     <div class="mb-3 text-start">
                         <label for="senha" class="form-label">Senha:</label>
-                        <input type="password" id="senha" name="senha" class="form-control" input type="password"
-                            id="pass" name="password" minlength="8" required />
+                        <input type="password" id="senha" name="senha" class="form-control" required />
                     </div>
 
                     <div class="mb-3 text-start">
@@ -199,51 +190,8 @@
     </div>
 
     <!-- Rodapé -->
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3 mb-4">
-                    <h5>SENAI TCCs</h5>
-                    <p>Plataforma dedicada à divulgação dos Trabalhos de Conclusão de Curso dos alunos do SENAI.</p>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <h5>Links Rápidos</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="index.html" class="text-light text-decoration-none">Início</a></li>
-                        <li><a href="buscar_tcc.html" class="text-light text-decoration-none">TCCs</a></li>
-                        <li><a href="login.html" class="text-light text-decoration-none">Login</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <h5>Conecte-se</h5>
-                    <div class="social-icons">
-                        <a href="https://www.facebook.com/senaisaopaulo/?locale=pt_BR" target="_blank"
-                            rel="noopener noreferrer"><i class="bi bi-facebook"></i></a>
-                        <a href="https://www.instagram.com/senai.sp/" target="_blank" rel="noopener noreferrer"><i
-                                class="bi bi-instagram"></i></a>
-                        <a href="https://www.youtube.com/channel/UCzqd0VpWU_w4BKwmSvFdieQ" target="_blank"
-                            rel="noopener noreferrer"><i class="bi bi-youtube"></i></a>
-                        <a href="https://www.linkedin.com/school/senai-sp/" target="_blank" rel="noopener noreferrer"><i
-                                class="bi bi-linkedin"></i></a>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <h5>Desenvolvedores</h5>
-                    <ul class="list-unstyled">
-                        <li>Adriana Rodrigues de Araujo</li>
-                        <li>Amanda Rodrigues de Araujo</li>
-                        <li>João Pedro Cruz Rocha</li>
-                        <li>Ricardo Oliveira Fluminhan</li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="bg-light">
-            <div class="text-center py-3">
-                <p>&copy; 2025 SENAI-SP - Todos os direitos reservados</p>
-            </div>
-        </div>
-    </footer>
-
+    <div class="bg-light" style="height: 25px;"></div>
+    <div class="bg-danger" style="height: 50px;"></div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -314,24 +262,7 @@
                 alert("Erro ao conectar com o servidor.");
             }
         });
-        const nomeInput = document.getElementById("nomeCompleto");
-        const erroNome = document.getElementById("erroNome");
-
-        nomeInput.addEventListener("input", function () {
-            const regex = /^[A-Za-zÀ-ÿ\s]+$/;
-
-            if (!regex.test(this.value)) {
-                this.setCustomValidity("Digite apenas letras.");
-                erroNome.textContent = "⚠ Digite apenas letras no nome.";
-            } else {
-                this.setCustomValidity("");
-                erroNome.textContent = "";
-            }
-        });
-
-
     </script>
 </body>
 
 </html>
-
